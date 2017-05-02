@@ -1,4 +1,4 @@
-package com.example.wangyan.oh_my_news_android_client;
+package com.example.wangyan.oh_my_news_android_client.util;
 
 import android.os.Message;
 
