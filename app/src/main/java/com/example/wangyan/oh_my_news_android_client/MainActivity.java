@@ -13,6 +13,9 @@ import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDat
 import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
 import com.example.wangyan.oh_my_news_android_client.okhttp.request.RequestParams;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity {
     private Button button;
     private EditText editText;
@@ -35,9 +38,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private void postRequest(){
-        RequestParams params = new RequestParams();
-        String url = "/accountManage/test";
-        params.put("code","123");
+        Map<String,Object> params = new HashMap<String,Object>();
+        String url = "/accountManage/getVerifyInfo";
+
+        params.put("username","123123");
         params.put("msg","567");
 
         CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {

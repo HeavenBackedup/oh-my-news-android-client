@@ -8,6 +8,8 @@ import com.example.wangyan.oh_my_news_android_client.okhttp.exception.OkHttpExce
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataListener;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -39,7 +41,6 @@ public class CommonCallBack implements Callback {
     @Override
     public void onFailure(Call call, final IOException e) {
         //返回到主线程中
-        Log.i("wangyan","response2");
         for(StackTraceElement s:e.getStackTrace()){
             Log.e("error",s.toString());
         }
@@ -55,11 +56,11 @@ public class CommonCallBack implements Callback {
     @Override
     public void onResponse(Call call, Response response) throws IOException {
         Log.i("wangyan","response");
-        final String result = response.body().toString();
+        final String resultJson = response.body().string();
         handler.post(new Runnable() {
             @Override
             public void run() {
-                handleResponse(result);
+                handleResponse(resultJson);
             }
         });
 
