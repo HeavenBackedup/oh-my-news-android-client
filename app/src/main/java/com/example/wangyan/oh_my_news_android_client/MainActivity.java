@@ -2,6 +2,7 @@ package com.example.wangyan.oh_my_news_android_client;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +13,9 @@ import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDat
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
 import com.example.wangyan.oh_my_news_android_client.okhttp.request.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,8 +50,18 @@ public class MainActivity extends AppCompatActivity {
         CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
-                editText.setText("");
-                editText.setText(responseObj.toString());
+               Log.i("yan","123...................");
+                String email;
+                try {
+                    JSONObject jsonObject = new JSONObject(responseObj.toString());
+                    if (jsonObject.has("email")) {
+                        email = jsonObject.getString("email");
+                        editText.setText(email);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
 
             @Override

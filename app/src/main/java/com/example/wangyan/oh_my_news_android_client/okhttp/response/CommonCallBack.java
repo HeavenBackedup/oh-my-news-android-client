@@ -11,6 +11,10 @@ import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDat
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -73,6 +77,7 @@ public class CommonCallBack implements Callback {
                 JSONObject jsonObject = new JSONObject(resultObj.toString());
                 Object result = jsonObject.get("data");
                 responseDataListener.onSuccess(result);
+
             }catch (Exception e){
                 responseDataListener.onFailure(new OkHttpException(OTHER_ERROR,e.getMessage()));
 
