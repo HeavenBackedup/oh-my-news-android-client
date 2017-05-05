@@ -39,10 +39,9 @@ public class MainActivity extends AppCompatActivity {
     }
     private void postRequest(){
         Map<String,Object> params = new HashMap<String,Object>();
-        String url = "/accountManage/getVerifyInfo";
+        String url = "/accountManage/getUser";
 
-        params.put("username","123123");
-        params.put("msg","567");
+        params.put("userId","123");
 
         CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {
             @Override

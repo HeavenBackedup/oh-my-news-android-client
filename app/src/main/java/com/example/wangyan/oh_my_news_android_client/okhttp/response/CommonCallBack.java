@@ -70,7 +70,9 @@ public class CommonCallBack implements Callback {
             responseDataListener.onFailure(new OkHttpException(NETWORK_ERROR,EMPTY_MSG));
         }else {
             try {
-                responseDataListener.onSuccess(resultObj);
+                JSONObject jsonObject = new JSONObject(resultObj.toString());
+                Object result = jsonObject.get("data");
+                responseDataListener.onSuccess(result);
             }catch (Exception e){
                 responseDataListener.onFailure(new OkHttpException(OTHER_ERROR,e.getMessage()));
 
