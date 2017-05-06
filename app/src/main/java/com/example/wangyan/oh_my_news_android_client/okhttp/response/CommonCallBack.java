@@ -25,9 +25,6 @@ import okhttp3.Response;
  */
 
 public class CommonCallBack implements Callback {
-    protected static String RESULT_CODE = "0";
-    protected  static String RESULT_CODE_MSG = "";
-
     protected final String EMPTY_MSG = "";
 
     protected final int NETWORK_ERROR = -1; // the network relative error
@@ -40,7 +37,6 @@ public class CommonCallBack implements Callback {
         responseDataListener = handle.responseDataListener;
         handler = new Handler(Looper.getMainLooper());
     }
-
 
     @Override
     public void onFailure(Call call, final IOException e) {

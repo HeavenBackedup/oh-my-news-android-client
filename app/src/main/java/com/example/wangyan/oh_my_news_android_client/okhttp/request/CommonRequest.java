@@ -18,6 +18,9 @@ import okhttp3.RequestBody;
  */
 
 public class CommonRequest {
+    public static Request createGetResquest(String url){
+        return new Request.Builder().url(url).build();
+    }
     public static Request createPostResquest(String url, Object params){
         Gson gson = new Gson();
         String updateParams = gson.toJson(params);
