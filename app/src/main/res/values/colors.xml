@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
-<color name="colorPrimary">#3F51B5</color>
-<color name="colorPrimaryDark">#303F9F</color>
-<color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#FF6E6E71</color>
+    <color name="colorPrimaryDark">#FF6E6E71</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorTopbarText">#FF232021</color>
+    <color name="colorTopBackground">#FFE4E2E3</color>
+
+    <color name="colorBottombarBackground">#FFE6DADE</color>
+    <color name="colorBottombarButtonBackground">#FFFCFBFB</color>
+    <color name="colorBottombarText">#FF232021</color>
+
+    <color name="colorLoginMain">#FFF7F5F6</color>
+    <color name="colorLoginButton">#FF899DFC</color>
+    <color name="colorLoginButtonText">#FFFCFDFD</color>
+<!--以上wangyan-->
+
 <color name="white">#ffffff</color><!--白色 -->
 <color name="ivory">#fffff0</color><!--象牙色 -->
 <color name="lightyellow">#ffffe0</color><!--亮黄色 -->
