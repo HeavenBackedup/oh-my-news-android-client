@@ -3,6 +3,7 @@ package com.example.wangyan.oh_my_news_android_client.okhttp;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle;
 import com.example.wangyan.oh_my_news_android_client.okhttp.response.CommonCallBack;
 import com.example.wangyan.oh_my_news_android_client.okhttp.response.CommonFileCallBack;
+import com.example.wangyan.oh_my_news_android_client.okhttp.response.CommonFileCallBackOther;
 
 import java.util.concurrent.TimeUnit;
 
@@ -36,5 +37,10 @@ public class CommonOkHttpClient {
     {
         Call call = okHttpClient.newCall(request);
         call.enqueue(new CommonFileCallBack(handle));
+    }
+    public static void downloadFileOther(Request request, ResponseDataHandle handle)
+    {
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new CommonFileCallBackOther(handle));
     }
 }

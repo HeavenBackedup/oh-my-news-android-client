@@ -1,5 +1,7 @@
 package com.example.wangyan.oh_my_news_android_client.okhttp.response;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -9,8 +11,6 @@ import com.example.wangyan.oh_my_news_android_client.okhttp.exception.OkHttpExce
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDownloadListener;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -19,10 +19,10 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 /**
- * Created by wangyan on 2017/5/6.
+ * Created by wangyan on 2017/5/8.
  */
 
-public class CommonFileCallBack implements Callback {
+public class CommonFileCallBackOther implements Callback {
     protected final String EMPTY_MSG = "";
 
     protected final int NETWORK_ERROR = -1; // the network relative error
@@ -33,12 +33,11 @@ public class CommonFileCallBack implements Callback {
     private static final int PROGRESS_MESSAGE = 0x01;
     private ResponseDownloadListener rListener;
     private Handler handler;
-    private String filePath;
     private int progress;
+    private Bitmap bitmap;
 
-    public CommonFileCallBack(ResponseDataHandle handle) {
-       this.rListener = handle.responseDownloadListener;
-        this.filePath = handle.fileSourse;
+    public CommonFileCallBackOther(ResponseDataHandle handle) {
+        this.rListener = handle.responseDownloadListener;
         handler = new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
@@ -63,53 +62,38 @@ public class CommonFileCallBack implements Callback {
     }
     @Override
     public void onResponse(Call call, Response response) throws IOException {
-        final File file = handleResponse(response);
+        bitmap = handleResponse(response);
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if (file != null){
-                    rListener.onSuccess(file);
+                if (bitmap != null){
+                    rListener.onSuccess(bitmap);
                 }else{
                     rListener.onFailure(new OkHttpException(IO_ERROR,EMPTY_MSG));
                 }
             }
         });
     }
-    private File handleResponse(Response response){
+    private Bitmap handleResponse(Response response){
         if (response == null) {
             return null;
         }
-        InputStream inputStream = null;
-        File file = null;
-        FileOutputStream fos = null;
+        InputStream inputStream = response.body().byteStream() ;
+        bitmap = BitmapFactory.decodeStream(inputStream);
         byte[] buffer = new byte[2048];
         int length = -1;
         int currentLength = 0;
         double sumLength = 0;
-
         try {
-            file = new File(filePath);
-            fos = new FileOutputStream(file);
-            inputStream = response.body().byteStream();
             sumLength = (double) response.body().contentLength();
-
             while ((length = inputStream.read(buffer)) != -1) {
-                fos.write(buffer, 0, length);
                 currentLength += length;
                 progress = (int) (currentLength / sumLength * 100);
                 handler.obtainMessage(PROGRESS_MESSAGE,progress).sendToTarget();
             }
-            fos.flush();
         } catch (IOException e) {
-            file = null;
-        }finally {
-            try {
-                fos.close();
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
         }
-        return file;
+        return bitmap;
     }
 }

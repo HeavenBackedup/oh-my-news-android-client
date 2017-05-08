@@ -12,6 +12,10 @@ public class ResponseDataHandle {
     public ResponseDataListener responseDataListener = null;
     public String fileSourse;
 
+    public ResponseDataHandle(ResponseDownloadListener responseDownloadListener) {
+        this.responseDownloadListener = responseDownloadListener;
+    }
+
     public ResponseDataHandle(ResponseDownloadListener responseDownloadListener, String fileSourse) {
         this.responseDownloadListener = responseDownloadListener;
         this.fileSourse = fileSourse;
