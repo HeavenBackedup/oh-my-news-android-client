@@ -8,6 +8,9 @@ public class OkHttpException extends Exception {
     private int ecode;
     private Object emsg;
 
+    public OkHttpException() {
+    }
+
     public OkHttpException(int ecode, Object emsg) {
         this.ecode = ecode;
         this.emsg = emsg;
