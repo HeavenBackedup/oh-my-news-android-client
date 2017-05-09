@@ -1,4 +1,4 @@
-package com.example.wangyan.oh_my_news_android_client.util;
+package com.example.wangyan.oh_my_news_android_client.util.MainPage;
 
 import android.content.Context;
 import android.content.res.TypedArray;
