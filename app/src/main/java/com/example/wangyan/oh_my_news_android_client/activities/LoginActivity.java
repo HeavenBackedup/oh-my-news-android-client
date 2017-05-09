@@ -178,7 +178,6 @@ public class LoginActivity extends AppCompatActivity {
                                 bundle.putString("error",error);
                                 Message msg = new Message();
                                 msg.setData(bundle);
-
                                 handler.sendMessage(msg);
 
                             }

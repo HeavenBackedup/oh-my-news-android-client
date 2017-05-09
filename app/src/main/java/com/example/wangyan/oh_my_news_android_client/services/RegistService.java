@@ -11,6 +11,7 @@ import com.example.wangyan.oh_my_news_android_client.okhttp.CommonOkHttpClient;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.MainpageConnection;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -48,12 +49,16 @@ public class RegistService extends Service {
                 responseSubmitData();
               }
             private void responseSubmitData(){
+//                Map<String,Object> params = new HashMap<String, Object>();
+//                params.put("username",username);
+//                params.put("pwd",pwd);
                 User params = new User();
                 params.setUsername(username);
                 params.setPassword(pwd);
                 Log.i("yan",username+".................123445..............."+pwd);
+//                       String urlSubmit = "/register/androidSubmitInfo";
                 String urlSubmit = "/register/submitInfo";
-//                String urlSubmit = "/register/androidSubmitInfo";
+
                 CommonOkHttpClient.post(CommonRequest.createPostResquest(urlSubmit,params),new ResponseDataHandle(new ResponseDataListener() {
                     @Override
                     public void onSuccess(Object responseObj) {

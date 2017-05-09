@@ -38,7 +38,6 @@ public class MainpageActivity extends AppCompatActivity{
 
     private Topbar topbar_main;
     private ListView lv_news;
-    private SwipeRefreshLayout news_refresh;
     private Handler handler;
 
     private MainpageConnection conn;
@@ -57,7 +56,6 @@ public class MainpageActivity extends AppCompatActivity{
     private void initView(){
         topbar_main = (Topbar)findViewById(R.id.topbar_main);
         lv_news = (ListView)findViewById(R.id.lv_news);
-        news_refresh = (SwipeRefreshLayout)findViewById(R.id.news_refresh);
         topbar_main.setOnTopbarClickListener(new Topbar.topbarClickListener() {
             @Override
             public void leftClick() {
@@ -70,7 +68,10 @@ public class MainpageActivity extends AppCompatActivity{
 
             }
         });
+        //请求新闻首页
+        initNewsList();
 
+        //刷新新闻首页
         handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -99,6 +100,10 @@ public class MainpageActivity extends AppCompatActivity{
 
             }
         };
+
+
+    }
+    private  void  initNewsList(){
         conn= new MainpageConnection();
         intent.setClass(MainpageActivity.this, MainpageService.class);
         bindService(intent,conn,BIND_AUTO_CREATE);
@@ -145,7 +150,6 @@ public class MainpageActivity extends AppCompatActivity{
         //创建并显示弹出的对话框
         builder.create().show();
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
