@@ -1,24 +1,32 @@
 package com.example.wangyan.oh_my_news_android_client.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.wangyan.oh_my_news_android_client.R;
-import com.example.wangyan.oh_my_news_android_client.data.DataServerForHomepage;
 import com.example.wangyan.oh_my_news_android_client.entity.HomepageUserInfo;
 import com.example.wangyan.oh_my_news_android_client.model.MultiItemOfHomepage;
+import com.example.wangyan.oh_my_news_android_client.okhttp.CommonOkHttpClient;
+import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle;
+import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDownloadListener;
+import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
 
+import java.io.File;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle.PATH;
 
 /**
  * Created by fanfan on 2017/5/6.
  */
 
-public class HomepageAdapter extends BaseMultiItemQuickAdapter<MultiItemOfHomepage,BaseViewHolder>{
+public class HomepageAdapter extends BaseMultiItemQuickAdapter<MultiItemOfHomepage,BaseViewHolder> implements HttpHandler{
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
      * some initialization data.
@@ -27,34 +35,50 @@ public class HomepageAdapter extends BaseMultiItemQuickAdapter<MultiItemOfHomepa
      */
     private Context context;
     private CircleImageView circleImageView;
-    public HomepageAdapter(Context context,List data) {
+    private HomepageUserInfo homepageUserInfo;
+    private BaseViewHolder helper;
+    public HomepageAdapter(Context context,List data,HomepageUserInfo homepageUserInfo) {
         super(data);
         this.context=context;
+        this.homepageUserInfo=homepageUserInfo;
         addItemType(MultiItemOfHomepage.HOMEPAGE_INFO, R.layout.homepage_info_item);
         addItemType(MultiItemOfHomepage.HOMEPAGE_LIST,R.layout.homepage_item);
         addItemType(MultiItemOfHomepage.HOMEPAGE_BTN,R.layout.fans_concerns_btn);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, MultiItemOfHomepage item) {
-        Log.i("viewHolder", String.valueOf(helper.getLayoutPosition()));
-        Log.i("holder1",helper.toString());
-        Log.i("holder2", String.valueOf(helper.getItemViewType()));
-        Log.i("adapter", String.valueOf(helper.getAdapterPosition()));
-        HomepageUserInfo homepageUserInfo= DataServerForHomepage.getUserInfo();
-//        String fans= String.valueOf(homepageUserInfo.getFans());
+    public void handle() throws Exception {
+
+
+    }
+
+    @Override
+    protected void convert(final BaseViewHolder helper, MultiItemOfHomepage item) {
+
         switch (helper.getItemViewType()){
             case MultiItemOfHomepage.HOMEPAGE_INFO:
                 Log.i("viewHolderForInfo", String.valueOf(helper.getLayoutPosition()));
-//                GetBitmap getBitmap=new GetBitmap(homepageUserInfo.getAvatar());
-//                Bitmap bitmap=getBitmap.getBitmapFromURL();
-//                helper.setImageBitmap(R.id.avatar_pic,bitmap);
-//                helper.setImageResource(R.id.avatar_pic, Integer.parseInt(homepageUserInfo.getAvatar()));
+                CommonOkHttpClient.downloadFile(CommonRequest.createGetResquest(homepageUserInfo.getAvatar()),new ResponseDataHandle(new ResponseDownloadListener(){
+
+                    @Override
+                    public void onSuccess(Object responseObj) {
+                        Bitmap bitmap= BitmapFactory.decodeFile(((File)responseObj).getAbsolutePath());
+                        helper.setImageBitmap(R.id.avatar_pic,bitmap);
+                    }
+
+                    @Override
+                    public void onFailure(Object reasonObj) {
+
+                    }
+
+                    @Override
+                    public void onProgress(int progress) {
+
+                    }
+                },PATH));
+
                 helper.setText(R.id.nickname_context,homepageUserInfo.getNickname());
                 helper.setText(R.id.signature_context,homepageUserInfo.getSignature());
-
-//                helper.setText(R.id.nickname_context,"fanfan");
-//                helper.setText(R.id.signature_context,"good day!");
                 break;
 
             case MultiItemOfHomepage.HOMEPAGE_LIST:
@@ -90,5 +114,8 @@ public class HomepageAdapter extends BaseMultiItemQuickAdapter<MultiItemOfHomepa
                 break;
         }
 
+
     }
+
+
 }

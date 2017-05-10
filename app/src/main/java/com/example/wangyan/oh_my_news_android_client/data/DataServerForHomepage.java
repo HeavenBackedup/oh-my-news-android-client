@@ -1,5 +1,7 @@
 package com.example.wangyan.oh_my_news_android_client.data;
 
+import android.util.Log;
+
 import com.example.wangyan.oh_my_news_android_client.R;
 import com.example.wangyan.oh_my_news_android_client.entity.ArticleInfo;
 import com.example.wangyan.oh_my_news_android_client.entity.CollectionInfo;
@@ -9,9 +11,17 @@ import com.example.wangyan.oh_my_news_android_client.entity.UserInfo;
 import com.example.wangyan.oh_my_news_android_client.model.MultiItemOfCollection;
 import com.example.wangyan.oh_my_news_android_client.model.MultiItemOfFans;
 import com.example.wangyan.oh_my_news_android_client.model.MultiItemOfHomepage;
+import com.example.wangyan.oh_my_news_android_client.okhttp.CommonOkHttpClient;
+import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle;
+import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataListener;
+import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by fanfan on 2017/5/7.
@@ -20,42 +30,41 @@ import java.util.List;
 public class DataServerForHomepage {
 
     public static HomepageUserInfo getUserInfo(){
-//
-//        JSONObject jsonObject=new JSONObject();
-//
-//        try {
-//            jsonObject.put("code",1);
-//            jsonObject.put("userId",1);
-//            RequestBody requestBody=requestBody=RequestBody.create(MediaType.parse("application/json"),jsonObject.toString().getBytes("UTF-8"));
-//            new SendOkHttpRequestPost("",new okhttp3.Callback(){
-//
-//                @Override
-//                public void onFailure(Call call, IOException e) {
-//
-//                }
-//
-//                @Override
-//                public void onResponse(Call call, Response response) throws IOException {
-//                   String line=response.body().string();
-//                    ChangeWithJson changeWithJson=new ChangeWithJson(line);
-//                    try {
-//                        UserInformation userInformation=changeWithJson.changForHomepage();
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }
-//            },requestBody);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        final HomepageUserInfo homepageUserInfo=new HomepageUserInfo();
+        Map<String,Object> params = new HashMap<String,Object>();
+        String url="/homePage/common";
+        params.put("userId",1);
+        CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {
+            @Override
+            public void onSuccess(Object responseObj)  {
+                Log.i("responseObj",responseObj.toString()+111);
+                try {
+                    JSONObject jsonObject=new JSONObject(responseObj.toString());
+                    Log.i("responseObj",responseObj.toString()+111);
+                    if (jsonObject!=null){
+                        homepageUserInfo.setAvatar((String) jsonObject.get("avatarPath"));
+                        homepageUserInfo.setUserId((Integer) jsonObject.get("usersId"));
+                        homepageUserInfo.setNickname((String) jsonObject.get("nickName"));
+                        homepageUserInfo.setSignature((String) jsonObject.get("signature"));
+                        homepageUserInfo.setConcerns((Integer) jsonObject.get("fans"));
+                        homepageUserInfo.setConcerns(jsonObject.getInt("followers"));
+                        Log.i("homepage",homepageUserInfo.toString());
 
-        HomepageUserInfo homepageUserInfo=new HomepageUserInfo();
-        homepageUserInfo.setAvatar("http://oh-my-news.oss-cn-shanghai.aliyuncs.com/1492101116270_1?Expires=1807461113&OSSAccessKeyId=LTAImvg3z9iZRy2n&Signature=6RGGw112mdxa4QdT534b%2F0ul6vQ%3D");
-        homepageUserInfo.setNickname("fanfan");
-        homepageUserInfo.setSignature("good day");
-        homepageUserInfo.setConcerns(17);
-        homepageUserInfo.setFans(19);
+                    }
+                } catch (Exception e) {
+                    Log.i("exp",e.toString()+111);
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Object reasonObj) {
+                Log.i("error",reasonObj.toString()+111);
+
+            }
+        }));
+
         return homepageUserInfo;
     }
 
@@ -126,14 +135,8 @@ public class DataServerForHomepage {
         return list;
     }
 
-//    public static List<CollectionInfo> getArticleInfo
-
     public static List<MultiItemOfHomepage> getMultiItemData(){
         List<MultiItemOfHomepage> list=new ArrayList<>();
-//        for (int i=0;i<5;i++){
-//
-//        }
-
         list.add(new MultiItemOfHomepage(MultiItemOfHomepage.HOMEPAGE_INFO,MultiItemOfHomepage.BASE_SIZE));
         list.add(new MultiItemOfHomepage(MultiItemOfHomepage.HOMEPAGE_BTN,MultiItemOfHomepage.BTN_SIZE));
         list.add(new MultiItemOfHomepage(MultiItemOfHomepage.HOMEPAGE_BTN,MultiItemOfHomepage.BTN_SIZE));

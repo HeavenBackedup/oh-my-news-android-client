@@ -11,10 +11,6 @@ import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDat
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -55,11 +51,13 @@ public class CommonCallBack implements Callback {
 
     @Override
     public void onResponse(Call call, Response response) throws IOException {
-        Log.i("wangyan","response");
+        Log.i("wangyan ","response");
         final String resultJson = response.body().string();
         handler.post(new Runnable() {
             @Override
             public void run() {
+                Log.i("tex",resultJson.toString());
+                Log.i("fanfan","fanfanfafnafn");
                 handleResponse(resultJson);
             }
         });
@@ -67,18 +65,39 @@ public class CommonCallBack implements Callback {
     }
     private void handleResponse(Object resultObj){
         if (resultObj == null){
+            Log.i("fan","response ");
             responseDataListener.onFailure(new OkHttpException(NETWORK_ERROR,EMPTY_MSG));
         }else {
             try {
+                Log.i("fan","response else 2222");
+                Log.i("dandand",resultObj.toString());
                 JSONObject jsonObject = new JSONObject(resultObj.toString());
+                Log.i("fan","response else1");
                 Object result = jsonObject.get("data");
+                Log.i("fan","response else"+result);
                 responseDataListener.onSuccess(result);
-
             }catch (Exception e){
+                Log.i("fan","response  eror");
                 responseDataListener.onFailure(new OkHttpException(OTHER_ERROR,e.getMessage()));
 
             }
         }
 
+
     }
+
+//    private void handleResponse(String result){
+//        if (result==null){
+//            responseDataListener.onFailure(new OkHttpException(NETWORK_ERROR,EMPTY_MSG));
+//        }else {
+//            try {
+//                Log.i("string ",result);
+//                JSONObject jsonObject=new JSONObject(result);
+//                Log.i("json", (String) jsonObject.get("data"));
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 }
