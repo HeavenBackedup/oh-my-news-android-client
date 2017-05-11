@@ -18,23 +18,22 @@
         custom:leftText="退出"
         custom:rightBackground="@color/colorTopBackground"
         custom:rightTextColor="@color/colorTopbarText"
-        custom:rightText="分类"
+        custom:rightText="登陆"
         custom:title="新闻频道"
         custom:titleTextColor="@color/colorTopbarText"
         custom:titleTextSize="8sp">
     </com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar>
-<android.support.v4.widget.SwipeRefreshLayout
-    android:id="@+id/news_refresh"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <ListView
+
+<include layout="@layout/layout_news_sort"></include>
+
+
+    <com.example.wangyan.oh_my_news_android_client.view.RefreshView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/lv_news"></ListView>
-</android.support.v4.widget.SwipeRefreshLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id="@+id/lv_refresh_news"></com.example.wangyan.oh_my_news_android_client.view.RefreshView>
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
         <include layout="@layout/layout_bottombar"></include>
-    </RelativeLayout>
+</RelativeLayout>
 </LinearLayout>

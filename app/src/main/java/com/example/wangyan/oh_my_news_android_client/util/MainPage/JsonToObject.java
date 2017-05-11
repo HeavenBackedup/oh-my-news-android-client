@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.example.wangyan.oh_my_news_android_client.services.MainpageService.NEWS_AUTHOR;
-import static com.example.wangyan.oh_my_news_android_client.services.MainpageService.NEWS_ID;
 import static com.example.wangyan.oh_my_news_android_client.services.MainpageService.NEWS_IMGS;
 import static com.example.wangyan.oh_my_news_android_client.services.MainpageService.NEWS_TITLE;
 
@@ -23,7 +22,7 @@ import static com.example.wangyan.oh_my_news_android_client.services.MainpageSer
 
 public class JsonToObject {
     private static boolean isLoginSuccess = false;
-    private static List<Map<String, Object>> list_Maps=new ArrayList<Map<String, Object>>();
+    private static List<Map<String, Object>> list_Maps = new ArrayList<Map<String, Object>>();
 
 //    登陆
     public static Map<String,Object> getLogin(Object json){
@@ -40,23 +39,70 @@ public class JsonToObject {
         Log.i("wangyan","fdsfe...................."+map.toString());
         return map;
     }
-//    首页
+
+//    解析url
+    public static String getUrl(Object json){
+        String url = null;
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(json.toString());
+            JSONArray newList = jsonObject.getJSONArray("newList");
+            for (int i = 0;i<newList.length();i++){
+                JSONObject responseList = newList.getJSONObject(i);
+                if (responseList.has("url")){
+                    url = responseList.getString("url");
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return url;
+    }
+    //封装map
+        public static List<Map<String,Object>> getNews1(Object json,Bitmap bitmap){
+            Map<String,Object> map;
+            try {
+                JSONObject jsonObject = new JSONObject(json.toString());
+                JSONArray newList = jsonObject.getJSONArray("newList");
+                for (int i = 0;i<newList.length();i++){
+                    map = new HashMap<String, Object>();
+                    JSONObject responseList = newList.getJSONObject(i);
+                    int articalId = responseList.getInt("id");
+                    String author = responseList.getString("author");
+                    String topic = responseList.getString("topic");
+                    if (bitmap != null){
+                        map.put(NEWS_IMGS,JsonToObject.newsImgs(bitmap));
+                    }
+                    map.put("articalId",articalId);
+                    map.put(NEWS_AUTHOR,author);
+                    map.put(NEWS_TITLE,topic);
+                    list_Maps.add(map);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return list_Maps;
+    }
+
+    //    首页
     public static List<Map<String,Object>> getNews(Object json,Object json2){
          Map<String,Object> map;
+
         try {
             JSONObject jsonObject = new JSONObject(json.toString());
            JSONArray newList = jsonObject.getJSONArray("newList");
             for (int i = 0;i<newList.length();i++){
                 map = new HashMap<String, Object>();
                 JSONObject responseList = newList.getJSONObject(i);
-                int news_id = responseList.getInt("id");
+                int articalId = responseList.getInt("id");
                 String author = responseList.getString("author");
                 String topic = responseList.getString("topic");
-                map.put(NEWS_ID,news_id);
-                map.put(NEWS_AUTHOR,author);
-                map.put(NEWS_TITLE,topic);
-                map.put(NEWS_IMGS,JsonToObject.newsImgs(json2));
-                list_Maps.add(map);
+                    map.put("articalId", articalId);
+                    map.put(NEWS_AUTHOR, author);
+                    map.put(NEWS_TITLE, topic);
+                    map.put(NEWS_IMGS, JsonToObject.newsImgs(json2));
+                    list_Maps.add(map);
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
