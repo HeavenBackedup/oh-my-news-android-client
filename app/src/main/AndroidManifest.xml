@@ -19,6 +19,18 @@
         <activity
             android:name=".PersonalPageActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".activities.MainpageActivity" />
+        <activity android:name=".activities.BaseActivity" />
+        <activity android:name=".activities.MyCollectionActivity" />
+        <activity android:name=".activities.MyArticleActivity" />
+        <activity android:name=".activities.MyFansListActivity" />
+        <activity android:name=".activities.HomepageActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activities.MainpageActivity">
 
         </activity>
