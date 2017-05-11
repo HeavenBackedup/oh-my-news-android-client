@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   android:id="@+id/rewardwindow"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="200dp"
+    android:minHeight="200dp"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:paddingBottom="30dp"
+    android:paddingTop="30dp">
+
+    <EditText
+        android:id="@+id/text_reward"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入打赏的金额"
+        android:minHeight="45dp"
+        android:textSize="18sp" />
+
+
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="确定" />
+
+</LinearLayout>

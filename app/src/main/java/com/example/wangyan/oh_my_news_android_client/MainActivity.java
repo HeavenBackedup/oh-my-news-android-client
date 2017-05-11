@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,15 +18,12 @@ import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDat
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDownloadListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
-import com.example.wangyan.oh_my_news_android_client.okhttp.request.RequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,11 +58,11 @@ public class MainActivity extends AppCompatActivity {
     private void initView(){
         button = (Button)findViewById(R.id.BTN_content);
         editText = (EditText)findViewById(R.id.ET_content);
-        button2 = (Button)findViewById(R.id.BTN_img);
-        imageView = (ImageView) findViewById(R.id.IV_img);
-        button3 = (Button)findViewById(R.id.BTN_img2);
+//        button2 = (Button)findViewById(R.id.BTN_img);
+//        imageView = (ImageView) findViewById(R.id.IV_img);
+//        button3 = (Button)findViewById(R.id.BTN_img2);
         imageView3 = (ImageView) findViewById(R.id.IV_img2);
-        listView = (ListView)findViewById(R.id.lv) ;
+//        listView = (ListView)findViewById(R.id.lv) ;
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgress(int progress) {
 //           下载进度已封装，可根据需求实现
+
             }
             @Override
             public void onSuccess(Object responseObj) {
