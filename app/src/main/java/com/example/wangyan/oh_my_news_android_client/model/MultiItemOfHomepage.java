@@ -10,6 +10,7 @@ public class MultiItemOfHomepage implements MultiItemEntity {
     public static final int HOMEPAGE_INFO=1;
     public static final int HOMEPAGE_LIST=2;
     public static final int HOMEPAGE_BTN=3;
+    public static final int HOMEPAGE_TALK=4;
     public static final int BASE_SIZE=2;
     public static final int BTN_SIZE=1;
     private int itemType;

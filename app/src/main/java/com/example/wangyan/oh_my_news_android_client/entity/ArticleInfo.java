@@ -5,16 +5,42 @@ package com.example.wangyan.oh_my_news_android_client.entity;
  */
 
 public class ArticleInfo {
-    private int articlePic;
+    private int articleId;
+    private String articlePic;
     private String articleContent;
-    private int commentNum;
     private int collectedNum;
+    private String topic;
+    private int userId;
 
-    public int getArticlePic() {
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public int getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(int articleId) {
+        this.articleId = articleId;
+    }
+
+    public String getArticlePic() {
         return articlePic;
     }
 
-    public void setArticlePic(int articlePic) {
+    public void setArticlePic(String articlePic) {
         this.articlePic = articlePic;
     }
 
@@ -26,13 +52,6 @@ public class ArticleInfo {
         this.articleContent = articleContent;
     }
 
-    public int getCommentNum() {
-        return commentNum;
-    }
-
-    public void setCommentNum(int commentNum) {
-        this.commentNum = commentNum;
-    }
 
     public int getCollectedNum() {
         return collectedNum;

@@ -4,16 +4,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="32dp"
-    android:background="@color/darkgray"
-    >
+    android:background="@color/darkgray">
 
     <ImageView
         android:id="@+id/img_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingRight="10dp"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
         android:src="@drawable/ic_arrow_left_c"/>
         <!--android:layout_centerVertical="true"-->
 
@@ -26,7 +25,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:text="title"
-        android:textColor="@color/gainsboro"
+        android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"/>
 

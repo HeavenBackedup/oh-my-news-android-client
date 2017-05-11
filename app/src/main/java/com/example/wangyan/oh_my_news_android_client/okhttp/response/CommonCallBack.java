@@ -52,12 +52,12 @@ public class CommonCallBack implements Callback {
     @Override
     public void onResponse(Call call, Response response) throws IOException {
         Log.i("wangyan ","response");
+        Log.i("onResponse",response.toString());
+//        final byte[] resultJson=response.body().bytes();
         final String resultJson = response.body().string();
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Log.i("tex",resultJson.toString());
-                Log.i("fanfan","fanfanfafnafn");
                 handleResponse(resultJson);
             }
         });
@@ -69,15 +69,10 @@ public class CommonCallBack implements Callback {
             responseDataListener.onFailure(new OkHttpException(NETWORK_ERROR,EMPTY_MSG));
         }else {
             try {
-                Log.i("fan","response else 2222");
-                Log.i("dandand",resultObj.toString());
                 JSONObject jsonObject = new JSONObject(resultObj.toString());
-                Log.i("fan","response else1");
                 Object result = jsonObject.get("data");
-                Log.i("fan","response else"+result);
                 responseDataListener.onSuccess(result);
             }catch (Exception e){
-                Log.i("fan","response  eror");
                 responseDataListener.onFailure(new OkHttpException(OTHER_ERROR,e.getMessage()));
 
             }

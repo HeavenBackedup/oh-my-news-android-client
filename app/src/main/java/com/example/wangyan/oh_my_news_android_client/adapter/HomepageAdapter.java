@@ -2,31 +2,26 @@ package com.example.wangyan.oh_my_news_android_client.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
+import android.os.Handler;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.wangyan.oh_my_news_android_client.R;
 import com.example.wangyan.oh_my_news_android_client.entity.HomepageUserInfo;
 import com.example.wangyan.oh_my_news_android_client.model.MultiItemOfHomepage;
-import com.example.wangyan.oh_my_news_android_client.okhttp.CommonOkHttpClient;
-import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle;
-import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDownloadListener;
-import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
 
-import java.io.File;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle.PATH;
 
 /**
  * Created by fanfan on 2017/5/6.
  */
 
-public class HomepageAdapter extends BaseMultiItemQuickAdapter<MultiItemOfHomepage,BaseViewHolder> implements HttpHandler{
+public class HomepageAdapter extends BaseMultiItemQuickAdapter<MultiItemOfHomepage,BaseViewHolder> {
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
      * some initialization data.
@@ -37,6 +32,8 @@ public class HomepageAdapter extends BaseMultiItemQuickAdapter<MultiItemOfHomepa
     private CircleImageView circleImageView;
     private HomepageUserInfo homepageUserInfo;
     private BaseViewHolder helper;
+    private Handler handler;
+    private String url;
     public HomepageAdapter(Context context,List data,HomepageUserInfo homepageUserInfo) {
         super(data);
         this.context=context;
@@ -44,57 +41,46 @@ public class HomepageAdapter extends BaseMultiItemQuickAdapter<MultiItemOfHomepa
         addItemType(MultiItemOfHomepage.HOMEPAGE_INFO, R.layout.homepage_info_item);
         addItemType(MultiItemOfHomepage.HOMEPAGE_LIST,R.layout.homepage_item);
         addItemType(MultiItemOfHomepage.HOMEPAGE_BTN,R.layout.fans_concerns_btn);
+        addItemType(MultiItemOfHomepage.HOMEPAGE_TALK,R.layout.homepage_talk);
     }
 
-    @Override
-    public void handle() throws Exception {
 
-
-    }
 
     @Override
     protected void convert(final BaseViewHolder helper, MultiItemOfHomepage item) {
 
+
+
         switch (helper.getItemViewType()){
             case MultiItemOfHomepage.HOMEPAGE_INFO:
-                Log.i("viewHolderForInfo", String.valueOf(helper.getLayoutPosition()));
-                CommonOkHttpClient.downloadFile(CommonRequest.createGetResquest(homepageUserInfo.getAvatar()),new ResponseDataHandle(new ResponseDownloadListener(){
-
+//                helper.setVisible(R.id.avatar_pic,false);
+                Glide.with(context).load(homepageUserInfo.getAvatar()).asBitmap().into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onSuccess(Object responseObj) {
-                        Bitmap bitmap= BitmapFactory.decodeFile(((File)responseObj).getAbsolutePath());
-                        helper.setImageBitmap(R.id.avatar_pic,bitmap);
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        helper.setImageBitmap(R.id.avatar_pic,resource);
                     }
+                });
 
-                    @Override
-                    public void onFailure(Object reasonObj) {
-
-                    }
-
-                    @Override
-                    public void onProgress(int progress) {
-
-                    }
-                },PATH));
 
                 helper.setText(R.id.nickname_context,homepageUserInfo.getNickname());
-                helper.setText(R.id.signature_context,homepageUserInfo.getSignature());
+                helper.setText(R.id.signature_context,"简介："+homepageUserInfo.getSignature());
                 break;
 
             case MultiItemOfHomepage.HOMEPAGE_LIST:
-                Log.i("viewHolderForList", String.valueOf(helper.getLayoutPosition()));
+
                 switch (helper.getLayoutPosition()) {
-                    case 3:
+
+                    case 4:
                         helper.setImageResource(R.id.list_pic, R.drawable.ic_android_favorite_outline);
                         helper.setText(R.id.list_content, "我的收藏");
 //                        helper.addOnClickListener(R.id.list_content);
                         break;
-                    case 4:
+                    case 5:
                         helper.setImageResource(R.id.list_pic, R.drawable.ic_ios_paper_outline);
                         helper.setText(R.id.list_content, "我的文章");
 //                        helper.addOnClickListener(R.id.homepage_list);
                     break;
-                    case 5:
+                    case 6:
                         helper.setImageResource(R.id.list_pic,R.drawable.ic_android_settings);
                         helper.setText(R.id.list_content,"账号设置");
 //                        helper.addOnClickListener(R.id.homepage_list);
@@ -112,10 +98,11 @@ public class HomepageAdapter extends BaseMultiItemQuickAdapter<MultiItemOfHomepa
                         break;
                 }
                 break;
+            case MultiItemOfHomepage.HOMEPAGE_TALK:
+                helper.setText(R.id.homepage_announcement,"声明："+homepageUserInfo.getAnnouncement());
         }
 
 
     }
-
 
 }

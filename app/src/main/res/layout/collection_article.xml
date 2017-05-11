@@ -15,7 +15,7 @@
        <TextView
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:maxLines="4"
+           android:maxLines="6"
            android:ellipsize="end"
            android:id="@+id/collection_article_context"/>
     </LinearLayout>
