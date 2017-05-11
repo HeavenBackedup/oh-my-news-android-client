@@ -173,7 +173,7 @@ public class RegistActivity extends AppCompatActivity {
 
 //    topbar左侧按钮退出函数
     public void exit(AlertDialog.Builder builder){
-        builder.setMessage("确定要退出吗？");
+        builder.setMessage("确定要退出注册吗？");
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.wangyan.oh_my_news_android_client.R;
 import com.example.wangyan.oh_my_news_android_client.services.LoginService;
+import com.example.wangyan.oh_my_news_android_client.services.MainpageService;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.DialogUtil;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.LoginConnection;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar;
@@ -40,6 +41,13 @@ public class LoginActivity extends AppCompatActivity {
     private String pwd;
     private boolean isExit = false;
 
+//    private int userId;
+//    private boolean isLoginSuccess;
+    private String detail;
+    private String privateMsg;
+    private String homePage;
+    private String mainPage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +57,10 @@ public class LoginActivity extends AppCompatActivity {
         intent = getIntent();
         username = intent.getStringExtra("username");
         pwd = intent.getStringExtra("pwd");
+        detail = intent.getStringExtra("detail");
+        privateMsg = intent.getStringExtra("privateMsg");
+        homePage = intent.getStringExtra("homePage");
+        mainPage = intent.getStringExtra("mainPage");
         et_loginUsername.setText(username);
         et_loginPwd.setText(pwd);
     }
@@ -111,13 +123,21 @@ public class LoginActivity extends AppCompatActivity {
                     Log.i("yan",userId+"...////..."+isLoginSuccess);
                     intent.putExtra("userId",userId);
                     intent.putExtra("isLoginSuccess",isLoginSuccess);
+                      if ("mainPage".equals(mainPage)) {
+                          intent.setClass(LoginActivity.this, MainpageActivity.class);
+                      }else if ("detail".equals(detail)){
+                            intent.setClass(LoginActivity.this, DetailActivity.class);
+                        }else if ("privateMsg".equals(privateMsg)){
+                            intent.setClass(LoginActivity.this,PrivateMsgActivity.class);
+                        }else if ("homePage".equals(homePage)){
+                            intent.setClass(LoginActivity.this,HomepageActivity.class);
+                        }
                     intent.setClass(LoginActivity.this, MainpageActivity.class);
                     startActivity(intent);
                     finish();
-                }else{
+                }else if (!isLoginSuccess){
                     DialogUtil.showDialog(LoginActivity.this,"用户名或密码错误，请重新输入！",false);
-                }
-                if ("error".equals(error)){
+                }else if("error".equals(error)){
                     DialogUtil.showDialog(LoginActivity.this,"网络响应异常，请稍后再试！",false);
                 }
 
@@ -190,7 +210,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void exit(AlertDialog.Builder builder){
 
-        builder.setMessage("确定要退出吗？");
+        builder.setMessage("确定要退出登陆吗？");
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

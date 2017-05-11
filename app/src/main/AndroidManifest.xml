@@ -19,10 +19,10 @@
         <activity
             android:name=".PersonalPageActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.MainpageActivity"></activity>
-        <activity android:name=".activities.LoginActivity">
+        <activity android:name=".activities.MainpageActivity">
 
         </activity>
+        <activity android:name=".activities.LoginActivity"></activity>
         <activity android:name=".activities.DetailActivity" />
         <activity android:name=".activities.SearchActivity" />
         <activity android:name=".activities.PrivateMsgActivity" />
@@ -33,13 +33,7 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activities.RegistActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activities.RegistActivity"></activity>
 
         <service
             android:name=".services.LoginService"
@@ -48,7 +42,15 @@
         <service
             android:name=".services.RegistService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".activities.StartActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
