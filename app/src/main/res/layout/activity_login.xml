@@ -1,113 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorLoginMain"
-    tools:context="com.example.wangyan.oh_my_news_android_client.activities.LoginActivity"
-    android:orientation="vertical">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.wangyan.oh_my_news_android_client.activities.LoginActivity">
 
-    <com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-
-        android:id="@+id/top_login"
-        custom:leftBackground="@color/colorTopBackground"
-        custom:leftTextColor="@color/colorTopbarText"
-        custom:leftText="退出"
-        custom:rightBackground="@color/colorTopBackground"
-        custom:rightTextColor="@color/colorTopbarText"
-        custom:rightText="注册"
-        custom:title="新闻频道"
-        custom:titleTextColor="@color/colorTopbarText"
-        custom:titleTextSize="8sp">
-    </com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar>
-
-    <RelativeLayout
-        android:id="@+id/editRel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp">
-    <!--登陆用户名-->
-    <RelativeLayout
-        android:id="@+id/accountRel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:gravity="center_vertical"
-        android:background="@drawable/logincolor">
-        <TextView
-            android:id="@+id/tv_loginUsername"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="账号"
-            android:textColor="#000"
-            android:textSize="17sp" />
-        <EditText
-            android:id="@+id/et_loginUsername"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="22dp"
-            android:layout_toRightOf="@id/tv_loginUsername"
-            android:background="@null"
-            android:hint="请输入账号"
-            android:textSize="15sp" />
-    </RelativeLayout>
-        <!--登陆密码-->
-        <RelativeLayout
-            android:id="@+id/pwdRel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/accountRel"
-            android:layout_marginTop="1dp"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:background="@drawable/logincolor">
-            <TextView
-                android:id="@+id/tv_loginPwd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="密码"
-                android:textColor="#000"
-                android:textSize="17sp" />
-            <EditText
-                android:id="@+id/et_loginPwd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="22dp"
-                android:layout_toRightOf="@id/tv_loginPwd"
-                android:background="@null"
-                android:hint="请输入密码"
-                android:textSize="15sp" />
-        </RelativeLayout>
-    </RelativeLayout>
-
-        <TextView
-            android:id="@+id/tv_loginToRegist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="15dp"
-            android:text="还没有注册？"
-            android:textColor="#29981A" />
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="22dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="30dp"
-        android:text="登陆"
-        android:textSize="17sp"
-        android:textColor="@color/colorLoginButtonText"
-        android:background="@color/colorLoginButton" />
-
-</LinearLayout>
+</RelativeLayout>

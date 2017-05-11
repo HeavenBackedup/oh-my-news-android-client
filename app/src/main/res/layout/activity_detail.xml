@@ -4,10 +4,164 @@
     android:id="@+id/activity_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.wangyan.oh_my_news_android_client.activities.DetailActivity">
+
+    <LinearLayout
+        android:id="@+id/layout2"
+        android:layout_above="@+id/layout3"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/layout1"
+            android:background="@color/grey"
+            android:layout_margin="0dp"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:background="@color/grey"
+                android:layout_margin="0dp"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="返回"
+                android:onClick="back"/>
+            <Button
+                android:clickable="false"
+                android:background="@color/grey"
+                android:layout_margin="0dp"
+                android:layout_weight="20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="正文" />
+            <Button
+                android:id="@+id/comment"
+                android:background="@color/grey"
+                android:layout_margin="0dp"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="评论"
+                android:onClick="comment"/>
+            <!--<Button-->
+                <!--android:background="@color/grey"-->
+                <!--android:layout_margin="0dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="20dp"-->
+                <!--android:text="分享"-->
+                <!--android:onClick="share"/>-->
+
+        </LinearLayout>
+        <TextView
+            android:id="@+id/mtv_topic"
+            android:textSize="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/mtv_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/mtv_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:gravity="center"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <WebView
+                    android:id="@+id/mwv_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"></WebView>
+                <TextView
+                    android:background="@color/grey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="评论"
+                    android:textSize="30dp"
+                    android:gravity="center"/>
+                <com.example.wangyan.oh_my_news_android_client.util.MyListView
+                    android:id="@+id/mlv_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"></com.example.wangyan.oh_my_news_android_client.util.MyListView>
+                <TextView
+                    android:id="@+id/mtv_more"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="点击加载更多"
+                    android:clickable="true"
+                    android:textSize="20dp"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+        </ScrollView>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layout3"
+        android:background="@color/grey"
+        android:layout_margin="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/reward"
+            android:background="@color/grey"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="打赏"
+            android:onClick="reward"/>
+        <Button
+            android:id="@+id/like"
+            android:background="@color/grey"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="点赞"
+            android:onClick="like"/>
+
+        <Button
+            android:id="@+id/collect"
+            android:background="@color/grey"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="收藏"
+            android:onClick="collect"/>
+        <Button
+            android:id="@+id/report"
+            android:background="@color/grey"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="举报"
+            android:onClick="report"/>
+
+
+    </LinearLayout>
+
+
+
 
 </RelativeLayout>

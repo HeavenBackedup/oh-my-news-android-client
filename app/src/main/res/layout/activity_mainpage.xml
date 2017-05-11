@@ -8,8 +8,7 @@
     tools:context="com.example.wangyan.oh_my_news_android_client.activities.MainpageActivity"
     android:orientation="vertical">
 
-    <com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar
-        android:id="@+id/topbar_main"
+    <com.example.wangyan.oh_my_news_android_client.util.Topbar        android:id="@+id/topbar_main"
         android:layout_width="match_parent"
         android:layout_height="40dp"
 
@@ -18,22 +17,37 @@
         custom:leftText="退出"
         custom:rightBackground="@color/colorTopBackground"
         custom:rightTextColor="@color/colorTopbarText"
-        custom:rightText="登陆"
+        custom:rightText="分类"
         custom:title="新闻频道"
         custom:titleTextColor="@color/colorTopbarText"
         custom:titleTextSize="8sp">
-    </com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar>
-
-<include layout="@layout/layout_news_sort"></include>
-
-
-    <com.example.wangyan.oh_my_news_android_client.view.RefreshView
+    </com.example.wangyan.oh_my_news_android_client.util.Topbar>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TableRow
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+        <Button
+            android:text="button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+        </TableRow>
+    </TableLayout>
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/lv_refresh_news"></com.example.wangyan.oh_my_news_android_client.view.RefreshView>
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-        <include layout="@layout/layout_bottombar"></include>
-</RelativeLayout>
+        android:id="@+id/lv_news"></ListView>
 </LinearLayout>
