@@ -2,25 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="14dp"
+    android:paddingLeft="8dp"
     android:orientation="vertical">
     <TextView
         android:id="@+id/tv_title2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:maxLines="1"
-        android:textSize="15sp"
-        android:text="1233121"/>
+        android:textSize="14sp"
+        android:paddingLeft="16dp" />
 
     <TextView
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="18dp"
         android:id="@+id/tv_author2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="8dp"
+        android:paddingLeft="25dp"
         android:maxLines="1"
         android:textSize="10sp"
-        android:text="12132312"/>
-
+        android:layout_marginBottom="12dp" />
 </LinearLayout>

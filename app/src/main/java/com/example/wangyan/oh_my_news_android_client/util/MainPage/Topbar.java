@@ -92,7 +92,7 @@ public class Topbar extends RelativeLayout{
         tvTitle.setTextSize(titleTextSize);
 
         tvTitle.setGravity(Gravity.CENTER);
-        setBackgroundColor(0xFFE6DADE);
+        setBackgroundColor(0xFFff0000);
 
         //控件以何种形式定义到viewgroup中
         leftParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);

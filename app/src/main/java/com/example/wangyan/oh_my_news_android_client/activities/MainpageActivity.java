@@ -186,6 +186,8 @@ public class MainpageActivity extends AppCompatActivity{
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
               Map<String,Object> map = list.get(position);
               articalId = (int) map.get("articalId");
+              intent.putExtra("userId",userId);
+              intent.putExtra("isLoginSuccess",isLoginSuccess);
               intent.putExtra("articalId",articalId);
               intent.setClass(MainpageActivity.this,DetailActivity.class);
               startActivity(intent);
@@ -216,7 +218,7 @@ public class MainpageActivity extends AppCompatActivity{
         list.clear();
         responseNewsData(index, addValue);
         restartButton();
-        button.setTextColor(0xFF30F5A3);
+        button.setTextColor(0xFFff0000);
         lv_refresh_news.setAdapter(null);
 
     }
@@ -324,6 +326,11 @@ public class MainpageActivity extends AppCompatActivity{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                Map<String,Object> map1 = new HashMap<String, Object>();
+                map1.put("articalId", articalId);
+                map1.put(NEWS_AUTHOR,"陌陌");
+                map1.put(NEWS_TITLE,"要知道遗忘是大脑最温柔的自我保护");
+                list.add(map1);
                 getData();
             }
             @Override

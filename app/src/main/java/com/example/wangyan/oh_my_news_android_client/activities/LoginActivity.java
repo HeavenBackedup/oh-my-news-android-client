@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.wangyan.oh_my_news_android_client.R;
 import com.example.wangyan.oh_my_news_android_client.services.LoginService;
+import com.example.wangyan.oh_my_news_android_client.util.AutoLogin;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.DialogUtil;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.LoginConnection;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar;
@@ -116,6 +117,8 @@ public class LoginActivity extends AppCompatActivity {
                 boolean isLoginSuccess = msg.getData().getBoolean("isLoginSuccess");
                 String error = msg.getData().getString("error");
                 if (isLoginSuccess){
+                    AutoLogin autoLogin = new AutoLogin();
+                    autoLogin.writeToFile(userId,isLoginSuccess);
                     Log.i("yan",userId+"...////..."+isLoginSuccess);
                     intent.putExtra("userId",userId);
                     intent.putExtra("isLoginSuccess",isLoginSuccess);

@@ -12,16 +12,16 @@
     <com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar
         android:id="@+id/topbar_regist"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
 
-        custom:leftBackground="@color/colorTopBackground"
-        custom:leftTextColor="@color/colorTopbarText"
+        custom:leftBackground="@color/red"
+        custom:leftTextColor="@color/white"
         custom:leftText="退出"
-        custom:rightBackground="@color/colorTopBackground"
-        custom:rightTextColor="@color/colorTopbarText"
+        custom:rightBackground="@color/red"
+        custom:rightTextColor="@color/white"
         custom:rightText="登陆"
         custom:title="新闻频道"
-        custom:titleTextColor="@color/colorTopbarText"
+        custom:titleTextColor="@color/white"
         custom:titleTextSize="8sp">
     </com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar>
 
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="42dp">
         <!--注册用户名-->
         <RelativeLayout
             android:id="@+id/accountRelR"
@@ -134,12 +134,11 @@
         android:id="@+id/registButton"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="22dp"
+        android:layout_marginTop="25dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="30dp"
         android:text="注册"
         android:textSize="17sp"
         android:textColor="@color/colorLoginButtonText"
-        android:background="@color/colorLoginButton"
-        android:onClick="regist"/>
+        android:background="@color/colorLoginButton" />
 </LinearLayout>

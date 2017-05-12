@@ -33,17 +33,19 @@
         <activity android:name=".activities.MyCollectionActivity"></activity>
         <activity android:name=".activities.MyFansListActivity"></activity>
         <activity android:name=".activities.MypageActivity">
+
+        </activity>
+        <activity android:name=".activities.OthersHomepageActivity"></activity>
+        <activity android:name=".activities.PrivateMsgActivity"></activity>
+        <activity android:name=".activities.RegistActivity"></activity>
+        <activity android:name=".activities.SearchActivity"></activity>
+        <activity android:name=".activities.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.OthersHomepageActivity"></activity>
-        <activity android:name=".activities.PrivateMsgActivity"></activity>
-        <activity android:name=".activities.RegistActivity"></activity>
-        <activity android:name=".activities.SearchActivity"></activity>
-        <activity android:name=".activities.StartActivity"></activity>
 
 
         <service
