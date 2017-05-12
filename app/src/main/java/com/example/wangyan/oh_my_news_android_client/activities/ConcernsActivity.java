@@ -14,6 +14,7 @@ import com.example.wangyan.oh_my_news_android_client.adapter.ConcernsAdapter;
 import com.example.wangyan.oh_my_news_android_client.data.DataServerForHomepage;
 import com.example.wangyan.oh_my_news_android_client.entity.ConcernInfo;
 import com.example.wangyan.oh_my_news_android_client.model.MultiItemOfFans;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 import com.example.wangyan.oh_my_news_android_client.util.RequestBodyForm;
 import com.example.wangyan.oh_my_news_android_client.util.SendOkHttpRequestPost;
 
@@ -43,6 +44,7 @@ public class ConcernsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_concerns);
+        ExitApplication.getInstance().addActivity(this);
         setTitle("我的关注");
         setBackBtn();
         Thread thread=new GetConcernsList(1);

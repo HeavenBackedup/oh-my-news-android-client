@@ -13,6 +13,7 @@ import com.example.wangyan.oh_my_news_android_client.adapter.MyCollectionAdapter
 import com.example.wangyan.oh_my_news_android_client.data.DataServerForHomepage;
 import com.example.wangyan.oh_my_news_android_client.entity.CollectionInfo;
 import com.example.wangyan.oh_my_news_android_client.model.MultiItemOfCollection;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 import com.example.wangyan.oh_my_news_android_client.util.RequestBodyForm;
 import com.example.wangyan.oh_my_news_android_client.util.SendOkHttpRequestPost;
 
@@ -40,6 +41,7 @@ public class MyCollectionActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_collection);
+        ExitApplication.getInstance().addActivity(this);
         setTitle("我的收藏");
         setBackBtn();
         intent=getIntent();
