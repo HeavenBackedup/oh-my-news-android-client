@@ -19,8 +19,6 @@
         <activity
             android:name=".PersonalPageActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".PersonalPageActivity" />
 
         <activity android:name=".activities.AccountManageActivity"></activity>
         <activity android:name=".activities.BaseActivity" />
@@ -29,9 +27,14 @@
         <activity android:name=".activities.MyFansListActivity" />
         <activity android:name=".activities.OthersHomepageActivity"></activity>
         <activity android:name=".activities.HomepageActivity">
+
+        </activity>
+        <activity android:name=".activities.MypageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".activities.MainpageActivity">
 
@@ -47,8 +50,6 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activities.OthersHomepageActivity"></activity>
-        <activity android:name=".activities.PrivateMsgActivity"></activity>
         <activity android:name=".activities.RegistActivity"></activity>
 
         <service
@@ -61,11 +62,7 @@
             android:exported="true" />
 
         <activity android:name=".activities.StartActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
 
