@@ -23,7 +23,7 @@ public class StartActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             public void run() {
 
-                intent.setClass(StartActivity.this, MainpageActivity.class);
+                intent.setClass(StartActivity.this, MypageActivity.class);
                 startActivity(intent);
                StartActivity.this.finish();
 
