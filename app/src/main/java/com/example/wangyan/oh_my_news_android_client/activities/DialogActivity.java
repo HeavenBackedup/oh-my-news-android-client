@@ -45,7 +45,8 @@ public class DialogActivity extends AppCompatActivity {
          name=intent.getStringExtra("name");
         // ActionBar actionBar = getSupportActionBar();
         //actionBar.hide();
-        initMsgs();
+//        initMsgs();
+        postRequest();
         adapter = new msgAdapter(DialogActivity.this, R.layout.listlayout, msgList);
         inputText = (EditText)findViewById(R.id.inputText);
         send = (Button)findViewById(R.id.send);
@@ -94,12 +95,6 @@ public class DialogActivity extends AppCompatActivity {
             }
         }));
     }
-
-    private void initMsgs() {
-        postRequest();
-        message msg1 = new message(name+":"+message0, message.TYPE_RECEIVED);
-        msgList.add(msg1);
-    }
     private void postRequest(){
         Map<String,Object> params = new HashMap<String,Object>();
         String url = "/privatemsg/getExMsg";
@@ -120,6 +115,8 @@ public class DialogActivity extends AppCompatActivity {
                         if(ob.getString("username").contains(name))
                         {
                            message0=ob.getString("message");
+                            message msg1 = new message(name+":"+message0, message.TYPE_RECEIVED);
+                            msgList.add(msg1);
 //                            System.out.println(message0);
 
                         }

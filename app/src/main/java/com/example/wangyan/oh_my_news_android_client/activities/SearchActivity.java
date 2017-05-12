@@ -32,8 +32,6 @@ import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity {
     Context context;
-//    private String[] index= new String[]{"aa","bb","cc","dd"};
-//    private String[] s= {"时尚", "科技", "医学", "财经"};
     private SearchView search;
     private ListView list;
 
@@ -46,18 +44,6 @@ public class SearchActivity extends AppCompatActivity {
         search = (SearchView) findViewById(R.id.searchView);
         list = (ListView) findViewById(R.id.listView);
         LinearLayout linearLayout=(LinearLayout)layoutInflater.inflate(R.layout.itemlayout,null);
-//        List<Map<String,Object>> t=new ArrayList<>();
-//        for(int i=0;i<4;i++) {
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("index",index[i] );
-//            map.put("title",s[i]);
-//            t.add(map);
-//        }
-//        SimpleAdapter adapter=new SimpleAdapter(context,t,R.layout.itemlayout,new String[]{"index","title"},new int[]{R.id.index,R.id.text});
-//        list.setAdapter(adapter);
-//        //启用过滤
-//        list.setTextFilterEnabled(true);
-        //显示搜索按钮
         search.setSubmitButtonEnabled(true);
 
 
@@ -67,16 +53,10 @@ public class SearchActivity extends AppCompatActivity {
             // 当点击搜索按钮时触发该方法
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // Intent intent = new Intent();
-                // intent.setClass(SearchActivity.this, MainActivity.class);
-                // intent.putExtra("id", query);
-                //startActivity(intent);
                 postRequest(query);
-                // Toast.makeText(SearchActivity.this, "选择的是;" + query, Toast.LENGTH_SHORT).show();
                 return false;
             }
 
-            // 当搜索内容改变时触发该方法
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (!TextUtils.isEmpty(newText)) {
@@ -130,10 +110,6 @@ public class SearchActivity extends AppCompatActivity {
                             startActivity(intent);
                         }
                     });
-//                    if (jsonObject.has("email")) {
-//                        email = jsonObject.getString("email");
-//                       // editText.setText(email);
-//                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
