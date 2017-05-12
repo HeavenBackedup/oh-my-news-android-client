@@ -61,7 +61,7 @@ public class MypageActivity extends ActivityGroup  {
         view1=getLocalActivityManager().startActivity("home",new Intent(MypageActivity.this,MainpageActivity.class)).getDecorView();
         view2=getLocalActivityManager().startActivity("search",new Intent(MypageActivity.this,SearchActivity.class)).getDecorView();
         view3=getLocalActivityManager().startActivity("primsg",new Intent(MypageActivity.this,PrivateMsgActivity.class)).getDecorView();
-        view4=getLocalActivityManager().startActivity("personal",new Intent(MypageActivity.this,PersonalPageActivity.class)).getDecorView();
+        view4=getLocalActivityManager().startActivity("personal",new Intent(MypageActivity.this,HomepageActivity.class)).getDecorView();
         views=new ArrayList<View>();
         views.add(view1);
         views.add(view2);

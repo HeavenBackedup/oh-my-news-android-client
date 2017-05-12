@@ -4,29 +4,21 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import com.example.wangyan.oh_my_news_android_client.R;
 import com.example.wangyan.oh_my_news_android_client.okhttp.CommonOkHttpClient;
-import com.example.wangyan.oh_my_news_android_client.okhttp.exception.OkHttpException;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDownloadListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
-import com.example.wangyan.oh_my_news_android_client.services.MainpageService;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.JsonToObject;
-import com.example.wangyan.oh_my_news_android_client.util.MainPage.MainpageConnection;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.RefreshAdapter;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar;
 import com.example.wangyan.oh_my_news_android_client.view.RefreshView;
@@ -194,6 +186,8 @@ public class MainpageActivity extends AppCompatActivity{
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
               Map<String,Object> map = list.get(position);
               articalId = (int) map.get("articalId");
+              intent.putExtra("userId",userId);
+              intent.putExtra("isLoginSuccess",isLoginSuccess);
               intent.putExtra("articalId",articalId);
               intent.setClass(MainpageActivity.this,DetailActivity.class);
               startActivity(intent);
@@ -224,7 +218,7 @@ public class MainpageActivity extends AppCompatActivity{
         list.clear();
         responseNewsData(index, addValue);
         restartButton();
-        button.setTextColor(0xFF30F5A3);
+        button.setTextColor(0xFFff0000);
         lv_refresh_news.setAdapter(null);
 
     }
@@ -332,6 +326,11 @@ public class MainpageActivity extends AppCompatActivity{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                Map<String,Object> map1 = new HashMap<String, Object>();
+                map1.put("articalId", articalId);
+                map1.put(NEWS_AUTHOR,"陌陌");
+                map1.put(NEWS_TITLE,"要知道遗忘是大脑最温柔的自我保护");
+                list.add(map1);
                 getData();
             }
             @Override

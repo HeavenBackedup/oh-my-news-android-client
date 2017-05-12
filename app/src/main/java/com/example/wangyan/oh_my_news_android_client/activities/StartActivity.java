@@ -2,13 +2,12 @@ package com.example.wangyan.oh_my_news_android_client.activities;
 
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.example.wangyan.oh_my_news_android_client.R;
-import com.example.wangyan.oh_my_news_android_client.services.MainpageService;
 
 public class StartActivity extends AppCompatActivity {
     private static final int LOAD_DISPLAY_TIME = 1500;
@@ -24,7 +23,7 @@ public class StartActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             public void run() {
 
-                intent.setClass(StartActivity.this, MainpageActivity.class);
+                intent.setClass(StartActivity.this, MypageActivity.class);
                 startActivity(intent);
                StartActivity.this.finish();
 

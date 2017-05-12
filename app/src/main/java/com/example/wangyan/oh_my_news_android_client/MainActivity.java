@@ -58,11 +58,11 @@ public class MainActivity extends AppCompatActivity {
     private void initView(){
         button = (Button)findViewById(R.id.BTN_content);
         editText = (EditText)findViewById(R.id.ET_content);
-        button2 = (Button)findViewById(R.id.BTN_img);
-        imageView = (ImageView) findViewById(R.id.IV_img);
-        button3 = (Button)findViewById(R.id.BTN_img2);
+//        button2 = (Button)findViewById(R.id.BTN_img);
+//        imageView = (ImageView) findViewById(R.id.IV_img);
+//        button3 = (Button)findViewById(R.id.BTN_img2);
         imageView3 = (ImageView) findViewById(R.id.IV_img2);
-        listView = (ListView)findViewById(R.id.lv) ;
+//        listView = (ListView)findViewById(R.id.lv) ;
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

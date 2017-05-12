@@ -11,16 +11,17 @@
     <com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar
         android:id="@+id/topbar_main"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
 
-        custom:leftBackground="@color/colorTopBackground"
-        custom:leftTextColor="@color/colorTopbarText"
+        custom:leftBackground="@color/red"
+        custom:leftTextColor="@color/white"
         custom:leftText="退出"
-        custom:rightBackground="@color/colorTopBackground"
-        custom:rightTextColor="@color/colorTopbarText"
+        custom:rightBackground="@color/red"
+        custom:rightTextColor="@color/white"
         custom:rightText="登陆"
+
         custom:title="新闻频道"
-        custom:titleTextColor="@color/colorTopbarText"
+        custom:titleTextColor="@color/white"
         custom:titleTextSize="8sp">
     </com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar>
 
@@ -31,9 +32,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/lv_refresh_news"></com.example.wangyan.oh_my_news_android_client.view.RefreshView>
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-        <include layout="@layout/layout_bottombar"></include>
-</RelativeLayout>
+
 </LinearLayout>

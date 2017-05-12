@@ -89,12 +89,15 @@ public class CommonFileCallBack implements Callback {
 
         try {
             file = new File(filePath);
+
             fos = new FileOutputStream(file);
             inputStream = response.body().byteStream();
+            Log.i("yanyue333",response.body().string());
             sumLength = (double) response.body().contentLength();
-
             while ((length = inputStream.read(buffer)) != -1) {
                 fos.write(buffer, 0, length);
+                String s=buffer.toString();
+                Log.i("yanyue333", s);
                 currentLength += length;
                 progress = (int) (currentLength / sumLength * 100);
                 handler.obtainMessage(PROGRESS_MESSAGE,progress).sendToTarget();

@@ -4,18 +4,12 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 
-import com.example.wangyan.oh_my_news_android_client.activities.MainpageActivity;
 import com.example.wangyan.oh_my_news_android_client.okhttp.CommonOkHttpClient;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDownloadListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
-import com.example.wangyan.oh_my_news_android_client.util.MainPage.JsonToObject;
-
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;

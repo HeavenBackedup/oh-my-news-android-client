@@ -11,13 +11,6 @@ import com.example.wangyan.oh_my_news_android_client.okhttp.CommonOkHttpClient;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
-import com.example.wangyan.oh_my_news_android_client.util.MainPage.MainpageConnection;
-
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
-import okhttp3.Response;
 
 public class RegistService extends Service {
     private Callback callback;

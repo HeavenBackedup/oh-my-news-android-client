@@ -12,9 +12,8 @@
     <color name="colorBottombarText">#FF232021</color>
 
     <color name="colorLoginMain">#FFF7F5F6</color>
-    <color name="colorLoginButton">#FF899DFC</color>
+    <color name="colorLoginButton">#FFF7BE54</color>
     <color name="colorLoginButtonText">#FFFCFDFD</color>
-    <color name="colorTextSort">#FF30F5A3</color>
 <!--以上wangyan-->
 
 <color name="white">#ffffff</color><!--白色 -->

@@ -3,10 +3,10 @@ package com.example.wangyan.oh_my_news_android_client.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,16 +14,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.wangyan.oh_my_news_android_client.R;
-import com.example.wangyan.oh_my_news_android_client.services.LoginService;
 import com.example.wangyan.oh_my_news_android_client.services.RegistService;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.DialogUtil;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.RegistConnection;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RegistActivity extends AppCompatActivity {
     private Intent intent = new Intent();

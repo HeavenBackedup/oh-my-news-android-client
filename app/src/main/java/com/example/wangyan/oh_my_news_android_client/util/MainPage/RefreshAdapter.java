@@ -2,6 +2,7 @@ package com.example.wangyan.oh_my_news_android_client.util.MainPage;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,6 @@ import android.widget.TextView;
 
 import com.example.wangyan.oh_my_news_android_client.R;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +32,7 @@ public class RefreshAdapter extends BaseAdapter {
     private List<Map<String,Object>> data;
     private static final int TYPE_1 = 0;
     private static final int TYPE_2 = 1;
+    private Map<String,Object> map;
 
     //ViewHolder静态类
     static class ViewHolder
@@ -54,13 +55,16 @@ public class RefreshAdapter extends BaseAdapter {
     //每个convert view都会调用此方法，获得当前所需要的view样式
     @Override
     public int getItemViewType(int position) {
-        int p = position%3;
-        if(p == 0)
+        map = data.get(position);
+        for (int i = 0;i<data.size();i++){
+            map = data.get(position);
+            Log.i("wangyan",map.size()+",,,,,,,,,,,,,,,,,,,,,");
+        }
+        if (map.size() == 4){
             return TYPE_1;
-        else if(p < 3)
+        }else if (map.size() == 3){
             return TYPE_2;
-        else
-           return TYPE_1;
+        }else return TYPE_2;
         }
 
     @Override

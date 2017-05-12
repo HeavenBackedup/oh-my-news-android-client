@@ -71,7 +71,7 @@ public class JsonToObject {
                     String author = responseList.getString("author");
                     String topic = responseList.getString("topic");
                     if (bitmap != null){
-                        map.put(NEWS_IMGS,JsonToObject.newsImgs(bitmap));
+                        map.put(NEWS_IMGS, JsonToObject.newsImgs(bitmap));
                     }
                     map.put("articalId",articalId);
                     map.put(NEWS_AUTHOR,author);

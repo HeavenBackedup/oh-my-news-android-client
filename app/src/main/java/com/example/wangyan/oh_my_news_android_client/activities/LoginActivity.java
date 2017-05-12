@@ -1,15 +1,12 @@
 package com.example.wangyan.oh_my_news_android_client.activities;
 
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +15,7 @@ import android.widget.TextView;
 
 import com.example.wangyan.oh_my_news_android_client.R;
 import com.example.wangyan.oh_my_news_android_client.services.LoginService;
-import com.example.wangyan.oh_my_news_android_client.services.MainpageService;
+import com.example.wangyan.oh_my_news_android_client.util.AutoLogin;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.DialogUtil;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.LoginConnection;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar;
@@ -120,6 +117,8 @@ public class LoginActivity extends AppCompatActivity {
                 boolean isLoginSuccess = msg.getData().getBoolean("isLoginSuccess");
                 String error = msg.getData().getString("error");
                 if (isLoginSuccess){
+                    AutoLogin autoLogin = new AutoLogin();
+                    autoLogin.writeToFile(userId,isLoginSuccess);
                     Log.i("yan",userId+"...////..."+isLoginSuccess);
                     intent.putExtra("userId",userId);
                     intent.putExtra("isLoginSuccess",isLoginSuccess);
