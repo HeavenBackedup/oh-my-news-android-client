@@ -16,6 +16,7 @@ import com.example.wangyan.oh_my_news_android_client.adapter.FansAdapter;
 import com.example.wangyan.oh_my_news_android_client.data.DataServerForHomepage;
 import com.example.wangyan.oh_my_news_android_client.entity.FansInfo;
 import com.example.wangyan.oh_my_news_android_client.model.MultiItemOfFans;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 import com.example.wangyan.oh_my_news_android_client.util.RequestBodyForm;
 import com.example.wangyan.oh_my_news_android_client.util.SendOkHttpRequestPost;
 
@@ -53,6 +54,7 @@ public class MyFansListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_fans_list);
+        ExitApplication.getInstance().addActivity(this);
         setTitle("我的粉丝");
         Log.i("index before", String.valueOf(index));
         setBackBtn();

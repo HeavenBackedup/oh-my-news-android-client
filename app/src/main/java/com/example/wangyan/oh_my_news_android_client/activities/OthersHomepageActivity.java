@@ -18,6 +18,7 @@ import com.example.wangyan.oh_my_news_android_client.adapter.OthersHomepageAdapt
 import com.example.wangyan.oh_my_news_android_client.data.DataServerForHomepage;
 import com.example.wangyan.oh_my_news_android_client.entity.HomepageUserInfo;
 import com.example.wangyan.oh_my_news_android_client.model.MultiItemOfHomepage;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 import com.example.wangyan.oh_my_news_android_client.util.RequestBodyForm;
 import com.example.wangyan.oh_my_news_android_client.util.SendOkHttpRequestPost;
 
@@ -53,7 +54,7 @@ public class OthersHomepageActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_others_homepage);
-
+        ExitApplication.getInstance().addActivity(this);
         intent=getIntent();
 //        userIdOfShow=intent.getIntExtra("userIdOfShow",-1);
         codeForSkip=intent.getIntExtra("codeForSkip",-1);

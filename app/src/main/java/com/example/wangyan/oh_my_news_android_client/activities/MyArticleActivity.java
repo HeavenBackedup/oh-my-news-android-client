@@ -16,6 +16,7 @@ import com.example.wangyan.oh_my_news_android_client.data.DataServerForHomepage;
 import com.example.wangyan.oh_my_news_android_client.data.User;
 import com.example.wangyan.oh_my_news_android_client.entity.ArticleInfo;
 import com.example.wangyan.oh_my_news_android_client.model.MultiItemOfCollection;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 import com.example.wangyan.oh_my_news_android_client.util.RequestBodyForm;
 import com.example.wangyan.oh_my_news_android_client.util.SendOkHttpRequestPost;
 
@@ -48,7 +49,7 @@ public class MyArticleActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_article);
-
+        ExitApplication.getInstance().addActivity(this);
         setBackBtn();
         intent=getIntent();
         user=new User();

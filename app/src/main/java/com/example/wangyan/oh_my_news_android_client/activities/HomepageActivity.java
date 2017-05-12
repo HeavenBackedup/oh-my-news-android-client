@@ -17,6 +17,7 @@ import com.example.wangyan.oh_my_news_android_client.adapter.HomepageAdapter;
 import com.example.wangyan.oh_my_news_android_client.data.DataServerForHomepage;
 import com.example.wangyan.oh_my_news_android_client.entity.HomepageUserInfo;
 import com.example.wangyan.oh_my_news_android_client.model.MultiItemOfHomepage;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 import com.example.wangyan.oh_my_news_android_client.util.RequestBodyForm;
 import com.example.wangyan.oh_my_news_android_client.util.SendOkHttpRequestPost;
 
@@ -44,6 +45,7 @@ public class HomepageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+        ExitApplication.getInstance().addActivity(this);
 //        Intent intent=getIntent();
 //        userId=intent.getIntExtra("userId",-1);
         Thread thread=new GetHomepageInfo(userId);
