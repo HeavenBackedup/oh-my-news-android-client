@@ -47,15 +47,18 @@ public class MyFansListActivity extends BaseActivity {
     private FansInfo fansInfoChanged;
     private boolean isConcerned;
     private ImageView imageView_btn;
+    private int index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_fans_list);
         setTitle("我的粉丝");
-
+        Log.i("index before", String.valueOf(index));
         setBackBtn();
         intent=getIntent();
+
+        imageView_btn=(ImageView)findViewById(R.id.fans_btn_pic);
         userIdOfLogin=intent.getIntExtra("userId",-1);
         Thread thread=new GetFansList(userIdOfLogin);
         thread.start();
@@ -104,37 +107,52 @@ public class MyFansListActivity extends BaseActivity {
                 }
 
                 fansAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener(){
+
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    Log.i("onItemClick","onItemClick");
+                        index=position/2;
+                        Log.i("index", String.valueOf(index));
                         fansInfoChanged=list.get(position/2);
-                        boolean isConcerned=fansInfoChanged.isConcerned();
+                       boolean isConcerned=fansInfoChanged.isConcerned();
                         final ImageView imageView=(ImageView) view.findViewById(R.id.fans_btn_pic);
                         if (position%2==0){
                             Intent intent=new Intent(MyFansListActivity.this,OthersHomepageActivity.class);
                             intent.putExtra("userIdOfShow",fansInfoChanged.getUserId());
                             intent.putExtra("nickname",fansInfoChanged.getNickname());
                             intent.putExtra("userIdOfLogin",userIdOfLogin);
+                            intent.putExtra("codeForSkip",0);
                              startActivityForResult(intent,1);
                         }else {
-                            if (isConcerned==true){
-                                imageView.setImageResource(R.mipmap.unconcerned);
-                                isConcerned=false;
-                            }else {
-                                imageView.setImageResource(R.mipmap.concerned);
-
-                                isConcerned=true;
-                            }
+//                            if (isConcerned==true){
+//                                SendInfo sendInfo=new SendInfo(userIdOfLogin,userIdOfShow,2);
+//                                imageView.setImageResource(R.mipmap.unconcerned);
+//                                isConcerned=false;
+//                            }else {
+//                                SendInfo sendInfo=new SendInfo(userIdOfLogin,userIdOfShow,3);
+//                                imageView.setImageResource(R.mipmap.concerned);
+//                                isConcerned=true;
+//                            }
 
                         }
 
                     }
                 });
+                Log.i("index after", String.valueOf(index));
 
 
 
 
             }
         };
+
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
 
     }
@@ -186,14 +204,51 @@ public class MyFansListActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        isConcerned=data.getBooleanExtra("isConcerned",fansInfoChanged.isConcerned());
-        Log.i("isConcerned ++", String.valueOf(isConcerned));
-  fansAdapter.changeForConcerned(1,false);
 
+    public class SendInfo extends Thread{
+        private int userIdOfLogin;
+        private int userIdOfShow;
+        private int code;
+
+        public SendInfo(int userIdOfLogin, int userIdOfShow, int code) {
+            this.userIdOfLogin = userIdOfLogin;
+            this.userIdOfShow = userIdOfShow;
+            this.code = code;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            Map<String,Object> params = new HashMap<String,Object>();
+            String url="/homePage/sendInformation";
+            params.put("userIdOfLogin",userIdOfLogin);
+            params.put("userIdOfShow",userIdOfShow);
+            params.put("code",code);
+            RequestBodyForm requestBodyForm=new RequestBodyForm(url,params);
+            String updateUrl=requestBodyForm.getUrl();
+            final RequestBody requestBody=requestBodyForm.getRequestBody();
+            new SendOkHttpRequestPost(updateUrl, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String line=response.body().string();
+                    Bundle bundle=new Bundle();
+                    Message message=new Message();
+                    bundle.putString("line",line);
+                    bundle.putString("code","isChanged");
+                    bundle.putInt("codeForSend",code);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+
+                }
+            },requestBody);
+
+        }
     }
 
 

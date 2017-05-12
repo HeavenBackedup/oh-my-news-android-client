@@ -48,6 +48,7 @@ public class OthersHomepageActivity extends BaseActivity {
     private boolean isConcerned;
     private int codeForSend;
     private boolean isLoginSuccess=true;
+    private int codeForSkip=-1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +56,7 @@ public class OthersHomepageActivity extends BaseActivity {
 
         intent=getIntent();
 //        userIdOfShow=intent.getIntExtra("userIdOfShow",-1);
+        codeForSkip=intent.getIntExtra("codeForSkip",-1);
         nickname=intent.getStringExtra("nickname");
         userIdOfLogin=intent.getIntExtra("userIdOfLogin",-1);
 //        isLoginSuccess=intent.getBooleanExtra("isLoginSuccess",false);
@@ -111,6 +113,20 @@ public class OthersHomepageActivity extends BaseActivity {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 String code= (String) msg.getData().get("code");
+                setBackBtn();
+//                setBackClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if (codeForSkip==0){
+//                            Intent intent=new Intent(OthersHomepageActivity.this,MyFansListActivity.class);
+//                            intent.putExtra("userId",userIdOfLogin);
+//                            startActivity(intent);
+//                        }else {
+//                            finish();
+//                        }
+//
+//                    }
+//                });
                 switch (code){
                     case "userInfo":
                         homepageUserInfo= (HomepageUserInfo) msg.getData().get("homepageUserInfo");
@@ -181,17 +197,17 @@ public class OthersHomepageActivity extends BaseActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        setBackClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Log.i("isConcerned", String.valueOf(isConcerned));
-                                Intent fintent=new Intent();
-                                fintent.putExtra("isConcerned",isConcerned);
-                                Log.i("otherisConcerned ", String.valueOf(isConcerned));
-                                OthersHomepageActivity.this.setResult(2,fintent);
-                                finish();
-                            }
-                        });
+//                        setBackClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                Log.i("isConcerned", String.valueOf(isConcerned));
+//                                Intent fintent=new Intent();
+//                                fintent.putExtra("isConcerned",isConcerned);
+//                                Log.i("otherisConcerned ", String.valueOf(isConcerned));
+//                                OthersHomepageActivity.this.setResult(2,fintent);
+//                                finish();
+//                            }
+//                        });
                         break;
                     case "isChanged":
                         String line1= (String) msg.getData().get("line");
@@ -238,17 +254,17 @@ public class OthersHomepageActivity extends BaseActivity {
                                 Toast.makeText(OthersHomepageActivity.this,"添加不成功，请重新操作",Toast.LENGTH_SHORT).show();
                             }
                         }
-                        setBackClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Log.i("isConcerned", String.valueOf(isConcerned));
-                                Intent fintent=new Intent();
-                                fintent.putExtra("isConcerned",isConcerned);
-                                Log.i("otherisConcerned ", String.valueOf(isConcerned));
-                                OthersHomepageActivity.this.setResult(2,fintent);
-                                finish();
-                            }
-                        });
+//                        setBackClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                Log.i("isConcerned", String.valueOf(isConcerned));
+//                                Intent fintent=new Intent();
+//                                fintent.putExtra("isConcerned",isConcerned);
+//                                Log.i("otherisConcerned ", String.valueOf(isConcerned));
+//                                OthersHomepageActivity.this.setResult(2,fintent);
+//                                finish();
+//                            }
+//                        });
                         break;
                 }
 
