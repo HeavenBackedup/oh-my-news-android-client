@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.example.wangyan.oh_my_news_android_client.R;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
