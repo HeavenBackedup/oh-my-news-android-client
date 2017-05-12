@@ -5,35 +5,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.wangyan.oh_my_news_android_client.activities.CommentActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white">
 
     <LinearLayout
         android:id="@+id/layout1"
-        android:background="@color/grey"
+        android:background="@color/red"
         android:layout_margin="0dp"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="45dp">
 
         <Button
-            android:background="@color/grey"
+            android:background="@color/red"
             android:layout_margin="0dp"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="25dp"
+            android:textSize="20dp"
             android:text="取消"
             android:onClick="back"/>
 
         <TextView
-            android:background="@color/grey"
+            android:background="@color/red"
             android:layout_margin="0dp"
-            android:layout_weight="20"
+            android:layout_weight="40"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="25dp"
+            android:textSize="20dp"
             android:gravity="center"
             android:text="评论"/>
         <!--<Button-->
@@ -73,7 +74,8 @@
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="0"/>
+                android:text="0"
+                />
             <RadioButton
                 android:id="@+id/rb1"
                 android:layout_weight="1"
@@ -108,10 +110,12 @@
     </LinearLayout>
     <Button
         android:id="@+id/submit"
+        android:background="#FFF78E54"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="25dp"
+        android:textColor="@color/white"
         android:text="发送"
         android:onClick="submit"/>
 </RelativeLayout>

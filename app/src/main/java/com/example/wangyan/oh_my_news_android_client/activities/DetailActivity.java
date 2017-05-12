@@ -65,6 +65,7 @@ public class DetailActivity extends AppCompatActivity {
     int readed;
     String articalTime;
     float articalScore;
+    int userIdOfShow;
 
 
     List<Map<String, ?>> data=new ArrayList<Map<String, ?>>();
@@ -81,6 +82,7 @@ public class DetailActivity extends AppCompatActivity {
         articleId=getIntent().getIntExtra("articleId",-1);
         userId=getIntent().getIntExtra("userId",-1);
         isLoginIn=getIntent().getBooleanExtra("isLoginSuccess",true);
+        Log.i("yanyue", "onCreate: "+articleId+"......."+userId+"......"+isLoginIn);
 
         tv_topic=(TextView)findViewById(R.id.mtv_topic);
         tv_info=(TextView)findViewById(R.id.mtv_info);
@@ -113,12 +115,12 @@ public class DetailActivity extends AppCompatActivity {
                 getComment();
             }
         });
-        comment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
+//        comment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//            }
+//        });
     }
 
 
@@ -146,13 +148,14 @@ public class DetailActivity extends AppCompatActivity {
                         JSONObject user=artical.getJSONObject("user");
                         Log.i("yanyue", "2.................................................................");
                         author=user.getString("name");
+                        userIdOfShow=Integer.parseInt(user.getString("userId"));
                         topic=articalInfo.getString("topic");
                         htmlContent=articalInfo.getString("htmlContent");
                         thumbupNum=Integer.parseInt(articalInfo.getString("thumbupNum"));
                         readed=Integer.parseInt(articalInfo.getString("readed"));
                         articalTime=articalInfo.getString("articalTime");
                         articalScore=Float.parseFloat(articalInfo.getString("articalScore"));
-                        Log.i("yanyue", author+".."+topic+".."+thumbupNum+".."+readed+".."+articalTime+".."+articalScore+".."+htmlContent);
+                        Log.i("yanyue", author+".."+topic+".."+thumbupNum+".."+readed+".."+articalTime+".."+articalScore+".."+htmlContent+"....."+userIdOfShow+"....");
                         Log.i("yanyue", ".................................................................");
                         articleInit();
                     }
@@ -309,6 +312,10 @@ public class DetailActivity extends AppCompatActivity {
     //登陆
     public void login(){
         Intent intent=new Intent();
+        intent.putExtra("articleId",articleId);
+        intent.putExtra("type","detail");
+        intent.putExtra("userId",userId);
+        intent.putExtra("isLoginSuccess",isLoginIn);
         intent.setClass(this,LoginActivity.class);
         startActivity(intent);
     }
@@ -399,8 +406,10 @@ public class DetailActivity extends AppCompatActivity {
 
     public void jump() {
         Intent intent=new Intent();
-        intent.putExtra("userId",userId);
-        intent.setClass(this, HomepageActivity.class);
+        intent.putExtra("userIdOfLogin",userId);
+        intent.putExtra("userIdOfShow",userIdOfShow);
+        intent.putExtra("isLoginSuccess",isLoginIn);
+        intent.setClass(this, OthersHomepageActivity.class);
         startActivity(intent);
     }
 
