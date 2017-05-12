@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.wangyan.oh_my_news_android_client.R;
 import com.example.wangyan.oh_my_news_android_client.classes.contentAdapter;
 import com.example.wangyan.oh_my_news_android_client.util.AutoLogin;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ public class MypageActivity extends ActivityGroup  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypage);
+        ExitApplication.getInstance().addActivity(this);
         Intent intent=getIntent();
         System.out.println(intent);
 //        userId=intent.getIntExtra("userId",-1);

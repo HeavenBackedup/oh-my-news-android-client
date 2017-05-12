@@ -21,6 +21,7 @@ import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDat
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDownloadListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,6 +47,7 @@ public class PrivateMsgActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_msg);
+        ExitApplication.getInstance().addActivity(this);
         context = this;
         final LayoutInflater layoutInflater = LayoutInflater.from(context);
         listView = (ListView) findViewById(R.id.listView);

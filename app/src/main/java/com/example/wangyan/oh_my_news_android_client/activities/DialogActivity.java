@@ -17,6 +17,7 @@ import com.example.wangyan.oh_my_news_android_client.okhttp.exception.OkHttpExce
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +42,7 @@ public class DialogActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialog);
+        ExitApplication.getInstance().addActivity(this);
         Intent intent=getIntent();
          name=intent.getStringExtra("name");
         // ActionBar actionBar = getSupportActionBar();
