@@ -10,6 +10,7 @@ import android.widget.RadioGroup;
 
 import com.example.wangyan.oh_my_news_android_client.R;
 import com.example.wangyan.oh_my_news_android_client.services.DetailService;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 
 public class CommentActivity extends AppCompatActivity {
     EditText commentcontent;
@@ -27,6 +28,8 @@ public class CommentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
+
+        ExitApplication.getInstance().addActivity(this);
 
         userId=getIntent().getIntExtra("userId",-1);
         articleId=getIntent().getIntExtra("article",-1);

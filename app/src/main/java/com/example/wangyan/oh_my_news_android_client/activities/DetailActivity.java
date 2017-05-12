@@ -24,6 +24,7 @@ import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDow
 import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
 import com.example.wangyan.oh_my_news_android_client.services.DetailService;
 import com.example.wangyan.oh_my_news_android_client.util.AutoLogin;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 import com.example.wangyan.oh_my_news_android_client.util.MyListView;
 
 import org.json.JSONArray;
@@ -79,6 +80,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        ExitApplication.getInstance().addActivity(this);
         articleId=getIntent().getIntExtra("articleId",-1);
         userId=getIntent().getIntExtra("userId",-1);
         isLoginIn=getIntent().getBooleanExtra("isLoginSuccess",true);
