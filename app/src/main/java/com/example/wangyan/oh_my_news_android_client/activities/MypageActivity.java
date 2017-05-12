@@ -1,12 +1,12 @@
 package com.example.wangyan.oh_my_news_android_client.activities;
 import android.app.ActivityGroup;
 import android.content.Intent;
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.example.wangyan.oh_my_news_android_client.PersonalPageActivity;
+
 import com.example.wangyan.oh_my_news_android_client.R;
 import com.example.wangyan.oh_my_news_android_client.classes.contentAdapter;
 

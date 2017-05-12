@@ -58,7 +58,7 @@ public class OthersHomepageActivity extends BaseActivity {
         nickname=intent.getStringExtra("nickname");
         userIdOfLogin=intent.getIntExtra("userIdOfLogin",-1);
 //        isLoginSuccess=intent.getBooleanExtra("isLoginSuccess",false);
-        setTitle(nickname+"的历史文章");
+        setTitle(nickname+"的主页");
 
         cardView=(CardView)findViewById(R.id.others_btn_cardView);
         textView_con=(TextView) findViewById(R.id.concern_unconcern_btn);
@@ -90,6 +90,15 @@ public class OthersHomepageActivity extends BaseActivity {
             }else {
                 cardView.setVisibility(View.VISIBLE);
                 textView_pri.setText("私信");
+                textView_pri.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(OthersHomepageActivity.this,DialogActivity.class);
+                        intent.putExtra("userIdOfLogin",userIdOfLogin);
+                        intent.putExtra("userIdOfShow",userIdOfShow);
+                        startActivity(intent);
+                    }
+                });
                 Thread thread1=new GetConfirmInfo(userIdOfLogin,userIdOfLogin);
                 thread1.start();
             }

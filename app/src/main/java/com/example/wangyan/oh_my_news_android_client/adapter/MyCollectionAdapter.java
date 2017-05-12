@@ -74,7 +74,7 @@ public class MyCollectionAdapter extends BaseMultiItemQuickAdapter<MultiItemOfCo
                 helper.setText(R.id.collection_btn_num,String.valueOf(collectionInfo.getCollectedNum()));
                 break;
             case 1:
-                helper.setText(R.id.collection_topic,collectionInfo.getTopic());
+                helper.setText(R.id.collection_topic,"标题："+collectionInfo.getTopic());
                 break;
         }
 //        for (int i=0;i<list.size();i++){

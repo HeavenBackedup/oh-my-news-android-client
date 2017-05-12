@@ -43,7 +43,7 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         context=this;
         final LayoutInflater layoutInflater=LayoutInflater.from(context);
-//        search = (SearchView) findViewById(R.id.searchView);
+        search = (SearchView) findViewById(R.id.searchView);
         list = (ListView) findViewById(R.id.listView);
         LinearLayout linearLayout=(LinearLayout)layoutInflater.inflate(R.layout.itemlayout,null);
 //        List<Map<String,Object>> t=new ArrayList<>();
