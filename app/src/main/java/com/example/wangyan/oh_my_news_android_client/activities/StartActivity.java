@@ -30,14 +30,14 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                AutoLogin autoLogin = new AutoLogin();
-                Map<String,Object> map = autoLogin.login();
-                userId = Integer.parseInt( map.get("userId").toString());
-                isLoginSuccess = Boolean.parseBoolean(map.get("isLoginSucess").toString());
-
-                intent.putExtra("userId",userId);
-                intent.putExtra("isLoginSuccess",isLoginSuccess);
-                intent.putExtra("type","");
+//                AutoLogin autoLogin = new AutoLogin();
+//                Map<String,Object> map = autoLogin.login();
+//                userId = Integer.parseInt( map.get("userId").toString());
+//                isLoginSuccess = Boolean.parseBoolean(map.get("isLoginSucess").toString());
+//
+//                intent.putExtra("userId",userId);
+//                intent.putExtra("isLoginSuccess",isLoginSuccess);
+//                intent.putExtra("type","");
 
                 intent.setClass(StartActivity.this, MypageActivity.class);
                 startActivity(intent);

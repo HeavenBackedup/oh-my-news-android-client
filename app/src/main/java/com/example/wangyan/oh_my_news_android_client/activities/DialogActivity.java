@@ -17,6 +17,7 @@ import com.example.wangyan.oh_my_news_android_client.okhttp.exception.OkHttpExce
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,11 +42,13 @@ public class DialogActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialog);
+        ExitApplication.getInstance().addActivity(this);
         Intent intent=getIntent();
          name=intent.getStringExtra("name");
         // ActionBar actionBar = getSupportActionBar();
         //actionBar.hide();
-        initMsgs();
+//        initMsgs();
+        postRequest();
         adapter = new msgAdapter(DialogActivity.this, R.layout.listlayout, msgList);
         inputText = (EditText)findViewById(R.id.inputText);
         send = (Button)findViewById(R.id.send);
@@ -94,12 +97,6 @@ public class DialogActivity extends AppCompatActivity {
             }
         }));
     }
-
-    private void initMsgs() {
-        postRequest();
-        message msg1 = new message(name+":"+message0, message.TYPE_RECEIVED);
-        msgList.add(msg1);
-    }
     private void postRequest(){
         Map<String,Object> params = new HashMap<String,Object>();
         String url = "/privatemsg/getExMsg";
@@ -120,6 +117,8 @@ public class DialogActivity extends AppCompatActivity {
                         if(ob.getString("username").contains(name))
                         {
                            message0=ob.getString("message");
+                            message msg1 = new message(name+":"+message0, message.TYPE_RECEIVED);
+                            msgList.add(msg1);
 //                            System.out.println(message0);
 
                         }

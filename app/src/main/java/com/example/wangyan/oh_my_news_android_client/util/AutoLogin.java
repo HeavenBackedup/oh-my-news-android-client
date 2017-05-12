@@ -28,32 +28,36 @@ public class AutoLogin {
         String filePath = Environment.getExternalStorageDirectory().toString()+ "/user.json";
         File file=new File(filePath);
         FileInputStream inputStream= null;
-        try {
-            inputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String data="";
-        String line;
-        try {
-            while((line=reader.readLine())!=null){
-                data=data+line;
+        if(file.exists()){
+            try {
+                inputStream = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
-            reader.close();
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String data="";
+            String line;
+            try {
+                while((line=reader.readLine())!=null){
+                    data=data+line;
+                }
+                reader.close();
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                JSONObject user=new JSONObject(data);
+                userId=Integer.parseInt(user.getString("userId"));
+                isLoginSuccess=Boolean.parseBoolean(user.getString("isLoginSuccess"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.i("yanyue", "login: "+userId+"..........."+isLoginSuccess);
         }
 
-        try {
-            JSONObject user=new JSONObject(data);
-            userId=Integer.parseInt(user.getString("userId"));
-            isLoginSuccess=Boolean.parseBoolean(user.getString("isLoginSuccess"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Log.i("yanyue", "login: "+userId+"..........."+isLoginSuccess);
+
         map.put("userId",userId);
         map.put("isLoginSucess",isLoginSuccess);
         return map;
