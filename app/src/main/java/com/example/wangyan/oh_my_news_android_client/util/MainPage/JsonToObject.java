@@ -36,7 +36,7 @@ public class JsonToObject {
             map.put("isLoginSuccess",isLoginSuccess);
             map.put("userId",userId);
         }
-        Log.i("wangyan","fdsfe...................."+map.toString());
+        Log.i("wangyan","...................."+map.toString()+"..................");
         return map;
     }
 
@@ -102,7 +102,6 @@ public class JsonToObject {
                     map.put(NEWS_TITLE, topic);
                     map.put(NEWS_IMGS, JsonToObject.newsImgs(json2));
                     list_Maps.add(map);
-
             }
         } catch (JSONException e) {
             e.printStackTrace();

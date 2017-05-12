@@ -89,7 +89,8 @@
                 android:layout_toRightOf="@id/tv_registPwd"
                 android:background="@null"
                 android:hint="请输入密码"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:inputType="textPassword"/>
         </RelativeLayout>
         <!--注册密码确认-->
         <RelativeLayout
@@ -118,7 +119,8 @@
                 android:layout_toRightOf="@id/tv_registPwdAgain"
                 android:background="@null"
                 android:hint="请再次输入密码"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:inputType="textPassword"/>
         </RelativeLayout>
     </RelativeLayout>
     <TextView

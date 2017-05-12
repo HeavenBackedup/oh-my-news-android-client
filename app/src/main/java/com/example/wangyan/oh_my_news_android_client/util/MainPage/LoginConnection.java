@@ -3,7 +3,10 @@ package com.example.wangyan.oh_my_news_android_client.util.MainPage;
 import android.content.ComponentName;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.example.wangyan.oh_my_news_android_client.activities.LoginActivity;
 import com.example.wangyan.oh_my_news_android_client.services.LoginService;
 
 /**
@@ -23,6 +26,6 @@ public class LoginConnection implements ServiceConnection {
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-
+        loginService = null;
     }
 }

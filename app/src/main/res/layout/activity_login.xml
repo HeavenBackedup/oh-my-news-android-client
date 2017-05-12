@@ -86,7 +86,8 @@
                 android:layout_toRightOf="@id/tv_loginPwd"
                 android:background="@null"
                 android:hint="请输入密码"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:inputType="textPassword"/>
         </RelativeLayout>
     </RelativeLayout>
 

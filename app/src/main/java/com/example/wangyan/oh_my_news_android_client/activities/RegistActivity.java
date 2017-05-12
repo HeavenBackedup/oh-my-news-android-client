@@ -13,9 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.wangyan.oh_my_news_android_client.Bean.User;
 import com.example.wangyan.oh_my_news_android_client.R;
+import com.example.wangyan.oh_my_news_android_client.okhttp.CommonOkHttpClient;
+import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle;
+import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataListener;
+import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
 import com.example.wangyan.oh_my_news_android_client.services.RegistService;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.DialogUtil;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.RegistConnection;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar;
 
@@ -32,17 +38,16 @@ public class RegistActivity extends AppCompatActivity {
     private String username;
     private String pwd;
     private String rePwd;
-    private RegistConnection conn;
-    private RegistService registService;
     //判断数据是否可提交，isRegistExist为true时可提交
     private boolean isSubmit = false;
-    private boolean isExit = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regist);
+
+        ExitApplication.getInstance().addActivity(this);
+
         initView();
     }
     private void initView(){
@@ -99,6 +104,9 @@ public class RegistActivity extends AppCompatActivity {
                     startActivity(intent);
                 }else {
                     et_registUsername.setText("");
+                    et_registPwd.setText("");
+                    et_registPwdAgain.setText("");
+                    DialogUtil.showDialog(RegistActivity.this,"用户名已存在！",false);
                 }
             }
         };
@@ -131,40 +139,33 @@ public class RegistActivity extends AppCompatActivity {
         return true;
     }
     private void regist(){
-        intent.putExtra("username",username);
-        intent.putExtra("pwd",pwd);
-        intent.setClass(this,RegistService.class);
-
-        conn = new RegistConnection();
-        bindService(intent,conn,BIND_AUTO_CREATE);
-        Log.i("yan",username+".................123wwwwwwww445..............."+pwd);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (!isExit) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    registService = conn.getRegistService();
-                    if (registService != null) {
-                        isExit = true;
-                        registService.setCallback(new RegistService.Callback() {
-                            @Override
-                            public void onDataChange(Object data) {
-                                Log.i("yan", data.toString() + "mainactivitty............");
-                                Message msg = new Message();
-                                msg.obj = data;
-                                handlerSubmit.sendMessage(msg);
-                            }
-                        });
-                    }
-                }
-            }
-        }).start();
+        responseSubmitData();
     }
+    private void responseSubmitData(){
+//                Map<String,Object> params = new HashMap<String, Object>();
+//                params.put("username",username);
+//                params.put("pwd",pwd);
+        User params = new User();
+        params.setUsername(username);
+        params.setPassword(pwd);
+        Log.i("yan",username+".................123445..............."+pwd);
+//                       String urlSubmit = "/register/androidSubmitInfo";
+        String urlSubmit = "/register/submitInfo";
+        CommonOkHttpClient.post(CommonRequest.createPostResquest(urlSubmit,params),new ResponseDataHandle(new ResponseDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                Message msg = new Message();
+                Log.i("wangyan","tttttttttttttttttttt"+responseObj.toString()+"..........");
+                msg.obj = responseObj;
+                handlerSubmit.sendMessage(msg);
+            }
+            @Override
+            public void onFailure(Object reasonObj) {
 
+            }
+        }));
+
+    }
 //    topbar左侧按钮退出函数
     public void exit(AlertDialog.Builder builder){
         builder.setMessage("确定要退出注册吗？");
@@ -187,9 +188,5 @@ public class RegistActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (conn != null){
-            unbindService(conn);
-        }
-        isExit = true;
     }
 }
