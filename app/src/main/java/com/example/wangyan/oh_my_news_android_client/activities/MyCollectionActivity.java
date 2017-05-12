@@ -33,6 +33,7 @@ public class MyCollectionActivity extends BaseActivity {
     private int length;
     private int userId;
     private CollectionInfo collectionInfo;
+    private Intent intent;
 
 
     @Override
@@ -41,7 +42,7 @@ public class MyCollectionActivity extends BaseActivity {
         setContentView(R.layout.activity_my_collection);
         setTitle("我的收藏");
         setBackBtn();
-        Intent intent=getIntent();
+        intent=getIntent();
         userId=intent.getIntExtra("userId",-1);
         list=DataServerForHomepage.getCollectionInfo();
         length=list.size();
@@ -59,22 +60,37 @@ public class MyCollectionActivity extends BaseActivity {
                 int index=position/4;
                 collectionInfo=list.get(index);
                 Toast.makeText(MyCollectionActivity.this,"item"+position+"userId"+collectionInfo.getUserId(),Toast.LENGTH_SHORT).show();
-                switch (position%4){
-                    case 0:
-                        Toast.makeText(MyCollectionActivity.this,"type name",Toast.LENGTH_SHORT).show();
-                        break;
-                    case 1:
-                        Toast.makeText(MyCollectionActivity.this,"type context",Toast.LENGTH_SHORT).show();
-                        break;
-                    case 2:
-                        Toast.makeText(MyCollectionActivity.this,"type context",Toast.LENGTH_SHORT).show();
-                        break;
-                    case 3:
-                        Toast.makeText(MyCollectionActivity.this,"type collect",Toast.LENGTH_SHORT).show();
+                if (position%4==0){
+                   intent=new Intent(MyCollectionActivity.this,OthersHomepageActivity.class);
+                    intent.putExtra("userIdOfShow",collectionInfo.getUserId());
+                    intent.putExtra("userIdOfLogin",userId);
+                    intent.putExtra("nickname",collectionInfo.getNickname());
+                    intent.putExtra("isLoginSuccess",true);
+                    startActivity(intent);
 
-                        break;
-
+                }else {
+                    intent=new Intent(MyCollectionActivity.this,DetailActivity.class);
+                    intent.putExtra("isLoginSuccess",true);
+                    intent.putExtra("userId",collectionInfo.getUserId());
+                    intent.putExtra("articleId",collectionInfo.getArticleId());
+                    startActivity(intent);
                 }
+//                switch (position%4){
+//                    case 0:
+//                        Toast.makeText(MyCollectionActivity.this,"type name",Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case 1:
+//                        Toast.makeText(MyCollectionActivity.this,"type context",Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case 2:
+//                        Toast.makeText(MyCollectionActivity.this,"type context",Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case 3:
+//                        Toast.makeText(MyCollectionActivity.this,"type collect",Toast.LENGTH_SHORT).show();
+//
+//                        break;
+//
+//                }
 
 
             }

@@ -93,6 +93,11 @@ public class HomepageActivity extends AppCompatActivity {
                                 intent.putExtra("userId",homepageUserInfo.getUserId());
                                 startActivity(intent);
                                 break;
+                            case 6:
+                                intent=new Intent(HomepageActivity.this,AccountManageActivity.class);
+                                intent.putExtra("userId",homepageUserInfo.getUserId());
+                                startActivity(intent);
+                                break;
 
                         }
                     }

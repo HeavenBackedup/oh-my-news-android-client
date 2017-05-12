@@ -8,6 +8,37 @@
     android:layout_height="match_parent"
     tools:context="com.example.wangyan.oh_my_news_android_client.activities.OthersHomepageActivity"
     android:orientation="vertical">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/others_btn_cardView">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/concern_unconcern_btn"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:layout_margin="10dp"
+                android:textSize="17sp"
+                android:gravity="center"
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/private_msg"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:layout_margin="10dp"
+                android:textSize="17sp"
+                android:gravity="center"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
