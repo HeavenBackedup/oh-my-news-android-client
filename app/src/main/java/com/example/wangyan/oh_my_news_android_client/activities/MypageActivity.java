@@ -47,7 +47,7 @@ public class MypageActivity extends ActivityGroup  {
 //        AutoLogin l=new AutoLogin();
 //        Map<String,Object> map=l.login();
         userId=1;
-        isLoginSuccss=true;
+        isLoginSuccss=false;
 //        userId=Integer.parseInt(map.get("userId").toString());
 //        isLoginSuccss=Boolean.parseBoolean(map.get("isLoginSuccess").toString());
         Home=(LinearLayout)findViewById(R.id.Home);
