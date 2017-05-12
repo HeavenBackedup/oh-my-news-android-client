@@ -18,6 +18,7 @@ import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDat
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDownloadListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.JsonToObject;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.RefreshAdapter;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar;
@@ -61,7 +62,7 @@ public class MainpageActivity extends AppCompatActivity{
     private int userId;
     private boolean isLoginSuccess;
     private int articalId;
-    private String mainPage = "mainPage";
+
 
     private Bitmap bitmap = null;
     private int value;
@@ -71,6 +72,9 @@ public class MainpageActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainpage);
+
+        ExitApplication.getInstance().addActivity(this);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -104,7 +108,7 @@ public class MainpageActivity extends AppCompatActivity{
             }
             @Override
             public void rightClick() {
-                intent.putExtra("mianPage",mainPage);
+                intent.putExtra("type","mainPage");
                 intent.setClass(MainpageActivity.this,LoginActivity.class);
                 startActivity(intent);
             }
@@ -349,6 +353,7 @@ public class MainpageActivity extends AppCompatActivity{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                MainpageActivity.this.finish();
+                ExitApplication.getInstance().exitApp();
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {

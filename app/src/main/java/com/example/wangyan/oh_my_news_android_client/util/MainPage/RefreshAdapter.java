@@ -56,16 +56,16 @@ public class RefreshAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
         map = data.get(position);
-        for (int i = 0;i<data.size();i++){
-            map = data.get(position);
-            Log.i("wangyan",map.size()+",,,,,,,,,,,,,,,,,,,,,");
-        }
         if (map.size() == 4){
+            Log.i("wangyan",".............."+data.get(position).size()+"..............");
             return TYPE_1;
         }else if (map.size() == 3){
+            Log.i("wangyan",".............."+data.get(position).size()+"..............");
             return TYPE_2;
-        }else return TYPE_2;
-        }
+        }else
+            Log.i("wangyan",".............."+data.get(position).size()+"..............");
+            return TYPE_2;
+    }
 
     @Override
     public int getViewTypeCount() {

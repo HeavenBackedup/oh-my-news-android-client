@@ -17,6 +17,7 @@ import com.example.wangyan.oh_my_news_android_client.R;
 import com.example.wangyan.oh_my_news_android_client.services.LoginService;
 import com.example.wangyan.oh_my_news_android_client.util.AutoLogin;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.DialogUtil;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.LoginConnection;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar;
 
@@ -40,26 +41,29 @@ public class LoginActivity extends AppCompatActivity {
 
 //    private int userId;
 //    private boolean isLoginSuccess;
-    private String detail;
-    private String privateMsg;
-    private String homePage;
-    private String mainPage;
+    private String type;
+    private String articalId;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        ExitApplication.getInstance().addActivity(this);
+
         initView();
         intent = getIntent();
         username = intent.getStringExtra("username");
         pwd = intent.getStringExtra("pwd");
-        detail = intent.getStringExtra("detail");
-        privateMsg = intent.getStringExtra("privateMsg");
-        homePage = intent.getStringExtra("homePage");
-        mainPage = intent.getStringExtra("mainPage");
         et_loginUsername.setText(username);
         et_loginPwd.setText(pwd);
+
+        type = intent.getStringExtra("type");
+        articalId = intent.getStringExtra("articalId");
+        Log.i("wangyan","..........."+type+"........");
+
+
     }
     /**
      * 视图初始化
@@ -122,16 +126,22 @@ public class LoginActivity extends AppCompatActivity {
                     Log.i("yan",userId+"...////..."+isLoginSuccess);
                     intent.putExtra("userId",userId);
                     intent.putExtra("isLoginSuccess",isLoginSuccess);
-                      if ("mainPage".equals(mainPage)) {
-                          intent.setClass(LoginActivity.this, MainpageActivity.class);
-                      }else if ("detail".equals(detail)){
+                      if ("mainPage".equals(type)) {
+                          intent.putExtra("type",type);
+                          intent.setClass(LoginActivity.this, MypageActivity.class);
+                      }else if ("detail".equals(type)){
+                          intent.putExtra("articalId",articalId);
                             intent.setClass(LoginActivity.this, DetailActivity.class);
-                        }else if ("privateMsg".equals(privateMsg)){
-                            intent.setClass(LoginActivity.this,PrivateMsgActivity.class);
-                        }else if ("homePage".equals(homePage)){
-                            intent.setClass(LoginActivity.this,HomepageActivity.class);
-                        }
-                    intent.setClass(LoginActivity.this, MainpageActivity.class);
+                        }else if ("privateMsg".equals(type)){
+                          intent.putExtra("type",type);
+                            intent.setClass(LoginActivity.this,MypageActivity.class);
+                        }else if ("homePage".equals(type)){
+                          intent.putExtra("type",type);
+                            intent.setClass(LoginActivity.this,MypageActivity.class);
+                        }else {
+                          intent.putExtra("type",type);
+                          intent.setClass(LoginActivity.this, MypageActivity.class);
+                      }
                     startActivity(intent);
                     finish();
                 }else if (!isLoginSuccess){
@@ -178,7 +188,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     loginService = conn.getLoginService();
                     if (loginService != null) {
-                        isExit = true;
                         loginService.setCallback(new LoginService.Callback() {
                             @Override
                             public void onDataChange(Object data) {
@@ -230,10 +239,12 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+
         if (conn!= null) {
         unbindService(conn);
         }
+        isExit = true;
+        super.onDestroy();
 
     }
 }
