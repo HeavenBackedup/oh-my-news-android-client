@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MypageActivity extends ActivityGroup  {
-    private View view1,view2,view3,view4;
+    private View view1,view2,view3,view4,view5;
     private LinearLayout Home;
     private LinearLayout Search;
     private LinearLayout Pmsg;
@@ -31,9 +31,12 @@ public class MypageActivity extends ActivityGroup  {
     private int userId;
     private  boolean isLoginSuccss;
     private ViewPager viewPager;
+    private ViewPager viewPager1;
     private contentAdapter adapter;
+    private contentAdapter adapter1;
 
     private List<View> views;
+    private List<View> views1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,10 +61,18 @@ public class MypageActivity extends ActivityGroup  {
         txtSearch = (TextView) findViewById(R.id.txtSearch);
         txtPmsg= (TextView) findViewById(R.id.txtPmsg);
         txtPersonal= (TextView) findViewById(R.id.txtPersonal);
-        initView();
-        initEvent();
+        if(isLoginSuccss){
+            initView();
+            onClickEvent();
+           pageChangeEvent();
+        }
+        else {
+            initView();
+            onClickEvent();
+            initView1();
+           pageChangeEvent1();
 
-
+        }
     }
     private void initView(){
         viewPager=(ViewPager)findViewById(R.id.vp_content);
@@ -91,7 +102,33 @@ public class MypageActivity extends ActivityGroup  {
         else
             txtHome.setTextColor(0xffFF0000);
     }
-    private void initEvent(){
+    private void initView1(){
+        viewPager1=(ViewPager)findViewById(R.id.vp_content);
+        view1=getLocalActivityManager().startActivity("home",new Intent(MypageActivity.this,MainpageActivity.class)).getDecorView();
+        view2=getLocalActivityManager().startActivity("search",new Intent(MypageActivity.this,SearchActivity.class)).getDecorView();
+        view5=getLocalActivityManager().startActivity("login",new Intent(MypageActivity.this,LoginActivity.class)).getDecorView();
+        views1=new ArrayList<View>();
+        views1.add(view1);
+        views1.add(view2);
+        views1.add(view5);
+        this.adapter1 = new contentAdapter(views1);
+        viewPager1.setAdapter(adapter1);
+        if(type.equals("privateMsg")){
+            viewPager.setCurrentItem(2);
+            txtPmsg.setTextColor(0xffFF0000);
+        }
+        else
+            txtHome.setTextColor(0xffFF0000);
+
+
+        if(type.equals("homePage")){
+            viewPager.setCurrentItem(3);
+            txtPersonal.setTextColor(0xffFF0000);
+        }
+        else
+            txtHome.setTextColor(0xffFF0000);
+    }
+    private void onClickEvent() {
 
         Home.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,15 +152,14 @@ public class MypageActivity extends ActivityGroup  {
         Pmsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isLoginSuccss){
+                if (isLoginSuccss) {
                     restartBotton();
                     txtPmsg.setTextColor(0xffFF0000);
                     viewPager.setCurrentItem(2);
-                }
-                else{
-                    Intent intent1=new Intent();
-                    intent1.setClass(MypageActivity.this,LoginActivity.class);
-                    intent1.putExtra("type","privateMsg");
+                } else {
+                    Intent intent1 = new Intent();
+                    intent1.setClass(MypageActivity.this, LoginActivity.class);
+                    intent1.putExtra("type", "privateMsg");
                     startActivity(intent1);
                 }
 
@@ -134,20 +170,21 @@ public class MypageActivity extends ActivityGroup  {
         Personal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isLoginSuccss){
+                if (isLoginSuccss) {
                     restartBotton();
                     txtPersonal.setTextColor(0xffFF0000);
                     viewPager.setCurrentItem(3);
-                }
-                else{
-                    Intent intent1=new Intent();
-                    intent1.setClass(MypageActivity.this,LoginActivity.class);
-                    intent1.putExtra("type","homePage");
+                } else {
+                    Intent intent1 = new Intent();
+                    intent1.setClass(MypageActivity.this, LoginActivity.class);
+                    intent1.putExtra("type", "homePage");
                     startActivity(intent1);
                 }
 
             }
         });
+    }
+    private void pageChangeEvent(){
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener(){
             @Override
             public void onPageScrollStateChanged(int arg0) {
@@ -161,38 +198,74 @@ public class MypageActivity extends ActivityGroup  {
 
             @Override
             public void onPageSelected(int arg0) {
-               restartBotton();
+                restartBotton();
                 switch (arg0) {
                     case 0:
-               txtHome.setTextColor(0xffFF0000);
+                        txtHome.setTextColor(0xffFF0000);
                         break;
                     case 1:
-               txtSearch.setTextColor(0xffFF0000);
+                        txtSearch.setTextColor(0xffFF0000);
                         break;
                     case 2:
-                        if(isLoginSuccss){
-                            txtPmsg.setTextColor(0xffFF0000);
-                        }
-                        else{
-                            Intent intent1=new Intent();
-                            intent1.setClass(MypageActivity.this,LoginActivity.class);
-                            intent1.putExtra("type","privateMsg");
-                            startActivity(intent1);
-                        }
+//                        if(isLoginSuccss){
+//                            txtPmsg.setTextColor(0xffFF0000);
+//                        }
+//                        else{
+//                            Intent intent1=new Intent();
+//                            intent1.setClass(MypageActivity.this,LoginActivity.class);
+//                            intent1.putExtra("type","privateMsg");
+//                            startActivity(intent1);
+//                        }
+                        txtPmsg.setTextColor(0xffFF0000);
 
                         break;
                     case 3:
-                        if(isLoginSuccss){
-                            txtPersonal.setTextColor(0xffFF0000);
-                        }
-                        else{
-                            Intent intent1=new Intent();
-                            intent1.setClass(MypageActivity.this,LoginActivity.class);
-                            intent1.putExtra("type","homePage");
-                            startActivity(intent1);
-                        }
-                        break;
+                        txtPersonal.setTextColor(0xffFF0000);
+//                        if(isLoginSuccss){
+//                            txtPersonal.setTextColor(0xffFF0000);
+//                        }
+//                        else{
+//                            Intent intent1=new Intent();
+//                            intent1.setClass(MypageActivity.this,LoginActivity.class);
+//                            intent1.putExtra("type","homePage");
+//                            startActivity(intent1);
+//                        }
+//                        break;
 
+                    default:
+                        break;
+                }
+
+            }
+        });
+
+    }
+
+    private void pageChangeEvent1(){
+        viewPager1.setOnPageChangeListener(new ViewPager.OnPageChangeListener(){
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
+
+            }
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+            }
+            @Override
+            public void onPageSelected(int arg0) {
+                restartBotton();
+                switch (arg0) {
+                    case 0:
+                        txtHome.setTextColor(0xffFF0000);
+                        break;
+                    case 1:
+                        txtSearch.setTextColor(0xffFF0000);
+                        break;
+                    case 2:
+                        txtHome.setTextColor(0x00FFFFFF);
+                        txtSearch.setTextColor(0x00FFFFFF);
+                        txtPmsg.setTextColor(0x00FFFFFF);
+                        txtPersonal.setTextColor(0x00FFFFFF);
                     default:
                         break;
                 }
