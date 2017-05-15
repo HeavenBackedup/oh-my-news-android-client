@@ -25,6 +25,9 @@ import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplicati
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.RegistConnection;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RegistActivity extends AppCompatActivity {
     private Intent intent = new Intent();
     private Topbar topbar_regist;
@@ -142,15 +145,12 @@ public class RegistActivity extends AppCompatActivity {
         responseSubmitData();
     }
     private void responseSubmitData(){
-//                Map<String,Object> params = new HashMap<String, Object>();
-//                params.put("username",username);
-//                params.put("pwd",pwd);
-        User params = new User();
-        params.setUsername(username);
-        params.setPassword(pwd);
+                Map<String,Object> params = new HashMap<String, Object>();
+                params.put("username",username);
+                params.put("pwd",pwd);
         Log.i("yan",username+".................123445..............."+pwd);
-//                       String urlSubmit = "/register/androidSubmitInfo";
-        String urlSubmit = "/register/submitInfo";
+                       String urlSubmit = "/register/androidSubmitInfo";
+//        String urlSubmit = "/register/submitInfo";
         CommonOkHttpClient.post(CommonRequest.createPostResquest(urlSubmit,params),new ResponseDataHandle(new ResponseDataListener() {
             @Override
             public void onSuccess(Object responseObj) {

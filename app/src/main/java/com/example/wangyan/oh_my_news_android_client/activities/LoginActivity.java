@@ -13,11 +13,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.wangyan.oh_my_news_android_client.Bean.User;
 import com.example.wangyan.oh_my_news_android_client.R;
+import com.example.wangyan.oh_my_news_android_client.okhttp.CommonOkHttpClient;
+import com.example.wangyan.oh_my_news_android_client.okhttp.exception.OkHttpException;
+import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataHandle;
+import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDataListener;
+import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
 import com.example.wangyan.oh_my_news_android_client.services.LoginService;
 import com.example.wangyan.oh_my_news_android_client.util.AutoLogin;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.DialogUtil;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.JsonToObject;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.LoginConnection;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.Topbar;
 
@@ -42,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
 //    private int userId;
 //    private boolean isLoginSuccess;
     private String type;
-    private String articalId;
+    private String articleId;
 
 
     @Override
@@ -60,11 +67,12 @@ public class LoginActivity extends AppCompatActivity {
         et_loginPwd.setText(pwd);
 
         type = intent.getStringExtra("type");
-        articalId = intent.getStringExtra("articalId");
+        articleId = intent.getStringExtra("articleId");
         Log.i("wangyan","..........."+type+"........");
 
 
     }
+
     /**
      * 视图初始化
      */
@@ -123,14 +131,18 @@ public class LoginActivity extends AppCompatActivity {
                 if (isLoginSuccess){
                     AutoLogin autoLogin = new AutoLogin();
                     autoLogin.writeToFile(userId,isLoginSuccess);
-                    Log.i("yan",userId+"...////..."+isLoginSuccess);
-                    intent.putExtra("userId",userId);
-                    intent.putExtra("isLoginSuccess",isLoginSuccess);
+
+                    ExitApplication.getInstance().userId = userId;
+                    ExitApplication.getInstance().isLoginSuccess = isLoginSuccess;
+                    intent.putExtra("userId",ExitApplication.getInstance().userId);
+                    intent.putExtra("isLoginSuccess",ExitApplication.getInstance().isLoginSuccess);
+
+                    Log.i("wangyan",ExitApplication.getInstance().userId+"...."+ExitApplication.getInstance().isLoginSuccess);
                       if ("mainPage".equals(type)) {
                           intent.putExtra("type",type);
                           intent.setClass(LoginActivity.this, MypageActivity.class);
                       }else if ("detail".equals(type)){
-                          intent.putExtra("articalId",articalId);
+                          intent.putExtra("articleId",articleId);
                             intent.setClass(LoginActivity.this, DetailActivity.class);
                         }else if ("privateMsg".equals(type)){
                           intent.putExtra("type",type);
@@ -145,6 +157,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }else if (!isLoginSuccess){
+                    Log.i("yan",userId+"...////..."+isLoginSuccess);
                     DialogUtil.showDialog(LoginActivity.this,"用户名或密码错误，请重新输入！",false);
                 }else if("error".equals(error)){
                     DialogUtil.showDialog(LoginActivity.this,"网络响应异常，请稍后再试！",false);
@@ -170,52 +183,53 @@ public class LoginActivity extends AppCompatActivity {
     //    登陆的网络请求
     private void login(){
 //        进行网络请求
-//        传值给loginService
-        intent.putExtra("username",username);
-        intent.putExtra("pwd",pwd);
-        intent.setClass(this, LoginService.class);
-        conn = new LoginConnection();
-        bindService(intent,conn,BIND_AUTO_CREATE);
-
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (!isExit) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    loginService = conn.getLoginService();
-                    if (loginService != null) {
-                        loginService.setCallback(new LoginService.Callback() {
-                            @Override
-                            public void onDataChange(Object data) {
-
-                                Map<String,Object> map = new HashMap<String, Object>();
-                                map = (Map<String,Object>)data;
-                                Integer userId = (Integer)map.get("userId");
-                                boolean isLoginSuccess = (boolean)map.get("isLoginSuccess");
-                                String error = (String)map.get("error");
-
-                                Log.i("wangyan",userId+"......"+isLoginSuccess+"............"+error);
-
-                                Bundle bundle = new Bundle();
-                                bundle.putBoolean("isLoginSuccess",isLoginSuccess);
-                                bundle.putInt("userId",userId);
-                                bundle.putString("error",error);
-                                Message msg = new Message();
-                                msg.setData(bundle);
-                                handler.sendMessage(msg);
-
-                            }
-                        });
-                    }
-                }
+                responseData();
             }
         }).start();
     }
+    private void responseData(){
+        User params = new User();
+            Log.i("yan",username+"..........wangyan..........."+pwd);
+            params.setUsername(username);
+            params.setPassword(pwd);
+            String url = "/login/submitInfo";
+            CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {
+                Message msg = new Message();
+                @Override
+                public void onSuccess(Object responseObj) {
 
+                    Map<String,Object> map = new HashMap<String, Object>();
+                    map = JsonToObject.getLogin(responseObj);
+                    Integer userId = (Integer)map.get("userId");
+                    boolean isLoginSuccess = (boolean)map.get("isLoginSuccess");
+
+                    Log.i("wangyan",userId+"......"+isLoginSuccess+"............");
+
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("isLoginSuccess",isLoginSuccess);
+                    bundle.putInt("userId",userId);
+                    msg = new Message();
+                    msg.setData(bundle);
+                    handler.sendMessage(msg);
+
+                }
+                @Override
+                public void onFailure(Object responseObj) {
+                    Map<String,Object> map = new HashMap<String, Object>();
+                    OkHttpException exception = (OkHttpException) responseObj;
+                    if (exception.getEcode() == -1 && exception.getEmsg() == null){
+                        Bundle bundle = new Bundle();
+                        bundle.putString("error","error");
+                        msg.setData(bundle);
+                        handler.sendMessage(msg);
+                    }
+
+                }
+            }));
+        }
     public void exit(AlertDialog.Builder builder){
 
         builder.setMessage("确定要退出登陆吗？");
@@ -239,11 +253,6 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-
-        if (conn!= null) {
-        unbindService(conn);
-        }
-        isExit = true;
         super.onDestroy();
 
     }
