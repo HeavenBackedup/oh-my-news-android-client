@@ -1,20 +1,26 @@
 package com.example.wangyan.oh_my_news_android_client.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.wangyan.oh_my_news_android_client.R;
 import com.example.wangyan.oh_my_news_android_client.okhttp.CommonOkHttpClient;
 import com.example.wangyan.oh_my_news_android_client.okhttp.exception.OkHttpException;
@@ -23,7 +29,7 @@ import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDat
 import com.example.wangyan.oh_my_news_android_client.okhttp.listener.ResponseDownloadListener;
 import com.example.wangyan.oh_my_news_android_client.okhttp.request.CommonRequest;
 import com.example.wangyan.oh_my_news_android_client.services.DetailService;
-import com.example.wangyan.oh_my_news_android_client.util.AutoLogin;
+import com.example.wangyan.oh_my_news_android_client.util.MainPage.DialogUtil;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 import com.example.wangyan.oh_my_news_android_client.util.MyListView;
 
@@ -43,6 +49,8 @@ public class DetailActivity extends AppCompatActivity {
     TextView tv_topic;
     TextView tv_info;
     TextView tv_author;
+    TextView tv_date;
+    TextView tv_commentNum;
     WebView content;
     MyListView comment;
     TextView tv_more;
@@ -64,14 +72,14 @@ public class DetailActivity extends AppCompatActivity {
     String htmlContent;
     int thumbupNum;
     int readed;
-    String articalTime;
-    float articalScore;
+    int commentNum;
+    String articleTime;
+    float articleScore;
     int userIdOfShow;
 
 
-    List<Map<String, ?>> data=new ArrayList<Map<String, ?>>();
-
-    Map<String,List<Map<String, ?>>> childComment=new HashMap<String,List<Map<String, ?>>>();
+    List<Map<String,Object>> data=new ArrayList<Map<String, Object>>();
+    List<JSONArray> allComments=new ArrayList<JSONArray>();
 
     RewardActivity rewardActivity;
 
@@ -83,12 +91,19 @@ public class DetailActivity extends AppCompatActivity {
         ExitApplication.getInstance().addActivity(this);
         articleId=getIntent().getIntExtra("articleId",-1);
         userId=getIntent().getIntExtra("userId",-1);
-        isLoginIn=getIntent().getBooleanExtra("isLoginSuccess",true);
+        isLoginIn=getIntent().getBooleanExtra("isLoginSuccess",false);
         Log.i("yanyue", "onCreate: "+articleId+"......."+userId+"......"+isLoginIn);
+
+        //用于跳过登陆的测试代码
+//        articleId=1;
+//        userId=2;
+//        isLoginIn=true;
 
         tv_topic=(TextView)findViewById(R.id.mtv_topic);
         tv_info=(TextView)findViewById(R.id.mtv_info);
         tv_author=(TextView)findViewById(R.id.mtv_author);
+        tv_date=(TextView)findViewById(R.id.mtv_date);
+        tv_commentNum=(TextView)findViewById(R.id.mtv_commentNum);
         content=(WebView)findViewById(R.id.mwv_content);
         comment=(MyListView) findViewById(R.id.mlv_comment);
         tv_more=(TextView)findViewById(R.id.mtv_more);
@@ -103,11 +118,23 @@ public class DetailActivity extends AppCompatActivity {
 //        test();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        isLoginIn = ExitApplication.getInstance().isLoginSuccess;
+        userId = ExitApplication.getInstance().userId;
+        currentpage=1;
+        data=new ArrayList<Map<String, Object>>();
+        allComments=new ArrayList<JSONArray>();
+        getArticle();
+        getComment();
+    }
+
     public void initListenner(){
         tv_author.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jump();
+                jump(userIdOfShow);
             }
         });
         tv_more.setOnClickListener(new View.OnClickListener() {
@@ -117,21 +144,30 @@ public class DetailActivity extends AppCompatActivity {
                 getComment();
             }
         });
-//        comment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//            }
-//        });
+        comment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String formerCommentId=data.get(position).get("formerCommentId").toString();
+                Log.i("yanyue", "onItemClick: "+formerCommentId);
+                Intent intent=new Intent();
+                intent.putExtra("userId",userId);
+                intent.putExtra("articleId",articleId);
+                intent.putExtra("isLoginSuccess",isLoginIn);
+                intent.putExtra("formerCommentId",Integer.parseInt(formerCommentId));
+                intent.putExtra("comments",allComments.get(position).toString());
+                intent.setClass(DetailActivity.this,CommentListActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
-
-
 
     public void getArticle(){
         Map<String,Object> params = new HashMap<String,Object>();
-        String url = "/detail/articalReq";
+        String url = "/detail/articleReq";
 
-        params.put("articalId",articleId);
+        params.put("articleId",articleId);
+        params.put("userId",userId);
 
         CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {
             @Override
@@ -142,24 +178,47 @@ public class DetailActivity extends AppCompatActivity {
                     JSONObject jsonObject=new JSONObject(responseObj.toString());
                     Log.i("yanyue", responseObj.toString());
 
-                    if(jsonObject.has("artical")){
+                    if(jsonObject.has("article")){
                         Log.i("yanyue", "1.................................................................");
-                        JSONObject artical=jsonObject.getJSONObject("artical");
+                        JSONObject article=jsonObject.getJSONObject("article");
                         Log.i("yanyue", "2.................................................................");
-                        JSONObject articalInfo=artical.getJSONObject("articalInfo");
-                        JSONObject user=artical.getJSONObject("user");
-                        Log.i("yanyue", "2.................................................................");
+                        JSONObject articleInfo=article.getJSONObject("articleInfo");
+                        JSONObject user=article.getJSONObject("user");
                         author=user.getString("name");
                         userIdOfShow=Integer.parseInt(user.getString("userId"));
-                        topic=articalInfo.getString("topic");
-                        htmlContent=articalInfo.getString("htmlContent");
-                        thumbupNum=Integer.parseInt(articalInfo.getString("thumbupNum"));
-                        readed=Integer.parseInt(articalInfo.getString("readed"));
-                        articalTime=articalInfo.getString("articalTime");
-                        articalScore=Float.parseFloat(articalInfo.getString("articalScore"));
-                        Log.i("yanyue", author+".."+topic+".."+thumbupNum+".."+readed+".."+articalTime+".."+articalScore+".."+htmlContent+"....."+userIdOfShow+"....");
+                        topic=articleInfo.getString("topic");
+                        htmlContent=articleInfo.getString("htmlContent");
+                        thumbupNum=Integer.parseInt(articleInfo.getString("thumbupNum"));
+                        readed=Integer.parseInt(articleInfo.getString("readed"));
+                        articleTime=articleInfo.getString("articleTime");
+                        commentNum=Integer.parseInt(articleInfo.getString("commentNum"));
+                        articleScore=Float.parseFloat(articleInfo.getString("articleScore"));
+                        Log.i("yanyue", author+".."+topic+".."+thumbupNum+".."+readed+".."+articleTime+".."+articleScore+".."+htmlContent+"....."+userIdOfShow+"....");
                         Log.i("yanyue", ".................................................................");
                         articleInit();
+                    }
+                    if(jsonObject.has("articleReader")){
+                        JSONObject articleReader=jsonObject.getJSONObject("articleReader");
+                        Log.i("yanyue", articleReader.toString());
+                        isCollect=Boolean.parseBoolean(articleReader.getString("collected"));
+                        if(isCollect){
+                            collect.setText("取消收藏");
+                        }else{
+                            collect.setText("收藏");
+                        }
+                        isLike=Boolean.parseBoolean(articleReader.getString("thumbUp"));
+                        if(isLike){
+                            like.setText("取消点赞");
+                        }else{
+                            like.setText("点赞");
+                        }
+                        isReport=Boolean.parseBoolean(articleReader.getString("report"));
+                        if(isReport){
+                            report.setText("已举报");
+                            report.setClickable(false);
+                        }else{
+                            collect.setText("举报");
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -178,8 +237,10 @@ public class DetailActivity extends AppCompatActivity {
 
     public void articleInit(){
         tv_topic.setText(topic);
-        tv_info.setText("时间："+articalTime+"  点击数："+readed+"  点赞数："+thumbupNum+"  评分："+articalScore);
-        tv_author.setText(author);
+        tv_info.setText("点击数："+readed+"  点赞数："+thumbupNum+"  评分："+articleScore);
+        tv_author.setText("    作者："+author);
+        tv_date.setText("发表时间："+articleTime);
+        tv_commentNum.setText("共有"+commentNum+"条评论");
         content.loadDataWithBaseURL(null,htmlContent,"text/html", "utf-8",null);
     }
 
@@ -187,7 +248,7 @@ public class DetailActivity extends AppCompatActivity {
         Map<String,Object> params = new HashMap<String,Object>();
         String url = "/detail/pageReq";
 
-//        params.put("articalId",articleId);
+        params.put("articleId",articleId);
         params.put("currentPage",currentpage);
 
         CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {
@@ -198,21 +259,39 @@ public class DetailActivity extends AppCompatActivity {
                     Log.i("yanyue", jsonObject.toString());
                     if (jsonObject.has("comments")) {
                         JSONArray rootComments=jsonObject.getJSONArray("comments");
+                        if(rootComments.length()==0){
+                            tv_more.setText("没有更多的评论了");
+                            currentpage=currentpage-1;
+                        }else{
+                            tv_more.setText("点击加载更多");
+                        }
                         for (int i=0;i<rootComments.length();i++){
                             JSONObject rootComment=rootComments.getJSONObject(i);
+                            Log.i("yanyue", rootComment.toString());
                             JSONArray comments=rootComment.getJSONArray("comments");
                             JSONObject comment=comments.getJSONObject(0);
                             JSONObject replier=comment.getJSONObject("replier");
+                            String replierId=replier.getString("userId");
                             String title=replier.getString("name");
                             String img=replier.getString("userImgSrc");
                             String info=comment.getString("content");
                             String date=comment.getString("date");
-
-                            try {
-                                downloadFileOther(title,info,img,date);
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            }
+                            String formerCommentId=comment.getString("id");
+                            allComments.add(comments);
+                            Map<String, Object> map = new HashMap<String, Object>();
+//                            Bitmap bitmap=null;
+                            map.put("title",title);
+                            map.put("info",info);
+                            map.put("date",date);
+                            map.put("img",img);
+                            map.put("formerCommentId",formerCommentId);
+                            data.add(map);
+                            commentInit();
+//                            try {
+//                                downloadFileOther(data.size()-1,img);
+//                            } catch (FileNotFoundException e) {
+//                                e.printStackTrace();
+//                            }
 
                         }
 
@@ -232,83 +311,13 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void commentInit(){
-        SimpleAdapter adapter = new SimpleAdapter(this,data,R.layout.comment_list,
+        CommentAdapter adapter = new CommentAdapter(this,data,R.layout.comment_list,
                 new String[]{"title","info","img","date"},
                 new int[]{R.id.title,R.id.info,R.id.img,R.id.date});
-        adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
 
-            @Override
-            public boolean setViewValue(View view, Object data,
-                                        String textRepresentation) {
-                if (view instanceof ImageView && data instanceof Bitmap) {
-                    ImageView iv = (ImageView) view;
-                    iv.setImageBitmap((Bitmap) data);
-                    return true;
-                }
-                return false;
-            }
-        });
         comment.setAdapter(adapter);
 //        setListViewHeightBasedOnChildren(comment);
 //        setListAdapter(adapter);
-    }
-
-    private void downloadFileOther(String title,String info,String img,String date) throws FileNotFoundException {
-        String url = "http://cms-bucket.nosdn.127.net/catchpic/e/e8/e8af197c3b3ab1786ef430976c9ae8f3.jpg?imageView&thumbnail=550x0";
-//        String url=img;
-
-        final Map<String, Object> map = new HashMap<String, Object>();
-        map.put("title",title);
-        map.put("info",info);
-        map.put("date",date);
-        CommonOkHttpClient.downloadFileOther(CommonRequest.createGetResquest(url),new ResponseDataHandle(new ResponseDownloadListener() {
-
-            @Override
-            public void onProgress(int progress) {
-//           下载进度已封装，可根据需求实现
-            }
-            @Override
-            public void onSuccess(Object responseObj) {
-
-                Bitmap bitmap;
-                bitmap = (Bitmap) responseObj;
-                map.put("img",bitmap);
-                data.add(map);
-                commentInit();
-            }
-
-            @Override
-            public void onFailure(Object reasonObj) {
-//                自定义异常，当网络请求失败时可能需要在页面进行显示（-1：网络错误；-2：io错误）
-                OkHttpException exception = new OkHttpException();
-                if (exception.getEcode() == -1 && exception.getEmsg() == null){
-                    Toast.makeText(DetailActivity.this,"网络不稳定",Toast.LENGTH_LONG).show();
-                }
-                if (exception.getEcode() == -2 && exception.getEmsg() == null){
-                    Toast.makeText(DetailActivity.this,"文件不存在",Toast.LENGTH_LONG).show();
-                }
-            }
-        }));
-    }
-
-    public void detailControl(String action,Boolean data){
-        Intent intent=new Intent();
-        intent.putExtra("userId",userId);
-        intent.putExtra("articleId",articleId);
-        intent.putExtra("action",action);
-        intent.putExtra("data",data);
-        intent.setClass(this, DetailService.class);
-        startService(intent);
-    }
-
-    public void detailControl(String action,String data){
-        Intent intent=new Intent();
-        intent.putExtra("userId",userId);
-        intent.putExtra("articleId",articleId);
-        intent.putExtra("action",action);
-        intent.putExtra("data",data);
-        intent.setClass(this, DetailService.class);
-        startService(intent);
     }
 
     //登陆
@@ -339,12 +348,7 @@ public class DetailActivity extends AppCompatActivity {
     public void like(View view) {
         if(isLoginIn){
             isLike=!isLike;
-            detailControl("like",isLike);
-            if(isLike){
-                like.setText("取消点赞");
-            }else{
-                like.setText("点赞");
-            }
+            submit("like",isLike);
         }else{
             login();
         }
@@ -356,12 +360,7 @@ public class DetailActivity extends AppCompatActivity {
     public void collect(View view) {
         if(isLoginIn){
             isCollect=!isCollect;
-            detailControl("collect",isCollect);
-            if(isCollect){
-                collect.setText("取消收藏");
-            }else{
-                collect.setText("收藏");
-            }
+            submit("collect",isCollect);
         }else{
             login();
         }
@@ -372,8 +371,7 @@ public class DetailActivity extends AppCompatActivity {
     public void report(View view) {
         if(isLoginIn){
             isReport=!isReport;
-            detailControl("report",isReport);
-            report.setClickable(false);
+            submit("report",isReport);
         }else{
             login();
         }
@@ -398,7 +396,7 @@ public class DetailActivity extends AppCompatActivity {
                 case R.id.btn_save:
                     String reward = rewardActivity.text_reward.getText().toString().trim();
                     rewardActivity.dismiss();
-                    detailControl("reward",reward);
+                    submit("reward",reward);
                     Log.i("yanyue", reward);
                     break;
             }
@@ -406,11 +404,13 @@ public class DetailActivity extends AppCompatActivity {
     };
 
 
-    public void jump() {
+    public void jump(int userIdTo) {
         Intent intent=new Intent();
         intent.putExtra("userIdOfLogin",userId);
-        intent.putExtra("userIdOfShow",userIdOfShow);
+        intent.putExtra("userIdOfShow",userIdTo);
         intent.putExtra("isLoginSuccess",isLoginIn);
+        intent.putExtra("pageStyle",0);
+        Log.i("yanyue", "jump: "+userId+"....userIdto"+userIdTo+"...."+isLoginIn);
         intent.setClass(this, OthersHomepageActivity.class);
         startActivity(intent);
     }
@@ -419,6 +419,284 @@ public class DetailActivity extends AppCompatActivity {
     public void back(View view) {
         finish();
     }
+
+    public void submit(String type, String msg){
+        final String submitType=type;
+
+        Map<String,Object> params = new HashMap<String,Object>();
+        String url = "/detail/androidSubmit";
+
+        params.put("articleId",articleId);
+        params.put("userId",userId);
+        params.put("type",type);
+
+        switch (type){
+            case "comment":
+                params.put("comment",msg);
+                break;
+            case "score":
+                params.put("score",msg);
+                break;
+            case "reward":
+                params.put("reward",msg);
+                break;
+        }
+
+        CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                showMsg(responseObj,submitType);
+            }
+
+            @Override
+            public void onFailure(Object reasonObj) {
+                Toast.makeText(DetailActivity.this,"failure",Toast.LENGTH_LONG).show();
+                showMsg(false,submitType);
+            }
+        }));
+    }
+    public void submit(String type, Boolean is){
+        final String submitType=type;
+        final Boolean isno=is;
+
+        Map<String,Object> params = new HashMap<String,Object>();
+        String url = "/detail/androidSubmit";
+
+        params.put("articleId",articleId);
+        params.put("userId",userId);
+        params.put("type",type);
+
+        switch (type){
+            case "report":
+                params.put("report",is);
+                break;
+            case "like":
+                params.put("like",is);
+                break;
+            case "collect":
+                params.put("collect",is);
+                break;
+        }
+
+        CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {
+            @Override
+            public void onSuccess(Object responseObj) {
+                showMsg(responseObj,submitType,isno);
+
+            }
+
+            @Override
+            public void onFailure(Object reasonObj) {
+                Toast.makeText(DetailActivity.this,"failure",Toast.LENGTH_LONG).show();
+                showMsg(false,submitType,isno);
+
+            }
+        }));
+    }
+
+    public void showMsg(Object responseObj,String submitType){
+        Boolean isSubmitSuccess=Boolean.parseBoolean(responseObj.toString());
+        Log.i("yanyue", "submit....."+responseObj);
+        if(isSubmitSuccess){
+            switch (submitType){
+                case "comment":
+                    DialogUtil.showDialog(DetailActivity.this,"评论已经成功提交",false);
+                    break;
+                case "score":
+                    break;
+                case "reward":
+                    DialogUtil.showDialog(DetailActivity.this,"您已打赏成功",false);
+                    break;
+            }
+        }else{
+            switch (submitType){
+                case "comment":
+                    DialogUtil.showDialog(DetailActivity.this,"评论提交失败，请重新提交",false);
+                    break;
+                case "score":
+                    break;
+                case "reward":
+                    DialogUtil.showDialog(DetailActivity.this,"打赏失败，请重新打赏",false);
+                    break;
+            }
+        }
+    }
+
+    public void showMsg(Object responseObj,String submitType,Boolean isno){
+        Boolean isSubmitSuccess=Boolean.parseBoolean(responseObj.toString());
+        Log.i("yanyue", "submit....."+responseObj);
+        if(isSubmitSuccess){
+            switch (submitType){
+                case "report":
+                    if(isno){
+                        DialogUtil.showDialog(DetailActivity.this,"您已举报成功",false);
+                        report.setText("已举报");
+                        collect.setClickable(false);
+                    }else{
+                        DialogUtil.showDialog(DetailActivity.this,"您已取消举报",false);
+                    }
+
+                    break;
+                case "like":
+                    if(isno){
+                        DialogUtil.showDialog(DetailActivity.this,"您已点赞成功",false);
+                        like.setText("取消点赞");
+                    }else{
+                        DialogUtil.showDialog(DetailActivity.this,"您已取消点赞",false);
+                        like.setText("点赞");
+                    }
+                    break;
+                case "collect":
+                    if(isno){
+                        DialogUtil.showDialog(DetailActivity.this,"您已收藏成功",false);
+                        collect.setText("取消收藏");
+                    }else{
+                        DialogUtil.showDialog(DetailActivity.this,"您已取消收藏",false);
+                        collect.setText("收藏");
+                    }
+                    break;
+            }
+        }else{
+            switch (submitType){
+                case "report":
+                    DialogUtil.showDialog(DetailActivity.this,"举报提交失败",false);
+                    break;
+                case "like":
+                    DialogUtil.showDialog(DetailActivity.this,"点赞提交失败",false);
+                    break;
+                case "collect":
+                    DialogUtil.showDialog(DetailActivity.this,"收藏提交是失败",false);
+                    break;
+            }
+        }
+    }
+
+
+    public class CommentAdapter extends BaseAdapter {
+        private LayoutInflater mInflater;
+        private List<Map<String, Object>> list;
+        private int layoutID;
+        private String flag[];
+        private int ItemIDs[];
+        private Context context;
+
+        public CommentAdapter(Context context, List<Map<String, Object>> list, int layoutID, String flag[], int ItemIDs[]) {
+
+            this.context=context;
+            this.mInflater = LayoutInflater.from(context);
+            this.list = list;
+            this.layoutID = layoutID;
+            this.flag = flag;
+            this.ItemIDs = ItemIDs;
+        }
+
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final int position1=position;
+            convertView = mInflater.inflate(layoutID, null);
+
+            TextView tv_title = (TextView) convertView.findViewById(ItemIDs[0]);
+            tv_title.setText(list.get(position).get(flag[0]).toString());
+            tv_title.setClickable(true);
+            tv_title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int replierId=Integer.parseInt(data.get(position1).get("replierId").toString());
+                    jump(replierId);
+                }
+            });
+            TextView tv_date=(TextView) convertView.findViewById(ItemIDs[3]);
+            tv_date.setText(list.get(position).get(flag[3]).toString());;
+            TextView tv_info=(TextView) convertView.findViewById(ItemIDs[1]);
+            tv_info.setText(list.get(position).get(flag[1]).toString());;
+            final ImageView iv_img=(ImageView) convertView.findViewById(ItemIDs[2]);
+            Glide.with(context).load(list.get(position).get(flag[2])).asBitmap().into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    iv_img.setImageBitmap(resource);
+                }
+            });
+//            iv_img.setImageBitmap((Bitmap)list.get(position).get(flag[2]));
+
+            return convertView;
+        }
+    }
+
+
+
+    //用于加载图片的代码，但由于占用内存过多且速度慢，已经取消
+//    private void downloadFileOther(int i,String img) throws FileNotFoundException {
+////        String url = "http://cms-bucket.nosdn.127.net/catchpic/e/e8/e8af197c3b3ab1786ef430976c9ae8f3.jpg?imageView&thumbnail=550x0";
+//        String url=img;
+//        final int index=i;
+//        CommonOkHttpClient.downloadFileOther(CommonRequest.createGetResquest(url),new ResponseDataHandle(new ResponseDownloadListener() {
+//
+//            @Override
+//            public void onProgress(int progress) {
+////           下载进度已封装，可根据需求实现
+//            }
+//            @Override
+//            public void onSuccess(Object responseObj) {
+//
+//                Bitmap bitmap;
+//                bitmap = (Bitmap) responseObj;
+//                data.get(index).put("img",bitmap);
+////                map.put("img",bitmap);
+////                data.add(map);
+//                commentInit();
+//            }
+//
+//            @Override
+//            public void onFailure(Object reasonObj) {
+////                自定义异常，当网络请求失败时可能需要在页面进行显示（-1：网络错误；-2：io错误）
+//                OkHttpException exception = new OkHttpException();
+//                if (exception.getEcode() == -1 && exception.getEmsg() == null){
+//                    Toast.makeText(DetailActivity.this,"网络不稳定",Toast.LENGTH_LONG).show();
+//                }
+//                if (exception.getEcode() == -2 && exception.getEmsg() == null){
+//                    Toast.makeText(DetailActivity.this,"文件不存在",Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        }));
+//    }
+
+
+    //利用service提交数据的代码，因为使用service无法弹出提示信息，所以已经弃用
+//    public void detailControl(String action,Boolean data){
+//        Intent intent=new Intent();
+//        intent.putExtra("userId",userId);
+//        intent.putExtra("articleId",articleId);
+//        intent.putExtra("action",action);
+//        intent.putExtra("data",data);
+//        intent.setClass(this, DetailService.class);
+//        startService(intent);
+//    }
+//
+//    public void detailControl(String action,String data){
+//        Intent intent=new Intent();
+//        intent.putExtra("userId",userId);
+//        intent.putExtra("articleId",articleId);
+//        intent.putExtra("action",action);
+//        intent.putExtra("data",data);
+//        intent.setClass(this, DetailService.class);
+//        startService(intent);
+//    }
 
     //    //用于测试免登陆功能
 //    public void test(){

@@ -23,7 +23,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="20dp"
             android:text="取消"
             android:onClick="back"/>
 
@@ -57,12 +56,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <EditText
-            android:id="@+id/commentary"
-            android:lines="10"
+        <LinearLayout
+            android:background="@color/red"
+            android:layout_margin="5dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="请输入您的评论"/>
+            android:layout_height="match_parent">
+            <EditText
+                android:background="@color/white"
+                android:id="@+id/commentary"
+                android:layout_margin="1dp"
+                android:lines="10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入您的评论"/>
+        </LinearLayout>
         <RadioGroup
             android:id="@+id/mrg"
             android:checkedButton="@+id/rb5"

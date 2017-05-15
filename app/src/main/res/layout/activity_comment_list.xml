@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_comment_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.wangyan.oh_my_news_android_client.activities.CommentListActivity">
+
+    <TextView
+        android:id="@+id/mtv_comment"
+        android:background="@color/red"
+        android:layout_alignParentTop="true"
+        android:padding="0dp"
+        android:layout_margin="-8dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:text="评论"/>
+    <ScrollView
+        android:layout_below="@+id/mtv_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.example.wangyan.oh_my_news_android_client.util.MyListView
+            android:id="@+id/mlv_comment_child"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></com.example.wangyan.oh_my_news_android_client.util.MyListView>
+    </ScrollView>
+    <LinearLayout
+        android:id="@+id/layout4"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/met_child_comment"
+            android:background="@color/white"
+            android:layout_weight="40"
+            android:layout_width="wrap_content"
+            android:hint="请输入您的回复"
+            android:layout_height="40dp" />
+        <Button
+            android:id="@+id/child_comment_submit"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:background="#FFF78E54"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="发送"
+            android:onClick="childSubmit"/>
+    </LinearLayout>
+
+</RelativeLayout>

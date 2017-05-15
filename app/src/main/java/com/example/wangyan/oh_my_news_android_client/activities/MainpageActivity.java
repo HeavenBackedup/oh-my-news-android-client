@@ -76,6 +76,7 @@ public class MainpageActivity extends AppCompatActivity{
 //        userId = intent.getIntExtra("userId",-1);
         isLoginSuccess = ExitApplication.getInstance().isLoginSuccess;
         userId = ExitApplication.getInstance().userId;
+        Log.i("yanyue", "onCreate: yyyyy"+userId+"...."+isLoginSuccess);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -191,9 +192,10 @@ public class MainpageActivity extends AppCompatActivity{
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
               Map<String,Object> map = list.get(position);
               articleId = (int) map.get("articleId");
-              intent.putExtra("userId",userId);
-              intent.putExtra("isLoginSuccess",isLoginSuccess);
+              intent.putExtra("userId",ExitApplication.getInstance().userId);
+              intent.putExtra("isLoginSuccess",ExitApplication.getInstance().isLoginSuccess);
               intent.putExtra("articleId",articleId);
+              Log.i("yanyue", "onCreate: "+userId+"...."+isLoginSuccess);
               intent.setClass(MainpageActivity.this,DetailActivity.class);
               startActivity(intent);
              }

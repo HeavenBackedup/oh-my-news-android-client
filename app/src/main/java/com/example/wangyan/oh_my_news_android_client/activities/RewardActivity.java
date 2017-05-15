@@ -53,7 +53,7 @@ public class RewardActivity extends Dialog{
         WindowManager m = context.getWindowManager();
         Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
         WindowManager.LayoutParams p = dialogWindow.getAttributes(); // 获取对话框当前的参数值
-         p.height = (int) (d.getHeight() * 0.4); // 高度设置为屏幕的0.6
+         p.height = (int) (d.getHeight() * 0.2); // 高度设置为屏幕的0.6
         p.width = (int) (d.getWidth() * 0.8); // 宽度设置为屏幕的0.8
         dialogWindow.setAttributes(p);
 
