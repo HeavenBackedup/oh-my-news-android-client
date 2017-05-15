@@ -73,38 +73,43 @@ public class SearchActivity extends AppCompatActivity {
     private void postRequest(String query){
         Map<String,Object> params = new HashMap<String,Object>();
         String url = "/search/showResult";
-
+        System.out.println("0000000000");
         params.put("KeyWord",query);
 
         CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
                 try {
+                    System.out.println(responseObj);
                     JSONObject jsonObject = new JSONObject(responseObj.toString());
-                    JSONArray resultList=jsonObject.getJSONArray("resultList");
-                    //System.out.println(resultList);
+                    JSONArray resultList=jsonObject.getJSONArray("contents");
+
+//                    JSONArray resultList=jsonObject.getJSONArray("resultList");
+                    System.out.println(resultList);
                     int len= resultList.length();
                     final  List<Map<String,Object>> tt=new ArrayList<>();
                     for(int i = 0; i < len; i++){//遍历JSONArray
                         JSONObject ob= resultList.getJSONObject(i);
-                        String index=ob.getString("index");
-                        String title=ob.getString("title");
+//                        String index=ob.getString("index");
+                        String articleId=ob.getString("articleId");
+                        String topic=ob.getString("topic");
+//                        String title=ob.getString("title");
                         Map<String, Object> map1= new HashMap<>();
-                        map1.put("index",index );
-                        map1.put("title",title);
+                        map1.put("articleId",articleId );
+                        map1.put("topic",topic);
                         tt.add(map1);
 
                         // System.out.println(title);
                         // System.out.println(ob);
                     }
-                    SimpleAdapter adapter=new SimpleAdapter(context,tt,R.layout.itemlayout,new String[]{"index","title"},new int[]{R.id.index,R.id.text});
+                    SimpleAdapter adapter=new SimpleAdapter(context,tt,R.layout.itemlayout,new String[]{"articleId","topic"},new int[]{R.id.index,R.id.text});
                     list.setAdapter(adapter);
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
                             System.out.println(arg2);
                             Map<String,Object> mm =  tt.get(arg2);
-                            String index=(String )mm.get("index");
+                            String index=(String )mm.get("articleId");
                             System.out.println(index);
                             Intent intent=new Intent();
                             intent.setClass(SearchActivity.this, DetailActivity.class);

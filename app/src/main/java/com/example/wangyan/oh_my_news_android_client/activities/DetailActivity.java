@@ -92,6 +92,8 @@ public class DetailActivity extends AppCompatActivity {
         articleId=getIntent().getIntExtra("articleId",-1);
         userId=getIntent().getIntExtra("userId",-1);
         isLoginIn=getIntent().getBooleanExtra("isLoginSuccess",false);
+        isLoginIn = ExitApplication.getInstance().isLoginSuccess;
+        userId = ExitApplication.getInstance().userId;
         Log.i("yanyue", "onCreate: "+articleId+"......."+userId+"......"+isLoginIn);
 
         //用于跳过登陆的测试代码

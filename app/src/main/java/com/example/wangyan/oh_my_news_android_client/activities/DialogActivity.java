@@ -100,8 +100,8 @@ public class DialogActivity extends AppCompatActivity {
     private void postRequest(){
         Map<String,Object> params = new HashMap<String,Object>();
         String url = "/privatemsg/getExMsg";
-        params.put("userId",123);
-        params.put("otherUserId",111);
+        params.put("userId",2);
+        params.put("otherUserId",1);
 
         CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {
             @Override

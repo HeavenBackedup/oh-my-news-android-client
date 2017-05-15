@@ -40,6 +40,8 @@ public class PrivateMsgActivity extends AppCompatActivity {
     private List<String>name;
     private List<String>path;
     private Bitmap bitmap;
+    private int userId;
+    private  boolean isLoginSuccess;
 //    private String[] name=new String[]{"1","1","1","1"};
 //    private String[] path=new String[]{"1","1","1","1"};
     private int len;
@@ -48,6 +50,8 @@ public class PrivateMsgActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_msg);
         ExitApplication.getInstance().addActivity(this);
+        isLoginSuccess = ExitApplication.getInstance().isLoginSuccess;
+        userId = ExitApplication.getInstance().userId;
         context = this;
         final LayoutInflater layoutInflater = LayoutInflater.from(context);
         listView = (ListView) findViewById(R.id.listView);
@@ -57,26 +61,30 @@ public class PrivateMsgActivity extends AppCompatActivity {
     private void postRequest() {
         Map<String, Object> params = new HashMap<String, Object>();
         String url = "/privatemsg/getPrivateMsg";
-        params.put("userId",999);
+//        params.put("userId",2);
+        params.put("userId",userId);
         params.put("selectedValue",0);
         //System.out.println(params.get("selectedValue"));
         CommonOkHttpClient.post(CommonRequest.createPostResquest(url, params), new ResponseDataHandle(new ResponseDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
+//                System.out.println("fffffffffff");
+                System.out.println(responseObj);
                 try {
-                    JSONArray jsonObject = new  JSONArray(responseObj.toString());
+                    JSONArray jsonObject = new JSONArray(responseObj.toString());
                     len=jsonObject.length();
                     name=new ArrayList<String>();
                     path=new ArrayList<String>();
                     for (int i = 0; i < len; i++) {
                         JSONObject ob =jsonObject.getJSONObject(i);
-//                        System.out.println(ob);
+                        System.out.println(ob);
                          path.add(ob.getString("avatar")) ;
                          name.add(ob.getString("username"));
 //                        System.out.println(name);
                     }
                     try {
-                        downloadFileOther();
+                        for(int j=0;j<len;j++)
+                            downloadFileOther(j);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -100,8 +108,9 @@ public class PrivateMsgActivity extends AppCompatActivity {
             }
         }));
     }
-    private void downloadFileOther() throws FileNotFoundException {
-        String url = "http://cms-bucket.nosdn.127.net/catchpic/e/e8/e8af197c3b3ab1786ef430976c9ae8f3.jpg?imageView&thumbnail=550x0";
+    private void downloadFileOther(int i) throws FileNotFoundException {
+//        String url = "http://cms-bucket.nosdn.127.net/catchpic/e/e8/e8af197c3b3ab1786ef430976c9ae8f3.jpg?imageView&thumbnail=550x0";
+        String url=path.get(i);
 
         CommonOkHttpClient.downloadFileOther(CommonRequest.createGetResquest(url),new ResponseDataHandle(new ResponseDownloadListener() {
             @Override
