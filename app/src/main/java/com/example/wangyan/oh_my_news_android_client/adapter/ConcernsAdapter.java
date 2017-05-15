@@ -22,6 +22,8 @@ import java.util.List;
 public class ConcernsAdapter  extends BaseMultiItemQuickAdapter<MultiItemOfFans,BaseViewHolder> {
     private List<ConcernInfo> list;
     private Context context;
+    private BaseViewHolder helper;
+
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
      * some initialization data.
@@ -38,22 +40,19 @@ public class ConcernsAdapter  extends BaseMultiItemQuickAdapter<MultiItemOfFans,
 
     @Override
     protected void convert(final BaseViewHolder helper, MultiItemOfFans item) {
+        this.helper=helper;
+        ConcernInfo concernInfo=list.get(helper.getLayoutPosition()/2);
         switch (helper.getItemViewType()){
             case MultiItemOfFans.FANS_INFO:
-                ConcernInfo concernInfo=list.get(helper.getLayoutPosition()/2);
                 Log.i("id", String.valueOf(concernInfo.getUserId()));
-
                 Glide.with(context).load(concernInfo.getAvatar()).asBitmap().into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         helper.setImageBitmap(R.id.fans_avatar_pic,resource);
                     }
                 });
-
-
                 helper.setText(R.id.fans_nickname,concernInfo.getNickname());
                 helper.setText(R.id.fans_signature,concernInfo.getSignature());
-
                 break;
             case MultiItemOfFans.FANS_BTN:
                 helper.setImageResource(R.id.fans_btn_pic,R.mipmap.concerned);

@@ -2,7 +2,6 @@ package com.example.wangyan.oh_my_news_android_client.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -37,7 +36,6 @@ public class FansAdapter extends BaseMultiItemQuickAdapter<MultiItemOfFans,BaseV
         addItemType(MultiItemOfFans.FANS_BTN,R.layout.fans_btn);
         this.list=list;
         this.context=context;
-//        Log.i("BaseViewHolder" )
     }
 
     @Override
@@ -59,7 +57,6 @@ public class FansAdapter extends BaseMultiItemQuickAdapter<MultiItemOfFans,BaseV
                 case MultiItemOfFans.FANS_BTN:
                     if (fansInfo.isConcerned()){
                         helper.setImageResource(R.id.fans_btn_pic,R.mipmap.concerned);
-//                        helper.setOnClickListener(new )
                     }else {
                         helper.setImageResource(R.id.fans_btn_pic,R.mipmap.unconcerned);
                    }
@@ -69,18 +66,7 @@ public class FansAdapter extends BaseMultiItemQuickAdapter<MultiItemOfFans,BaseV
 
     }
 
- public void changeForConcerned(int position,boolean isConcern){
 
-        helper.setImageResource(R.id.fans_btn_pic,R.mipmap.unconcerned);
-
-        if (helper.getLayoutPosition()==position){
-            Log.i("getLayoutPosition", String.valueOf(helper.getLayoutPosition()));
-            helper.setImageResource(R.id.fans_btn_pic,R.mipmap.unconcerned);
-        }
-        Log.i("position", String.valueOf(position));
-
-
-    }
 
 
 

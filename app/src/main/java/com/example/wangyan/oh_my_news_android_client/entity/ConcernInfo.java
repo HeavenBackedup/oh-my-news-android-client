@@ -9,6 +9,15 @@ public class ConcernInfo {
     private String avatar;
     private String nickname;
     private String signature;
+    private boolean isConcerned;
+
+    public boolean isConcerned() {
+        return isConcerned;
+    }
+
+    public void setConcerned(boolean concerned) {
+        isConcerned = concerned;
+    }
 
     public int getUserId() {
         return userId;

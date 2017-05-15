@@ -40,7 +40,7 @@ public class OthersHomepageActivity extends BaseActivity {
     private Intent intent;
     private HomepageUserInfo homepageUserInfo;
     private Handler handler;
-    private int userIdOfShow=2;
+    private int userIdOfShow;
     private String nickname;
     private int userIdOfLogin;
     private TextView textView_con;
@@ -48,36 +48,50 @@ public class OthersHomepageActivity extends BaseActivity {
     private CardView cardView;
     private boolean isConcerned;
     private int codeForSend;
-    private boolean isLoginSuccess=true;
-    private int codeForSkip=-1;
+    private boolean isLoginSuccess;
+    private int position;
+    private static final int RESULT_FANS=2;
+    private int resultCode;
+    public final static int RESULT_REL=1;
+    public final static int RESULT_BACK=2;
+    public final static int RESULT_CHANGE=4;
+    private int pageStyle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_others_homepage);
         ExitApplication.getInstance().addActivity(this);
-        intent=getIntent();
-//        userIdOfShow=intent.getIntExtra("userIdOfShow",-1);
-        codeForSkip=intent.getIntExtra("codeForSkip",-1);
-        nickname=intent.getStringExtra("nickname");
-        userIdOfLogin=intent.getIntExtra("userIdOfLogin",-1);
-//        isLoginSuccess=intent.getBooleanExtra("isLoginSuccess",false);
-        setTitle(nickname+"的主页");
-
         cardView=(CardView)findViewById(R.id.others_btn_cardView);
         textView_con=(TextView) findViewById(R.id.concern_unconcern_btn);
         textView_pri=(TextView) findViewById(R.id.private_msg);
+
+        intent=getIntent();
+        userIdOfShow=intent.getIntExtra("userIdOfShow",-1);
+        nickname=intent.getStringExtra("nickname");
+        userIdOfLogin=intent.getIntExtra("userIdOfLogin",-1);
+        isLoginSuccess=intent.getBooleanExtra("isLoginSuccess",false);
+        pageStyle=intent.getIntExtra("pageStyle",-1);
+        setTitle(nickname+"的主页");
+        if (pageStyle==1){
+            position=intent.getIntExtra("position",-1);
+            setBackClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Thread threadBack=new GetConfirmInfo(userIdOfLogin,userIdOfShow,RESULT_BACK);
+                    threadBack.start();
+                }
+            });
+        }else {
+            setBackBtn();
+        }
+
+
         Thread thread=new GetOtherHomepageInfo(userIdOfShow);
         thread.start();
         if (isLoginSuccess==false){
             textView_con.setText("+关注");
             textView_con.setTextColor(getResources().getColor(R.color.tomato));
             textView_pri.setText("私信");
-//            textView_con.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(OthersHomepageActivity.this,"请登陆后",Toast.LENGTH_SHORT).show();
-//                }
-//            });
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -89,7 +103,7 @@ public class OthersHomepageActivity extends BaseActivity {
 
         }else {
             if (userIdOfLogin==userIdOfShow){
-                cardView.setVisibility(View.INVISIBLE);
+                cardView.setVisibility(View.GONE);
             }else {
                 cardView.setVisibility(View.VISIBLE);
                 textView_pri.setText("私信");
@@ -97,12 +111,13 @@ public class OthersHomepageActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent=new Intent(OthersHomepageActivity.this,DialogActivity.class);
-                        intent.putExtra("userIdOfLogin",userIdOfLogin);
-                        intent.putExtra("userIdOfShow",userIdOfShow);
+                        intent.putExtra("userId",userIdOfLogin);
+                        intent.putExtra("otherUserId",userIdOfShow);
+                        intent.putExtra("isLoginSuccess",isLoginSuccess);
                         startActivity(intent);
                     }
                 });
-                Thread thread1=new GetConfirmInfo(userIdOfLogin,userIdOfLogin);
+                Thread thread1=new GetConfirmInfo(userIdOfLogin,userIdOfShow,RESULT_REL);
                 thread1.start();
             }
         }
@@ -114,20 +129,7 @@ public class OthersHomepageActivity extends BaseActivity {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 String code= (String) msg.getData().get("code");
-                setBackBtn();
-//                setBackClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if (codeForSkip==0){
-//                            Intent intent=new Intent(OthersHomepageActivity.this,MyFansListActivity.class);
-//                            intent.putExtra("userId",userIdOfLogin);
-//                            startActivity(intent);
-//                        }else {
-//                            finish();
-//                        }
-//
-//                    }
-//                });
+
                 switch (code){
                     case "userInfo":
                         homepageUserInfo= (HomepageUserInfo) msg.getData().get("homepageUserInfo");
@@ -161,54 +163,59 @@ public class OthersHomepageActivity extends BaseActivity {
                         break;
                     case "isConcernedInfo":
                         String line= (String) msg.getData().get("line");
+                        resultCode= (int) msg.getData().get("resultCode");
 
                         try {
-                            JSONObject jsonObject=new JSONObject(line);
+                            JSONObject jsonObject = new JSONObject(line);
                             int isConsernedNum=jsonObject.getInt("data");
-                            Log.i("isConsernedNum", String.valueOf(isConsernedNum));
-                            if (isConsernedNum==0){
-                                isConcerned=true;
-                                textView_con.setText("取消关注");
-                                Log.i("取消关注", String.valueOf(isConcerned));
-                                textView_con.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-//                                        codeForSend=2;
-                                        Thread threadDelet=new SendInfo(userIdOfLogin,userIdOfShow,2);
-                                        threadDelet.start();
+                            switch (resultCode){
+                                case RESULT_REL:
+                                    Log.i("isConsernedNum", String.valueOf(isConsernedNum));
+                                    if (isConsernedNum==0){
+                                        isConcerned=true;
+                                        textView_con.setText("取消关注");
+                                        textView_con.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Thread threadDelet=new SendInfo(userIdOfLogin,userIdOfShow,2);
+                                                threadDelet.start();
 
-                                    }
-                                });
-                            }else {
-                                isConcerned=false;
-                                Log.i("添加关注", String.valueOf(isConcerned));
-                                textView_con.setText("添加关注");
-                                textView_con.setTextColor(getResources().getColor(R.color.tomato));
-                                textView_con.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
+                                            }
+                                        });
+                                    }else {
+                                        isConcerned=false;
+                                        textView_con.setText("添加关注");
+                                        textView_con.setTextColor(getResources().getColor(R.color.tomato));
+                                        textView_con.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
 //                                        codeForSend=3;
-                                        Thread threadAdd=new SendInfo(userIdOfLogin,userIdOfShow,3);
-                                        threadAdd.start();
+                                                Thread threadAdd=new SendInfo(userIdOfLogin,userIdOfShow,3);
+                                                threadAdd.start();
+                                            }
+                                        });
+
                                     }
-                                });
-
+                                    break;
+                                case RESULT_BACK:
+                                    Log.i("userIdOfLogin ", String.valueOf(userIdOfLogin));
+                                    Log.i("userIdOfShow fanfan", String.valueOf(userIdOfShow));
+                                    if (isConsernedNum==0){
+                                        isConcerned=true;
+                                    }else {
+                                        isConcerned=false;
+                                    }
+                                    Intent intent=new Intent();
+                                    intent.putExtra("position",position);
+                                    intent.putExtra("isConcerned",isConcerned);
+                                    OthersHomepageActivity.this.setResult(RESULT_CHANGE,intent);
+                                    finish();
+                                    break;
                             }
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-//                        setBackClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                Log.i("isConcerned", String.valueOf(isConcerned));
-//                                Intent fintent=new Intent();
-//                                fintent.putExtra("isConcerned",isConcerned);
-//                                Log.i("otherisConcerned ", String.valueOf(isConcerned));
-//                                OthersHomepageActivity.this.setResult(2,fintent);
-//                                finish();
-//                            }
-//                        });
+
                         break;
                     case "isChanged":
                         String line1= (String) msg.getData().get("line");
@@ -229,7 +236,6 @@ public class OthersHomepageActivity extends BaseActivity {
                                 textView_con.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-//                                        codeForSend=3;
                                         Thread threadAdd=new SendInfo(userIdOfLogin,userIdOfShow,3);
                                         threadAdd.start();
                                     }
@@ -241,7 +247,6 @@ public class OthersHomepageActivity extends BaseActivity {
                                 textView_con.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-//                                        codeForSend=2;
                                         Thread threadDelet=new SendInfo(userIdOfLogin,userIdOfShow,2);
                                         threadDelet.start();
                                     }
@@ -258,11 +263,10 @@ public class OthersHomepageActivity extends BaseActivity {
 //                        setBackClickListener(new View.OnClickListener() {
 //                            @Override
 //                            public void onClick(View v) {
-//                                Log.i("isConcerned", String.valueOf(isConcerned));
-//                                Intent fintent=new Intent();
-//                                fintent.putExtra("isConcerned",isConcerned);
-//                                Log.i("otherisConcerned ", String.valueOf(isConcerned));
-//                                OthersHomepageActivity.this.setResult(2,fintent);
+//                                Intent intent=new Intent();
+//                                intent.putExtra("isConcerned",isConcerned);
+//                                intent.putExtra("position",position);
+//                                OthersHomepageActivity.this.setResult(RESULT_FANS,intent);
 //                                finish();
 //                            }
 //                        });
@@ -295,7 +299,6 @@ public class OthersHomepageActivity extends BaseActivity {
                 @Override
                 public void onFailure(Call call, IOException e) {
 
-
                 }
 
                 @Override
@@ -308,9 +311,10 @@ public class OthersHomepageActivity extends BaseActivity {
                         homepageUserInfo.setUserId((Integer) jsonObject.get("usersId"));
                         homepageUserInfo.setNickname((String) jsonObject.get("nickName"));
                         homepageUserInfo.setSignature((String) jsonObject.get("signature"));
-                        homepageUserInfo.setConcerns((Integer) jsonObject.get("fans"));
-                        homepageUserInfo.setFans((Integer) jsonObject.get("followers"));
-                        homepageUserInfo.setAnnouncement((String) jsonObject.get("announcement"));
+                        homepageUserInfo.setConcerns((Integer) jsonObject.get("followers"));
+                        homepageUserInfo.setFans((Integer) jsonObject.get("fans"));
+//                        homepageUserInfo.setAnnouncement((String) jsonObject.get("announcement"));
+                        homepageUserInfo.setAnnouncement("fafanfan");
                         Message message=new Message();
                         Bundle bundle=new Bundle();
                         bundle.putSerializable("homepageUserInfo",homepageUserInfo);
@@ -320,7 +324,6 @@ public class OthersHomepageActivity extends BaseActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
                 }
             },requestBody);
         }
@@ -329,11 +332,15 @@ public class OthersHomepageActivity extends BaseActivity {
     public class GetConfirmInfo extends Thread{
         private int userIdOfLogin;
         private int userIdOfShow;
+        private int resultCode;
 
-        public GetConfirmInfo(int userIdOfLogin, int userIdOfShow) {
+        public GetConfirmInfo(int userIdOfLogin, int userIdOfShow, int resultCode) {
             this.userIdOfLogin = userIdOfLogin;
             this.userIdOfShow = userIdOfShow;
+            this.resultCode = resultCode;
         }
+
+
 
         @Override
         public void run() {
@@ -358,6 +365,7 @@ public class OthersHomepageActivity extends BaseActivity {
                     Message message=new Message();
                     bundle.putString("line",line);
                     bundle.putString("code","isConcernedInfo");
+                    bundle.putInt("resultCode",resultCode);
                     message.setData(bundle);;
                     handler.sendMessage(message);
 
@@ -414,4 +422,16 @@ public class OthersHomepageActivity extends BaseActivity {
 
 
 
+    @Override
+    public void onBackPressed() {
+        Log.i("pageStyle  fanfan otherhome stop", String.valueOf(pageStyle));
+        if (pageStyle==1){
+            Log.i("pageStyle backPress", String.valueOf(pageStyle));
+            Thread threadDestroy=new GetConfirmInfo(userIdOfLogin,userIdOfShow,RESULT_BACK);
+            threadDestroy.start();
+            Log.i("pageStyle backPress", String.valueOf(pageStyle));
+        }else {
+            finish();
+        }
+    }
 }

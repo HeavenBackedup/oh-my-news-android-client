@@ -64,7 +64,6 @@ public class MyCollectionAdapter extends BaseMultiItemQuickAdapter<MultiItemOfCo
                             helper.setImageBitmap(R.id.collection_article_pic,resource);
                         }
                     });
-
                 }
 //                    helper.setImageResource(R.id.collection_article_pic, Integer.parseInt(collectionInfo.getArticlePic()));
                 helper.setText(R.id.collection_article_context,collectionInfo.getArticleContent());

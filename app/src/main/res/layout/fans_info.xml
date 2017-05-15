@@ -16,11 +16,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="15dp">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/fans_nickname"/>
+                android:id="@+id/fans_nickname"
+                android:textStyle="bold"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

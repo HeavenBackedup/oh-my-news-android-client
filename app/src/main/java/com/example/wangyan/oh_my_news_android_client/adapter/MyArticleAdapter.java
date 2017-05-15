@@ -59,10 +59,8 @@ public class MyArticleAdapter extends BaseMultiItemQuickAdapter<MultiItemOfColle
                 helper.setText(R.id.collection_nickname,user.getUserName());
                 break;
             case 2:
-
-                if (articleInfo.getArticlePic()==null){
+                if (articleInfo.getArticlePic()==null||articleInfo.getArticlePic()=="null"||articleInfo.getArticlePic()==""){
                     Log.i("pic  ",articleInfo.getArticlePic()+2);
-
                     helper.setVisible(R.id.collection_article_pic,false);
                 }else {
                     Log.i("pic +1 ",articleInfo.getArticlePic()+1);
@@ -83,9 +81,7 @@ public class MyArticleAdapter extends BaseMultiItemQuickAdapter<MultiItemOfColle
                 helper.setText(R.id.collection_btn_num,String.valueOf(articleInfo.getCollectedNum()));
                 break;
             case 1:
-                Log.i("fanfan helper",helper+"");
-                Log.i("articleInfo: ",articleInfo+"");
-                helper.setText(R.id.collection_topic,articleInfo.getTopic());
+                helper.setText(R.id.collection_topic,"标题："+articleInfo.getTopic());
                 break;
 
         }

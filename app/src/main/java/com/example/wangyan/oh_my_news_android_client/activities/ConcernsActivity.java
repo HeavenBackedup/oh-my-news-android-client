@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.wangyan.oh_my_news_android_client.R;
@@ -37,78 +40,168 @@ public class ConcernsActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private Handler handler;
     private JSONArray jsonArray;
-    private List<ConcernInfo> list=new ArrayList<>();
+
     private int length;
     private ConcernsAdapter concernsAdapter;
+    private  Map<Integer,ImageView> map=new HashMap<Integer, ImageView>();
+    private boolean isConcerned;
+    private int userIdOfLogin;
+    private int position;
+    private Intent intent;
+    private boolean isLoginSuccess;
+    private int userIdOfShow;
+    private int getConcerncode;
+    public final static int CONCERNSINFO=1;
+    public final static int CONCERNSSIZE=2;
+    public final static int CONCERNRESULT=1;
+    private int concernNum;
+    public final static int FROM_CONCERN=1;
+    public final static int CONCERNS_OTHER=3;
+    private SwipeRefreshLayout swipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_concerns);
         ExitApplication.getInstance().addActivity(this);
+        intent=getIntent();
+        isLoginSuccess=intent.getBooleanExtra("isLoginSuccess",false);
+        userIdOfLogin=intent.getIntExtra("userId",-1);
         setTitle("我的关注");
-        setBackBtn();
-        Thread thread=new GetConcernsList(1);
+        setBackClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Thread threadSize=new GetConcernsList(userIdOfLogin,CONCERNSSIZE);
+                threadSize.start();
+
+            }
+        });
+        Thread thread=new GetConcernsList(userIdOfLogin,CONCERNSINFO);
         thread.start();
+        swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.concerns_refresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.i("fanfan refresh", String.valueOf(userIdOfLogin));
+                Thread threadRefresh=new GetConcernsList(userIdOfLogin,CONCERNSINFO);
+                threadRefresh.start();
+
+            }
+        });
         handler=new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 String line= (String) msg.getData().get("concernList");
+                getConcerncode=msg.getData().getInt("getConcerncode");
+                final List<ConcernInfo> list=new ArrayList<>();
+                switch (getConcerncode){
+                    case CONCERNSINFO:
+                        try {
+                            jsonArray=new JSONArray(line);
+                            length=jsonArray.length();
+                            for (int i=0;i<length;i++){
+                                JSONObject jsonObject=jsonArray.getJSONObject(i);
+                                ConcernInfo concernInfo=new ConcernInfo();
+                                concernInfo.setAvatar((String) jsonObject.get("avatarPath"));
+                                concernInfo.setNickname((String) jsonObject.get("nickName"));
+                                concernInfo.setSignature((String) jsonObject.get("signature"));
+                                concernInfo.setUserId((Integer) jsonObject.get("userId"));
+                                concernInfo.setConcerned(true);
+                                list.add(concernInfo);
+                            }
+                            recyclerView=(RecyclerView)findViewById(R.id.concern_recycler_view);
+                            final List<MultiItemOfFans> data= DataServerForHomepage.getMuliItemFansData(length);
+                            concernsAdapter=new ConcernsAdapter(ConcernsActivity.this,data,list);
+                            GridLayoutManager manager=new GridLayoutManager(ConcernsActivity.this,5);
+                            recyclerView.setLayoutManager(manager);
+                            recyclerView.setAdapter(concernsAdapter);
+                            concernsAdapter.setSpanSizeLookup(new BaseQuickAdapter.SpanSizeLookup(){
+                                @Override
+                                public int getSpanSize(GridLayoutManager gridLayoutManager, int position) {
+                                    return data.get(position).getSpanSize();
+                                }
+                            });
+                            concernsAdapter.bindToRecyclerView(recyclerView);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
-                try {
-
-                    jsonArray=new JSONArray(line);
-                    length=jsonArray.length();
-                    for (int i=0;i<length;i++){
-                        JSONObject jsonObject=jsonArray.getJSONObject(i);
-                        ConcernInfo concernInfo=new ConcernInfo();
-                        concernInfo.setAvatar((String) jsonObject.get("avatarPath"));
-                        concernInfo.setNickname((String) jsonObject.get("nickName"));
-                        concernInfo.setSignature((String) jsonObject.get("signature"));
-                        concernInfo.setUserId((Integer) jsonObject.get("userId"));
-                        list.add(concernInfo);
-                        recyclerView=(RecyclerView)findViewById(R.id.concern_recycler_view);
-                        final List<MultiItemOfFans> data= DataServerForHomepage.getMuliItemFansData(length);
-                         concernsAdapter=new ConcernsAdapter(ConcernsActivity.this,data,list);
-                        GridLayoutManager manager=new GridLayoutManager(ConcernsActivity.this,5);
-                        recyclerView.setLayoutManager(manager);
-                        recyclerView.setAdapter(concernsAdapter);
-                        concernsAdapter.setSpanSizeLookup(new BaseQuickAdapter.SpanSizeLookup(){
+                        concernsAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener(){
 
                             @Override
-                            public int getSpanSize(GridLayoutManager gridLayoutManager, int position) {
-                                return data.get(position).getSpanSize();
+                            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                ConcernInfo concernInfo=list.get(position/2);
+                                int index=position+1-position%2;
+                                userIdOfShow=concernInfo.getUserId();
+                                ImageView imageViewForHolder= (ImageView) adapter.getViewByPosition(index,R.id.fans_btn_pic);
+//                                switch (position%2){
+//                                    case 0:
+//
+//                                        break;
+//                                    case 1:
+//                                        break;
+//                                }
+
+                                map.put(index,imageViewForHolder);
+                                Intent intent=new Intent(ConcernsActivity.this,OthersHomepageActivity.class);
+                                intent.putExtra("userIdOfShow",concernInfo.getUserId());
+                                intent.putExtra("nickname",concernInfo.getNickname());
+                                intent.putExtra("userIdOfLogin",userIdOfLogin);
+                                intent.putExtra("position",position);
+                                intent.putExtra("isLoginSuccess",isLoginSuccess);
+                                intent.putExtra("pageStyle",FROM_CONCERN);
+                                startActivityForResult(intent,CONCERNS_OTHER);
                             }
                         });
-
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                concernsAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener(){
-
-                    @Override
-                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                        ConcernInfo concernInfo=list.get(position/2);
-                        if (position%2==0){
-                            Intent intent=new Intent(ConcernsActivity.this,OthersHomepageActivity.class);
-                            intent.putExtra("userId",concernInfo.getUserId());
-                            intent.putExtra("nickname",concernInfo.getNickname());
-                            startActivity(intent);
+                        concernsAdapter.notifyDataSetChanged();
+                        swipeRefreshLayout.setRefreshing(false);
+                        break;
+                    case CONCERNSSIZE:
+                        try {
+                            jsonArray=new JSONArray(line);
+                            concernNum=jsonArray.length();
+                            Intent intent=new Intent();
+                            intent.putExtra("concernNum",concernNum);
+                            ConcernsActivity.this.setResult(CONCERNRESULT,intent);
+                            finish();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    }
-                });
+
+                        break;
+
+                }
+
+
             }
         };
 
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        isConcerned=data.getBooleanExtra("isConcerned",false);
+        position=data.getIntExtra("position",-1);
+        int index=position+1-position%2;
+        ImageView imageView=map.get(index);
+        Log.i("imageView", String.valueOf(map.size()));
+        Log.i("index", String.valueOf(index));
+        if (isConcerned==true){
+            imageView.setImageResource(R.mipmap.concerned);
+        }else {
+            imageView.setImageResource(R.mipmap.unconcerned);
+        }
+    }
+
     public class GetConcernsList extends Thread{
         private int userId;
+        private int getConcerncode;
 
-        public GetConcernsList(int userId) {
+        public GetConcernsList(int userId, int getConcerncode) {
             this.userId = userId;
+            this.getConcerncode = getConcerncode;
         }
 
         @Override
@@ -125,7 +218,6 @@ public class ConcernsActivity extends BaseActivity {
                 public void onFailure(Call call, IOException e) {
 
                 }
-
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String line1=response.body().string();
@@ -136,16 +228,22 @@ public class ConcernsActivity extends BaseActivity {
                         Message message=new Message();
                         Bundle bundle=new Bundle();
                         bundle.putString("concernList",line);
+                        bundle.putInt("getConcerncode",getConcerncode);
                         message.setData(bundle);
                         handler.sendMessage(message);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-
                 }
             },requestBody);
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Thread threadSizeBack=new GetConcernsList(userIdOfLogin,CONCERNSSIZE);
+        threadSizeBack.start();
     }
 }

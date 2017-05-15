@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -36,18 +37,25 @@ import okhttp3.Response;
 
 public class HomepageActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private Intent intent;
     private HomepageUserInfo homepageUserInfo;
     private Handler handler;
-    private int userId=1;
+    private int userId=4;
+    private boolean isLoginSuccess=true;
+    private TextView textViewConcerns;
+    private int REQUEST_CODE_CONCERNS=1;
+    private int REQUEST_CODE_FANS=2;
+    private int concernNum;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
         ExitApplication.getInstance().addActivity(this);
-//        Intent intent=getIntent();
+        intent=getIntent();
 //        userId=intent.getIntExtra("userId",-1);
+//        isLoginSuccess=intent.getBooleanExtra("isLoginSuccess",false);
+        Log.i("userId", String.valueOf(userId));
         Thread thread=new GetHomepageInfo(userId);
         thread.start();
         handler=new Handler(){
@@ -55,6 +63,8 @@ public class HomepageActivity extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 homepageUserInfo= (HomepageUserInfo) msg.getData().get("homepageUserInfo");
+                homepageUserInfo.setUserId(userId);
+                concernNum=homepageUserInfo.getConcerns();
                 recyclerView=(RecyclerView)findViewById(R.id.homepage_recyclerView_view);
                 final List<MultiItemOfHomepage> data= DataServerForHomepage.getMultiItemData();
                 final HomepageAdapter homepageAdapter=new HomepageAdapter(HomepageActivity.this,data,homepageUserInfo);
@@ -68,32 +78,41 @@ public class HomepageActivity extends AppCompatActivity {
                         return data.get(position).getSpanSize();
                     }
                 });
+                homepageAdapter.bindToRecyclerView(recyclerView);
                 homepageAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener(){
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                         Toast.makeText(HomepageActivity.this,"item "+position,Toast.LENGTH_SHORT).show();
+
                         switch (position){
                             case 4:
                                 intent=new Intent(HomepageActivity.this,MyCollectionActivity.class);
                                 intent.putExtra("userId",userId);
+                                intent.putExtra("isLoginSuccess",isLoginSuccess);
                                 startActivity(intent);
                                 break;
                             case 5:
                                 intent=new Intent(HomepageActivity.this,MyArticleActivity.class);
                                 intent.putExtra("userId",homepageUserInfo.getUserId());
+                                Log.i("homapage userId", String.valueOf(homepageUserInfo.getUserId()));
                                 intent.putExtra("avatarPic",homepageUserInfo.getAvatar());
                                 intent.putExtra("nickName",homepageUserInfo.getNickname());
+                                intent.putExtra("isLoginSuccess",isLoginSuccess);
                                 startActivity(intent);
                                 break;
                             case 2:
+                                textViewConcerns=(TextView)adapter.getViewByPosition(position-1,R.id.btn_size);
                                 intent=new Intent(HomepageActivity.this,MyFansListActivity.class);
                                 intent.putExtra("userId",homepageUserInfo.getUserId());
-                                startActivity(intent);
+                                intent.putExtra("isLoginSuccess",isLoginSuccess);
+                                startActivityForResult(intent,REQUEST_CODE_FANS);
                                 break;
                             case 1:
+                                textViewConcerns=(TextView)adapter.getViewByPosition(position,R.id.btn_size);
                                 intent=new Intent(HomepageActivity.this,ConcernsActivity.class);
                                 intent.putExtra("userId",homepageUserInfo.getUserId());
-                                startActivity(intent);
+                                intent.putExtra("isLoginSuccess",isLoginSuccess);
+                                startActivityForResult(intent,REQUEST_CODE_CONCERNS);
                                 break;
                             case 6:
                                 intent=new Intent(HomepageActivity.this,AccountManageActivity.class);
@@ -111,6 +130,15 @@ public class HomepageActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        concernNum=data.getIntExtra("concernNum",-1);
+        Log.i("concernNum", String.valueOf(concernNum));
+        textViewConcerns.setText( String.valueOf(concernNum));
+
+    }
+
     public  class GetHomepageInfo extends Thread{
         private int userId;
 
@@ -121,7 +149,6 @@ public class HomepageActivity extends AppCompatActivity {
         @Override
         public void run() {
             super.run();
-            Log.i("Thread123",Thread.currentThread().getName());
             Map<String,Object> params = new HashMap<String,Object>();
             String url="/homePage/common";
             params.put("userId",userId);
@@ -132,7 +159,6 @@ public class HomepageActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call call, IOException e) {
 
-
                 }
 
                 @Override
@@ -141,13 +167,18 @@ public class HomepageActivity extends AppCompatActivity {
                     try {
                         String line=response.body().string();
                         JSONObject jsonObject=new JSONObject(line).getJSONObject("data");
+                        Log.i("jsonObject",jsonObject.toString());
                         homepageUserInfo.setAvatar((String) jsonObject.get("avatarPath"));
                         homepageUserInfo.setUserId((Integer) jsonObject.get("usersId"));
+
                         homepageUserInfo.setNickname((String) jsonObject.get("nickName"));
                         homepageUserInfo.setSignature((String) jsonObject.get("signature"));
-                        homepageUserInfo.setConcerns((Integer) jsonObject.get("fans"));
-                        homepageUserInfo.setFans((Integer) jsonObject.get("followers"));
-                        homepageUserInfo.setAnnouncement((String) jsonObject.get("announcement"));
+                        homepageUserInfo.setConcerns((Integer) jsonObject.get("followers"));
+                        homepageUserInfo.setFans((Integer) jsonObject.get("fans"));
+//                        homepageUserInfo.setAnnouncement("今天是个好天气");
+
+                        homepageUserInfo.setAnnouncement(jsonObject.getString("announcement"));
+
                         Message message=new Message();
                         Bundle bundle=new Bundle();
                         bundle.putSerializable("homepageUserInfo",homepageUserInfo);
@@ -162,5 +193,7 @@ public class HomepageActivity extends AppCompatActivity {
 
         }
     }
+
+
 
 }

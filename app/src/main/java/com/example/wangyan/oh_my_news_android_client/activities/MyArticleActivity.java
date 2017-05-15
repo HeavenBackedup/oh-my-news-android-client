@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,8 +28,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -38,12 +41,16 @@ import okhttp3.Response;
 public class MyArticleActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private User user;
-    private List<ArticleInfo> list=new ArrayList<>();
+
     private int length;
     private Handler handler;
     private int userIdOfLogin;
     private int userIdOfShow;
     private Intent intent;
+    public final static int OTHER_STYLE=0;
+    private boolean isLoginSuccess;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private Set set=new HashSet();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +58,23 @@ public class MyArticleActivity extends BaseActivity {
         setContentView(R.layout.activity_my_article);
         ExitApplication.getInstance().addActivity(this);
         setBackBtn();
+        swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.article_refresh);
+
         intent=getIntent();
         user=new User();
         user.setAvatarPic(intent.getStringExtra("avatarPic"));
-        user.setUserId(intent.getIntExtra("userId",1));
+        user.setUserId(intent.getIntExtra("userId",-1));
+        Log.i("userIdOfLogin", String.valueOf(user.getUserId()));
         user.setUserName(intent.getStringExtra("nickName"));
-        Log.i("user   ",user.toString());
+        isLoginSuccess=intent.getBooleanExtra("isLoginSuccess",false);
+        userIdOfLogin=user.getUserId();
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Thread threadArticle=new GetMyArticleList(userIdOfLogin);
+                threadArticle.start();
+            }
+        });
         setTitle(user.getUserName()+"的文章");
         Thread thread=new GetMyArticleList(user.getUserId());
         thread.start();
@@ -65,26 +83,23 @@ public class MyArticleActivity extends BaseActivity {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 final String line= (String) msg.getData().get("result");
+                final List<ArticleInfo> list=new ArrayList<>();
                 try {
                     JSONArray jsonArray=new JSONArray(line);
                     for (int i=0;i<jsonArray.length();i++){
                         JSONObject jsonObject= jsonArray.getJSONObject(i);
                         ArticleInfo articleInfo=new ArticleInfo();
-                        articleInfo.setArticleContent(jsonObject.getString("article"));
+                        articleInfo.setArticleContent(jsonObject.getString("articleContent"));
                         articleInfo.setTopic(jsonObject.getString("topic"));
-                        articleInfo.setArticlePic("http://oh-my-news.oss-cn-shanghai.aliyuncs.com/1492105281826_2?Expires=2122825175&OSSAccessKeyId=LTAImvg3z9iZRy2n&Signature=%2B3Q2dKk8KlxgAwkEkh8yAFxQq1o%3D");
-                        if (i%2==0){
-                            articleInfo.setCollectedNum(50);
-                            articleInfo.setArticleId(1);
-                            articleInfo.setUserId(1);
-                        }else {
-                            articleInfo.setCollectedNum(100);
-                            articleInfo.setArticleId(4);
-                            articleInfo.setArticleId(2);
-                        }
-                        list.add(articleInfo);
+                        articleInfo.setArticlePic(jsonObject.getString("articlePic"));
+                        articleInfo.setArticleId(jsonObject.getInt("articleId"));
+//                        articleInfo.setUserId(jsonObject.getInt(""));
+                        articleInfo.setCollectedNum(jsonObject.getInt("collectedNum"));
+                            list.add(articleInfo);
+
 
                     }
+
                     length=list.size();
                     recyclerView=(RecyclerView)findViewById(R.id.article_recycler_view);
                     final List<MultiItemOfCollection> data= DataServerForHomepage.getMultiItemCollectionData(length);
@@ -97,41 +112,34 @@ public class MyArticleActivity extends BaseActivity {
                         @Override
                         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                             ArticleInfo articleInfo=list.get(position/4);
-                            userIdOfShow=articleInfo.getUserId();
+                            userIdOfShow=user.getUserId();
                             int articleId=articleInfo.getArticleId();
                             userIdOfLogin=user.getUserId();
                             if (position%4==0){
                                 Intent intent=new Intent(MyArticleActivity.this,OthersHomepageActivity.class);
                                 intent.putExtra("userIdOfLogin",userIdOfLogin);
                                 intent.putExtra("userIdOfShow",userIdOfShow);
+                                intent.putExtra("pageStyle",OTHER_STYLE);
+                                intent.putExtra("isLoginSuccess",isLoginSuccess);
+                                intent.putExtra("nickname",user.getUserName());
                                 startActivity(intent);
                             }else {
                                 Intent intent=new Intent(MyArticleActivity.this,DetailActivity.class);
-                                intent.putExtra("userIdOfShow",userIdOfShow);
                                 intent.putExtra("userIdOfLogin",userIdOfLogin);
+                                intent.putExtra("isLoginSuccess",isLoginSuccess);
                                 intent.putExtra("articleId",articleId);
                                 startActivity(intent);
                             }
-
-
                         }
                     });
+                    myArticleAdapter.notifyDataSetChanged();;
+                    swipeRefreshLayout.setRefreshing(false);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
             }
         };
-//        list=DataServerForHomepage.getArticleInfo();
-
-
-//        myArticleAdapter.setSpanSizeLookup(new BaseQuickAdapter.SpanSizeLookup(){
-//
-//            @Override
-//            public int getSpanSize(GridLayoutManager gridLayoutManager, int position) {
-//                return data.get(position).getSpanSize();
-//            }
-//        });
 
     }
 
@@ -146,11 +154,8 @@ public class MyArticleActivity extends BaseActivity {
         public void run() {
             super.run();
             Map<String,Object> params = new HashMap<String,Object>();
-            String url="/history/getContent";
+            String url="/history/getContents";
             params.put("userId",userId);
-            params.put("currentPage",1);
-            params.put("pageItemNum",10);
-            params.put("value",1);
             RequestBodyForm requestBodyForm=new RequestBodyForm(url,params);
             String updateUrl=requestBodyForm.getUrl();
             RequestBody requestBody=requestBodyForm.getRequestBody();
@@ -165,7 +170,7 @@ public class MyArticleActivity extends BaseActivity {
                 String line=response.body().string();
                     try {
                         JSONObject jsonObject=new JSONObject(line).getJSONObject("data");
-                        JSONArray jsonArray=jsonObject.getJSONArray("content");
+                        JSONArray jsonArray=jsonObject.getJSONArray("data");
                         String result=jsonArray.toString();
                         Bundle bundle=new Bundle();
                         Message message=new Message();
