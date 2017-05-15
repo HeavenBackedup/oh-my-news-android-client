@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.wangyan.oh_my_news_android_client.R;
@@ -97,7 +98,9 @@ public class MyArticleActivity extends BaseActivity {
                         articleInfo.setCollectedNum(jsonObject.getInt("collectedNum"));
                             list.add(articleInfo);
 
-
+                    }
+                    if (list.size()==0){
+                        Toast.makeText(MyArticleActivity.this,"还没有发布文章哦",Toast.LENGTH_SHORT).show();
                     }
 
                     length=list.size();

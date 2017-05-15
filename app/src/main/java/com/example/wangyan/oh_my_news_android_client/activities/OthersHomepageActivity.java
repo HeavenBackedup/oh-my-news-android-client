@@ -307,14 +307,14 @@ public class OthersHomepageActivity extends BaseActivity {
                     try {
                         String line=response.body().string();
                         JSONObject jsonObject=new JSONObject(line).getJSONObject("data");
-                        homepageUserInfo.setAvatar((String) jsonObject.get("avatarPath"));
-                        homepageUserInfo.setUserId((Integer) jsonObject.get("usersId"));
-                        homepageUserInfo.setNickname((String) jsonObject.get("nickName"));
-                        homepageUserInfo.setSignature((String) jsonObject.get("signature"));
-                        homepageUserInfo.setConcerns((Integer) jsonObject.get("followers"));
-                        homepageUserInfo.setFans((Integer) jsonObject.get("fans"));
+                        homepageUserInfo.setAvatar(jsonObject.getString("avatarPath"));
+                        homepageUserInfo.setUserId(jsonObject.getInt("usersId"));
+                        homepageUserInfo.setNickname(jsonObject.getString("nickName"));
+                        homepageUserInfo.setSignature(jsonObject.getString("signature"));
+                        homepageUserInfo.setConcerns(jsonObject.getInt("followers"));
+                        homepageUserInfo.setFans(jsonObject.getInt("fans"));
 //                        homepageUserInfo.setAnnouncement((String) jsonObject.get("announcement"));
-                        homepageUserInfo.setAnnouncement("fafanfan");
+                        homepageUserInfo.setAnnouncement(jsonObject.getString("announcement"));
                         Message message=new Message();
                         Bundle bundle=new Bundle();
                         bundle.putSerializable("homepageUserInfo",homepageUserInfo);
@@ -434,4 +434,6 @@ public class OthersHomepageActivity extends BaseActivity {
             finish();
         }
     }
+
+
 }

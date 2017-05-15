@@ -52,7 +52,7 @@ public class HomepageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
         ExitApplication.getInstance().addActivity(this);
-        intent=getIntent();
+//        intent=getIntent();
 //        userId=intent.getIntExtra("userId",-1);
 //        isLoginSuccess=intent.getBooleanExtra("isLoginSuccess",false);
         Log.i("userId", String.valueOf(userId));
@@ -119,7 +119,6 @@ public class HomepageActivity extends AppCompatActivity {
                                 intent.putExtra("userId",homepageUserInfo.getUserId());
                                 startActivity(intent);
                                 break;
-
                         }
                     }
                 });
@@ -158,7 +157,7 @@ public class HomepageActivity extends AppCompatActivity {
             new SendOkHttpRequestPost(updateUrl, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-
+                    Toast.makeText(HomepageActivity.this," fanfan  failure",Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -168,15 +167,12 @@ public class HomepageActivity extends AppCompatActivity {
                         String line=response.body().string();
                         JSONObject jsonObject=new JSONObject(line).getJSONObject("data");
                         Log.i("jsonObject",jsonObject.toString());
-                        homepageUserInfo.setAvatar((String) jsonObject.get("avatarPath"));
-                        homepageUserInfo.setUserId((Integer) jsonObject.get("usersId"));
-
-                        homepageUserInfo.setNickname((String) jsonObject.get("nickName"));
-                        homepageUserInfo.setSignature((String) jsonObject.get("signature"));
-                        homepageUserInfo.setConcerns((Integer) jsonObject.get("followers"));
-                        homepageUserInfo.setFans((Integer) jsonObject.get("fans"));
-//                        homepageUserInfo.setAnnouncement("今天是个好天气");
-
+                        homepageUserInfo.setAvatar(jsonObject.getString("avatarPath"));
+                        homepageUserInfo.setUserId(jsonObject.getInt("usersId"));
+                        homepageUserInfo.setNickname(jsonObject.getString("nickName"));
+                        homepageUserInfo.setSignature(jsonObject.getString("signature"));
+                        homepageUserInfo.setConcerns(jsonObject.getInt("followers"));
+                        homepageUserInfo.setFans(jsonObject.getInt("fans"));
                         homepageUserInfo.setAnnouncement(jsonObject.getString("announcement"));
 
                         Message message=new Message();
@@ -190,7 +186,6 @@ public class HomepageActivity extends AppCompatActivity {
 
                 }
             },requestBody);
-
         }
     }
 

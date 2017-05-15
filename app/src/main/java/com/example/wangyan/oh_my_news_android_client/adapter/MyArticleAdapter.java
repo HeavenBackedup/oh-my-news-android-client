@@ -48,6 +48,7 @@ public class MyArticleAdapter extends BaseMultiItemQuickAdapter<MultiItemOfColle
     @Override
     protected void convert(final BaseViewHolder helper, MultiItemOfCollection item) {
         ArticleInfo articleInfo=list.get(helper.getLayoutPosition()/4);
+
         switch (helper.getLayoutPosition()%4){
             case 0:
                 Glide.with(context).load(user.getAvatarPic()).asBitmap().into(new SimpleTarget<Bitmap>() {

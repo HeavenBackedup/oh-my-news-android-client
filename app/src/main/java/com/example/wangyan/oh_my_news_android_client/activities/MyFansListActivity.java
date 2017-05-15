@@ -51,7 +51,6 @@ public class MyFansListActivity extends BaseActivity  {
     private ImageView imageView_btn;
     private int position;
     private  Map<Integer,ImageView> map=new HashMap<>();
-    private Map<Integer,ImageView> mapFan=new HashMap<>();
     private boolean isLoginSuccess;
     public final static int FANSINFO=1;
     public final static int CONCERNSIZE=2;
@@ -100,10 +99,10 @@ public class MyFansListActivity extends BaseActivity  {
                             for (int i=0;i<length;i++){
                                 JSONObject jsonObject=jsonArray.getJSONObject(i);
                                 FansInfo fansInfo=new FansInfo();
-                                fansInfo.setAvatar((String) jsonObject.get("avatarPath"));
-                                fansInfo.setNickname((String) jsonObject.get("nickName"));
-                                fansInfo.setSignature((String) jsonObject.get("signature"));
-                                fansInfo.setUserId((Integer) jsonObject.get("userId"));
+                                fansInfo.setAvatar(jsonObject.getString("avatarPath"));
+                                fansInfo.setNickname(jsonObject.getString("nickName"));
+                                fansInfo.setSignature(jsonObject.getString("signature"));
+                                fansInfo.setUserId(jsonObject.getInt("userId"));
                                 fansInfo.setConcerned(jsonObject.getBoolean("concernRel"));
                                 list.add(fansInfo);
                             }

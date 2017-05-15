@@ -3,19 +3,16 @@ import android.app.ActivityGroup;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.wangyan.oh_my_news_android_client.R;
 import com.example.wangyan.oh_my_news_android_client.classes.contentAdapter;
-import com.example.wangyan.oh_my_news_android_client.util.AutoLogin;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MypageActivity extends ActivityGroup  {
     private View view1,view2,view3,view4,view5;
@@ -50,7 +47,7 @@ public class MypageActivity extends ActivityGroup  {
 //        AutoLogin l=new AutoLogin();
 //        Map<String,Object> map=l.login();
         userId=1;
-        isLoginSuccss=false;
+        isLoginSuccss=true;
 //        userId=Integer.parseInt(map.get("userId").toString());
 //        isLoginSuccss=Boolean.parseBoolean(map.get("isLoginSuccess").toString());
         Home=(LinearLayout)findViewById(R.id.Home);

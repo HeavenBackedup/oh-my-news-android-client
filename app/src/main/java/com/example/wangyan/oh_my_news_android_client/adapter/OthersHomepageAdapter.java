@@ -54,7 +54,12 @@ public class OthersHomepageAdapter extends BaseMultiItemQuickAdapter<MultiItemOf
 
 
                         helper.setText(R.id.nickname_context,homepageUserInfo.getNickname());
-                        helper.setText(R.id.signature_context,"简介："+homepageUserInfo.getSignature());
+                        if (homepageUserInfo.getSignature()=="null"||homepageUserInfo.getSignature()==null){
+                            helper.setText(R.id.signature_context,"简介: 他还没有介绍自己哦");
+                        }else {
+                            helper.setText(R.id.signature_context,"简介："+homepageUserInfo.getSignature());
+                        }
+
                         break;
 
                     case MultiItemOfHomepage.HOMEPAGE_LIST:
@@ -76,7 +81,12 @@ public class OthersHomepageAdapter extends BaseMultiItemQuickAdapter<MultiItemOf
                         }
                         break;
                     case MultiItemOfHomepage.HOMEPAGE_TALK:
-                        helper.setText(R.id.homepage_announcement,"声明："+homepageUserInfo.getAnnouncement());
+                        if (homepageUserInfo.getAnnouncement()=="null"||homepageUserInfo.getAnnouncement()==null){
+                            helper.setText(R.id.homepage_announcement,"声明: 他还没有发表声明哦");
+                        }else {
+                            helper.setText(R.id.homepage_announcement,"声明："+homepageUserInfo.getAnnouncement());
+                        }
+
                 }
 
 

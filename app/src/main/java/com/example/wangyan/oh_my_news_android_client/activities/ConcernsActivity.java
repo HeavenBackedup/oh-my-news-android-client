@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.wangyan.oh_my_news_android_client.R;
@@ -102,12 +103,15 @@ public class ConcernsActivity extends BaseActivity {
                             for (int i=0;i<length;i++){
                                 JSONObject jsonObject=jsonArray.getJSONObject(i);
                                 ConcernInfo concernInfo=new ConcernInfo();
-                                concernInfo.setAvatar((String) jsonObject.get("avatarPath"));
-                                concernInfo.setNickname((String) jsonObject.get("nickName"));
-                                concernInfo.setSignature((String) jsonObject.get("signature"));
-                                concernInfo.setUserId((Integer) jsonObject.get("userId"));
+                                concernInfo.setAvatar(jsonObject.getString("avatarPath"));
+                                concernInfo.setNickname(jsonObject.getString("nickName"));
+                                concernInfo.setSignature(jsonObject.getString("signature"));
+                                concernInfo.setUserId(jsonObject.getInt("userId"));
                                 concernInfo.setConcerned(true);
                                 list.add(concernInfo);
+                            }
+                            if (list.size()==0){
+                                Toast.makeText(ConcernsActivity.this,"您还没有关注别人",Toast.LENGTH_SHORT).show();
                             }
                             recyclerView=(RecyclerView)findViewById(R.id.concern_recycler_view);
                             final List<MultiItemOfFans> data= DataServerForHomepage.getMuliItemFansData(length);
@@ -217,6 +221,7 @@ public class ConcernsActivity extends BaseActivity {
                 @Override
                 public void onFailure(Call call, IOException e) {
 
+                    Toast.makeText(ConcernsActivity.this," fanfan  failure",Toast.LENGTH_SHORT).show();
                 }
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {

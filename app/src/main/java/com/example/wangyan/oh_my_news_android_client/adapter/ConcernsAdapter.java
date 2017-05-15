@@ -2,7 +2,6 @@ package com.example.wangyan.oh_my_news_android_client.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -41,10 +40,10 @@ public class ConcernsAdapter  extends BaseMultiItemQuickAdapter<MultiItemOfFans,
     @Override
     protected void convert(final BaseViewHolder helper, MultiItemOfFans item) {
         this.helper=helper;
+
         ConcernInfo concernInfo=list.get(helper.getLayoutPosition()/2);
         switch (helper.getItemViewType()){
             case MultiItemOfFans.FANS_INFO:
-                Log.i("id", String.valueOf(concernInfo.getUserId()));
                 Glide.with(context).load(concernInfo.getAvatar()).asBitmap().into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {

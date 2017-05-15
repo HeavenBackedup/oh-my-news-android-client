@@ -88,6 +88,10 @@ public class MyCollectionActivity extends BaseActivity {
                         collectionInfo.setAvatar(jsonObject.getString("avatar"));
                         collectionInfo.setCollectedNum(jsonObject.getInt("collectedNum"));
                         list.add(collectionInfo);
+                    }
+                    if (list.size()==0){
+                        Toast.makeText(MyCollectionActivity.this,"您还没有收藏的文章哦",Toast.LENGTH_SHORT).show();
+                    }
                         recyclerView=(RecyclerView)findViewById(R.id.collection_recycler_view);
                         final List<MultiItemOfCollection> data= DataServerForHomepage.getMultiItemCollectionData(length);
                         MyCollectionAdapter myCollectionAdapter=new MyCollectionAdapter(MyCollectionActivity.this,data,list);
@@ -121,7 +125,7 @@ public class MyCollectionActivity extends BaseActivity {
                         });
                         myCollectionAdapter.notifyDataSetChanged();
                         swipeRefreshLayout.setRefreshing(false);
-                    }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
