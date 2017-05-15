@@ -14,7 +14,7 @@ import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplicati
 import java.util.Map;
 
 public class StartActivity extends AppCompatActivity {
-    private static final int LOAD_DISPLAY_TIME = 1500;
+    private static final int LOAD_DISPLAY_TIME = 2000;
     private Handler handler;
     private Intent intent = new Intent();
     private int userId = -1;
@@ -34,11 +34,12 @@ public class StartActivity extends AppCompatActivity {
 //                Map<String,Object> map = autoLogin.login();
 //                userId = Integer.parseInt( map.get("userId").toString());
 //                isLoginSuccess = Boolean.parseBoolean(map.get("isLoginSucess").toString());
-//
+                  ExitApplication.getInstance().userId = userId;
+                  ExitApplication.getInstance().isLoginSuccess = isLoginSuccess;
+
 //                intent.putExtra("userId",userId);
 //                intent.putExtra("isLoginSuccess",isLoginSuccess);
 //                intent.putExtra("type","");
-
                 intent.setClass(StartActivity.this, MypageActivity.class);
                 startActivity(intent);
                StartActivity.this.finish();

@@ -65,16 +65,14 @@ public class CommonCallBack implements Callback {
     }
     private void handleResponse(Object resultObj){
         if (resultObj == null){
-
             responseDataListener.onFailure(new OkHttpException(NETWORK_ERROR,EMPTY_MSG));
         }else {
             try {
                 JSONObject jsonObject = new JSONObject(resultObj.toString());
                 Object result = jsonObject.get("data");
-                Log.i("fan",result.toString());
+                Log.i("fan","...."+result.toString());
                 responseDataListener.onSuccess(result);
             }catch (Exception e){
-                Log.i("wangyan ","response................"+resultObj+"............");
                 responseDataListener.onFailure(new OkHttpException(OTHER_ERROR,e.getMessage()));
 
             }

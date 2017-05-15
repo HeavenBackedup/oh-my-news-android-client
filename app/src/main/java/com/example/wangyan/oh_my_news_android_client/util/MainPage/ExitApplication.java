@@ -3,8 +3,10 @@ package com.example.wangyan.oh_my_news_android_client.util.MainPage;
 import android.app.Activity;
 import android.app.Application;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wangyan on 2017/5/12.
@@ -12,6 +14,10 @@ import java.util.List;
 
 public class ExitApplication extends Application {
     private List<Activity> activityList = new LinkedList<Activity>();
+    private Map<String,Object> map = new HashMap<String, Object>();
+    public Integer userId;
+    public boolean isLoginSuccess;
+
     private static ExitApplication instance;
 
     private ExitApplication(){}

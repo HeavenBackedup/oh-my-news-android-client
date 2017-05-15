@@ -59,7 +59,6 @@ public class LoginService extends Service {
                     CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {
                         @Override
                         public void onSuccess(Object responseObj) {
-                            Log.i("wangyan","nsuaudhns..........."+JsonToObject.getLogin(responseObj));
 
                             //将返回的json对象进行解析，只返回给页面具体值
                             if (callback != null){

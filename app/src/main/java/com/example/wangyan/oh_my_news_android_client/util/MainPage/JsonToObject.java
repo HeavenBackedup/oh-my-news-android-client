@@ -21,16 +21,18 @@ import static com.example.wangyan.oh_my_news_android_client.services.MainpageSer
  */
 
 public class JsonToObject {
-    private static boolean isLoginSuccess = false;
+    private static boolean isLoginSuccess;
     private static List<Map<String, Object>> list_Maps = new ArrayList<Map<String, Object>>();
 
 //    登陆
     public static Map<String,Object> getLogin(Object json){
         Map<String,Object> map = new HashMap<String, Object>();
         Integer userId = (Integer)json;
+        isLoginSuccess = false;
         if (userId == -1){
             map.put("isLoginSuccess",isLoginSuccess);
             map.put("userId",userId);
+            Log.i("wangyan","...........new........."+map.toString()+"..................");
         }else {
             isLoginSuccess = true;
             map.put("isLoginSuccess",isLoginSuccess);
@@ -73,7 +75,7 @@ public class JsonToObject {
                     if (bitmap != null){
                         map.put(NEWS_IMGS, JsonToObject.newsImgs(bitmap));
                     }
-                    map.put("articalId",articalId);
+                    map.put("articleId",articalId);
                     map.put(NEWS_AUTHOR,author);
                     map.put(NEWS_TITLE,topic);
                     list_Maps.add(map);

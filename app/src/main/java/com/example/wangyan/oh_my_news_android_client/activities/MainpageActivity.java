@@ -61,10 +61,7 @@ public class MainpageActivity extends AppCompatActivity{
     private List<Map<String,Object>> list = new ArrayList<Map<String, Object>>();
     private int userId;
     private boolean isLoginSuccess;
-    private int articalId;
-
-
-    private Bitmap bitmap = null;
+    private int articleId;
     private int value;
 
 
@@ -74,18 +71,22 @@ public class MainpageActivity extends AppCompatActivity{
         setContentView(R.layout.activity_mainpage);
 
         ExitApplication.getInstance().addActivity(this);
-
+//        intent = getIntent();
+//        isLoginSuccess = intent.getBooleanExtra("isLoginSuccess",false);
+//        userId = intent.getIntExtra("userId",-1);
+        isLoginSuccess = ExitApplication.getInstance().isLoginSuccess;
+        userId = ExitApplication.getInstance().userId;
         new Thread(new Runnable() {
             @Override
             public void run() {
-                responseNewsData(index,addValue);
+                responseNewsData(addValue);
             }
         }).start();
-        intent = getIntent();
-        isLoginSuccess = intent.getBooleanExtra("isLoginSuccess",false);
-        userId = intent.getIntExtra("userId",-1);
+
         initView();
     }
+
+
     private void initView(){
         topbar_main = (Topbar)findViewById(R.id.topbar_main);
         lv_refresh_news = (RefreshView)findViewById(R.id.lv_refresh_news);
@@ -189,10 +190,10 @@ public class MainpageActivity extends AppCompatActivity{
           @Override
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
               Map<String,Object> map = list.get(position);
-              articalId = (int) map.get("articalId");
+              articleId = (int) map.get("articleId");
               intent.putExtra("userId",userId);
               intent.putExtra("isLoginSuccess",isLoginSuccess);
-              intent.putExtra("articalId",articalId);
+              intent.putExtra("articleId",articleId);
               intent.setClass(MainpageActivity.this,DetailActivity.class);
               startActivity(intent);
              }
@@ -207,7 +208,7 @@ public class MainpageActivity extends AppCompatActivity{
                     @Override
                     public void run() {
                         addValue++;
-                        responseNewsData(index,addValue);
+                        responseNewsData(addValue);
                         adapter.notifyDataSetChanged();
                         lv_refresh_news.loadComplete();
                     }
@@ -220,7 +221,7 @@ public class MainpageActivity extends AppCompatActivity{
     }
     private void sortOnclick(int index,Button button){
         list.clear();
-        responseNewsData(index, addValue);
+        responseNewsData(addValue);
         restartButton();
         button.setTextColor(0xFFff0000);
         lv_refresh_news.setAdapter(null);
@@ -238,43 +239,61 @@ public class MainpageActivity extends AppCompatActivity{
          sportButton.setTextColor(0xFF000000);
          bookButton.setTextColor(0xFF000000);
     }
-    private void responseNewsData(int index, int addValue){
-        Log.i("wangyna",index+",,index,,,,,,,,,123,,,addvalue,,,"+addValue);
+
+
+    //封装数据
+    private void responseNewsData(int addValue){
         //增加局部变量value，防止页面刷新切换页面时出现错误
         value = index;
-        String url = "/mainpage/showPage";
-//        String url = "/mainpage/androidShowPage";
-        Map<String,Object> map = new HashMap<String, Object>();
-        map.put("pageIndex",index);
-        map.put("currentPage",addValue);
-        CommonOkHttpClient.post(CommonRequest.createPostResquest(url,map),new ResponseDataHandle(new ResponseDataListener() {
-            @Override
-            public void onSuccess(Object responseObj) {
-                    responseImg(responseObj);
-            }
-            @Override
-            public void onFailure(Object reasonObj) {
-
-            }
-        }));
-    }
-    //后期用
-    //封装数据
-    private void responseNewsData1(int index,int addValue){
-        value = index;
-        String url = "/mainpage/androidShowPage";
+        final String url = "/mainpage/androidShowPage";
         Map<String,Object> map = new HashMap<String, Object>();
         map.put("index",index);
         map.put("addValue",addValue);
         CommonOkHttpClient.post(CommonRequest.createPostResquest(url,map),new ResponseDataHandle(new ResponseDataListener() {
+
             @Override
             public void onSuccess(Object responseObj) {
-                String url = JsonToObject.getUrl(responseObj);
-                Bitmap bitmap1 = null;
-                if (url != null){
-                   bitmap1 = responseImg1(url);
+
+                int img = 0;
+                try {
+                    Map<String,Object> map;
+                    JSONObject jsonObject = new JSONObject(responseObj.toString());
+                    JSONArray newList = jsonObject.getJSONArray("newList");
+                    for (int i = 0;i<newList.length();i++){
+//                            map = new HashMap<String, Object>();
+                            JSONObject responseList = newList.getJSONObject(i);
+                            String url = responseList.getString("url");
+
+                            int articleId = responseList.getInt("id");
+                            String author = responseList.getString("author");
+                            String topic = responseList.getString("topic");
+
+                           if (value == index) {
+                               if (url.equals("null")) {
+                                   map = new HashMap<String, Object>();
+                                   map.put("articleId", articleId);
+                                   map.put(NEWS_AUTHOR, author);
+                                   map.put(NEWS_TITLE, topic);
+                                   Log.i("wangyan", "..." + map.size());
+                                   list.add(map);
+                                   getData();
+                                  }else{
+                                   Bitmap bitmap = null;
+                                   map = new HashMap<String, Object>();
+                                   map.put("articleId", articleId);
+                                   map.put(NEWS_AUTHOR, author);
+                                   map.put(NEWS_TITLE, topic);
+                                   map.put(NEWS_IMGS,bitmap);
+                                   Log.i("wangyan","not null"+"..."+list.size());
+                                   responseImg(url,list.size());
+                                   list.add(map);
+                               }
+                             }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                JsonToObject.getNews1(responseObj,bitmap1);
 
             }
             @Override
@@ -284,57 +303,17 @@ public class MainpageActivity extends AppCompatActivity{
         }));
     }
     //返回图片
-    private Bitmap responseImg1(String url){
+    private void responseImg(String url, final int i){
+        Log.i("wanbyan",i+"..."+url);
         CommonOkHttpClient.downloadFileOther(CommonRequest.createGetResquest(url),new ResponseDataHandle(new ResponseDownloadListener() {
             @Override
             public void onProgress(int progress) {
             }
             @Override
             public void onSuccess(Object responseObj2) {
-                bitmap = (Bitmap) responseObj2;
-            }
-            @Override
-            public void onFailure(Object reasonObj) {
-            }
-        }));
-        return bitmap;
-    }
-    private void responseImg(Object responseObj){
-        final Object responseObj1 = responseObj;
-        String url_img = "http://cms-bucket.nosdn.127.net/catchpic/e/e8/e8af197c3b3ab1786ef430976c9ae8f3.jpg?imageView&thumbnail=550x0";
-        CommonOkHttpClient.downloadFileOther(CommonRequest.createGetResquest(url_img),new ResponseDataHandle(new ResponseDownloadListener() {
-            @Override
-            public void onProgress(int progress) {
-            }
-            @Override
-            public void onSuccess(Object responseObj2) {
-                Map<String,Object> map;
-                try {
-                    JSONObject jsonObject = new JSONObject(responseObj1.toString());
-                    JSONArray newList = jsonObject.getJSONArray("newList");
-                    for (int i = 0;i<newList.length();i++){
-                        map = new HashMap<String, Object>();
-                        JSONObject responseList = newList.getJSONObject(i);
-                        int articalId = responseList.getInt("id");
-                        String author = responseList.getString("author");
-                        String topic = responseList.getString("topic");
-                        Log.i("wangyan",index+"..index..............value.."+value);
-                        if (value == index) {
-                            map.put("articalId", articalId);
-                            map.put(NEWS_AUTHOR, author);
-                            map.put(NEWS_TITLE, topic);
-                            map.put(NEWS_IMGS, (Bitmap) responseObj2);
-                            list.add(map);
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Map<String,Object> map1 = new HashMap<String, Object>();
-                map1.put("articalId", articalId);
-                map1.put(NEWS_AUTHOR,"陌陌");
-                map1.put(NEWS_TITLE,"要知道遗忘是大脑最温柔的自我保护");
-                list.add(map1);
+
+               Bitmap bitmap = (Bitmap) responseObj2;
+                list.get(i).put(NEWS_IMGS,bitmap);
                 getData();
             }
             @Override
@@ -352,7 +331,6 @@ public class MainpageActivity extends AppCompatActivity{
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-               MainpageActivity.this.finish();
                 ExitApplication.getInstance().exitApp();
             }
         });
