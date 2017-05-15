@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
 //    private int userId;
 //    private boolean isLoginSuccess;
     private String type;
-    private String articleId;
+    private int articleId;
 
 
     @Override
@@ -67,8 +67,8 @@ public class LoginActivity extends AppCompatActivity {
         et_loginPwd.setText(pwd);
 
         type = intent.getStringExtra("type");
-        articleId = intent.getStringExtra("articleId");
-        Log.i("wangyan","..........."+type+"........");
+        articleId = intent.getIntExtra("articleId",-1);
+        Log.i("wangyan","..........."+type+"........"+articleId);
 
 
     }

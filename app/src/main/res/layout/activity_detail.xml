@@ -22,11 +22,11 @@
             android:layout_height="wrap_content">
             <Button
                 android:background="@color/red"
+                android:layout_gravity="center_vertical"
                 android:layout_margin="0dp"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
                 android:text="返回"
                 android:onClick="back"
                 android:textColor="@color/white"/>
@@ -37,17 +37,17 @@
                 android:layout_weight="20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
+                android:textSize="25dp"
                 android:text="正文"
                 android:textColor="@color/white"/>
             <Button
                 android:id="@+id/comment"
+                android:layout_gravity="center_vertical"
                 android:background="@color/red"
                 android:layout_margin="0dp"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
                 android:text="评论"
                 android:onClick="comment"
                 android:textColor="@color/white"/>
@@ -74,7 +74,7 @@
                 <TextView
                     android:id="@+id/mtv_topic"
                     android:background="@color/white"
-                    android:textSize="30dp"
+                    android:textSize="25dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"/>
@@ -84,32 +84,68 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"/>
-                <TextView
-                    android:id="@+id/mtv_author"
-                    android:background="@color/white"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:gravity="center"/>
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/mtv_author"
+                        android:background="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:layout_gravity="left"
+                        android:textColor="@color/red"/>
+                    <TextView
+                        android:id="@+id/mtv_date"
+                        android:background="@color/white"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"/>
+                </LinearLayout>
+
                 <WebView
                     android:id="@+id/mwv_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"></WebView>
-                <TextView
-                    android:background="@color/lightgray"
+                <LinearLayout
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="评        论"
-                    android:textSize="30dp"
-                    android:gravity="center"/>
+                    android:orientation="horizontal">
+                    <TextView
+                        android:background="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="  评论"
+                        android:textSize="25dp"
+                        android:gravity="center"/>
+                    <LinearLayout
+                        android:background="@color/white"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:id="@+id/mtv_commentNum"
+                            android:background="@color/white"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:layout_gravity="center_vertical"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
                 <com.example.wangyan.oh_my_news_android_client.util.MyListView
                     android:id="@+id/mlv_comment"
                     android:background="@color/white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"></com.example.wangyan.oh_my_news_android_client.util.MyListView>
+
                 <TextView
                     android:id="@+id/mtv_more"
                     android:background="@color/white"
+                    android:layout_marginTop="1dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="点击加载更多"

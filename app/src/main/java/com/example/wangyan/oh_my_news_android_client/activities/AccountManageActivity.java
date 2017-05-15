@@ -35,7 +35,7 @@ import java.util.Map;
 public class AccountManageActivity extends AppCompatActivity {
     Context context;
     private ListView list;
-//    private Button button;
+    private Button button;
 //    private Button button0;
     private List<Map<String,Object>> tt;
 //    static  int position;
@@ -51,26 +51,18 @@ public class AccountManageActivity extends AppCompatActivity {
 //        text.setText(content0);
         context=this;
         final LayoutInflater layoutInflater=LayoutInflater.from(context);
-//        button=(Button)findViewById(R.id.button);
-//        button0=(Button)findViewById(R.id.button0);
-//
-//        button.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent0=getIntent();
-//                String content0=intent0.getStringExtra("content");
-////                System.out.println(position+".......");
-//                ListAdapter la=list.getAdapter();
-//                HashMap<String, Object> map = (HashMap<String, Object>)la.getItem(position);
-//                map.put("content",content0);
-//                list.setAdapter(la);
-//                ((SimpleAdapter)la).notifyDataSetChanged();
-////                TextView text=(TextView)findViewById(R.id.text);
-////                text.setText(content0);
-//
-//            }
-//        });
+        button=(Button)findViewById(R.id.btn);
+
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent0=new Intent();
+                intent0.setClass(AccountManageActivity.this,HomepageActivity.class);
+                startActivity(intent0);
+
+            }
+        });
 //        button0.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -83,7 +75,7 @@ public class AccountManageActivity extends AppCompatActivity {
     private void postRequest(){
         Map<String,Object> params = new HashMap<String,Object>();
         String url = "/accountManage/getUser";
-        params.put("userId","123");
+        params.put("userId","1");
 
         CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {
             @Override

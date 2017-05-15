@@ -6,7 +6,6 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.example.wangyan.oh_my_news_android_client.R;
 import com.example.wangyan.oh_my_news_android_client.classes.contentAdapter;
 import com.example.wangyan.oh_my_news_android_client.util.MainPage.ExitApplication;
@@ -26,7 +25,7 @@ public class MypageActivity extends ActivityGroup  {
     private TextView txtPersonal;
     private String type="";
     private int userId;
-    private  boolean isLoginSuccss;
+    private  boolean isLoginSuccess;
     private ViewPager viewPager;
     private ViewPager viewPager1;
     private contentAdapter adapter;
@@ -46,8 +45,10 @@ public class MypageActivity extends ActivityGroup  {
 //        type=intent.getStringExtra("type");
 //        AutoLogin l=new AutoLogin();
 //        Map<String,Object> map=l.login();
-        userId=1;
-        isLoginSuccss=false;
+//        userId=1;
+//        isLoginSuccess=true;
+        isLoginSuccess = ExitApplication.getInstance().isLoginSuccess;
+        userId = ExitApplication.getInstance().userId;
 //        userId=Integer.parseInt(map.get("userId").toString());
 //        isLoginSuccss=Boolean.parseBoolean(map.get("isLoginSuccess").toString());
         Home=(LinearLayout)findViewById(R.id.Home);
@@ -58,7 +59,7 @@ public class MypageActivity extends ActivityGroup  {
         txtSearch = (TextView) findViewById(R.id.txtSearch);
         txtPmsg= (TextView) findViewById(R.id.txtPmsg);
         txtPersonal= (TextView) findViewById(R.id.txtPersonal);
-        if(isLoginSuccss){
+        if(isLoginSuccess){
             initView();
             onClickEvent();
            pageChangeEvent();
@@ -110,20 +111,7 @@ public class MypageActivity extends ActivityGroup  {
         views1.add(view5);
         this.adapter1 = new contentAdapter(views1);
         viewPager1.setAdapter(adapter1);
-        if(type.equals("privateMsg")){
-            viewPager.setCurrentItem(2);
-            txtPmsg.setTextColor(0xffFF0000);
-        }
-        else
-            txtHome.setTextColor(0xffFF0000);
-
-
-        if(type.equals("homePage")){
-            viewPager.setCurrentItem(3);
-            txtPersonal.setTextColor(0xffFF0000);
-        }
-        else
-            txtHome.setTextColor(0xffFF0000);
+        txtHome.setTextColor(0xffFF0000);
     }
     private void onClickEvent() {
 
@@ -149,7 +137,7 @@ public class MypageActivity extends ActivityGroup  {
         Pmsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isLoginSuccss) {
+                if (isLoginSuccess) {
                     restartBotton();
                     txtPmsg.setTextColor(0xffFF0000);
                     viewPager.setCurrentItem(2);
@@ -167,7 +155,7 @@ public class MypageActivity extends ActivityGroup  {
         Personal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isLoginSuccss) {
+                if (isLoginSuccess) {
                     restartBotton();
                     txtPersonal.setTextColor(0xffFF0000);
                     viewPager.setCurrentItem(3);
