@@ -58,17 +58,16 @@ public class MyArticleActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_article);
         ExitApplication.getInstance().addActivity(this);
+        isLoginSuccess = ExitApplication.getInstance().isLoginSuccess;
+        userIdOfLogin = ExitApplication.getInstance().userId;
         setBackBtn();
         swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.article_refresh);
-
         intent=getIntent();
         user=new User();
         user.setAvatarPic(intent.getStringExtra("avatarPic"));
-        user.setUserId(intent.getIntExtra("userId",-1));
+        user.setUserId(userIdOfLogin);
         Log.i("userIdOfLogin", String.valueOf(user.getUserId()));
         user.setUserName(intent.getStringExtra("nickName"));
-        isLoginSuccess=intent.getBooleanExtra("isLoginSuccess",false);
-        userIdOfLogin=user.getUserId();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -94,7 +93,7 @@ public class MyArticleActivity extends BaseActivity {
                         articleInfo.setTopic(jsonObject.getString("topic"));
                         articleInfo.setArticlePic(jsonObject.getString("articlePic"));
                         articleInfo.setArticleId(jsonObject.getInt("articleId"));
-//                        articleInfo.setUserId(jsonObject.getInt(""));
+                        articleInfo.setUserId(userIdOfLogin);
                         articleInfo.setCollectedNum(jsonObject.getInt("collectedNum"));
                             list.add(articleInfo);
 
@@ -117,18 +116,15 @@ public class MyArticleActivity extends BaseActivity {
                             ArticleInfo articleInfo=list.get(position/4);
                             userIdOfShow=user.getUserId();
                             int articleId=articleInfo.getArticleId();
-                            userIdOfLogin=user.getUserId();
                             if (position%4==0){
                                 Intent intent=new Intent(MyArticleActivity.this,OthersHomepageActivity.class);
-                                intent.putExtra("userIdOfLogin",userIdOfLogin);
                                 intent.putExtra("userIdOfShow",userIdOfShow);
                                 intent.putExtra("pageStyle",OTHER_STYLE);
-                                intent.putExtra("isLoginSuccess",isLoginSuccess);
                                 intent.putExtra("nickname",user.getUserName());
                                 startActivity(intent);
                             }else {
                                 Intent intent=new Intent(MyArticleActivity.this,DetailActivity.class);
-                                intent.putExtra("userIdOfLogin",userIdOfLogin);
+                                intent.putExtra("userId",userIdOfLogin);
                                 intent.putExtra("isLoginSuccess",isLoginSuccess);
                                 intent.putExtra("articleId",articleId);
                                 startActivity(intent);

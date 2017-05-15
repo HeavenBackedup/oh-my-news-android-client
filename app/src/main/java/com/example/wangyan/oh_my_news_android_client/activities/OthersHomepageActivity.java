@@ -61,6 +61,8 @@ public class OthersHomepageActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_others_homepage);
         ExitApplication.getInstance().addActivity(this);
+        isLoginSuccess = ExitApplication.getInstance().isLoginSuccess;
+        userIdOfLogin = ExitApplication.getInstance().userId;
         cardView=(CardView)findViewById(R.id.others_btn_cardView);
         textView_con=(TextView) findViewById(R.id.concern_unconcern_btn);
         textView_pri=(TextView) findViewById(R.id.private_msg);
@@ -68,8 +70,6 @@ public class OthersHomepageActivity extends BaseActivity {
         intent=getIntent();
         userIdOfShow=intent.getIntExtra("userIdOfShow",-1);
         nickname=intent.getStringExtra("nickname");
-        userIdOfLogin=intent.getIntExtra("userIdOfLogin",-1);
-        isLoginSuccess=intent.getBooleanExtra("isLoginSuccess",false);
         pageStyle=intent.getIntExtra("pageStyle",-1);
         setTitle(nickname+"的主页");
         if (pageStyle==1){
@@ -260,16 +260,7 @@ public class OthersHomepageActivity extends BaseActivity {
                                 Toast.makeText(OthersHomepageActivity.this,"添加不成功，请重新操作",Toast.LENGTH_SHORT).show();
                             }
                         }
-//                        setBackClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                Intent intent=new Intent();
-//                                intent.putExtra("isConcerned",isConcerned);
-//                                intent.putExtra("position",position);
-//                                OthersHomepageActivity.this.setResult(RESULT_FANS,intent);
-//                                finish();
-//                            }
-//                        });
+
                         break;
                 }
 
@@ -435,5 +426,9 @@ public class OthersHomepageActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
 
+    }
 }

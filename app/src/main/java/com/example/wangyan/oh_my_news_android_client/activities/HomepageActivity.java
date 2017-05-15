@@ -39,8 +39,8 @@ public class HomepageActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private HomepageUserInfo homepageUserInfo;
     private Handler handler;
-    private int userId=4;
-    private boolean isLoginSuccess=true;
+    private int userId;
+    private boolean isLoginSuccess;
     private TextView textViewConcerns;
     private int REQUEST_CODE_CONCERNS=1;
     private int REQUEST_CODE_FANS=2;
@@ -52,10 +52,14 @@ public class HomepageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
         ExitApplication.getInstance().addActivity(this);
+        isLoginSuccess = ExitApplication.getInstance().isLoginSuccess;
+        userId = ExitApplication.getInstance().userId;
+
 //        intent=getIntent();
 //        userId=intent.getIntExtra("userId",-1);
 //        isLoginSuccess=intent.getBooleanExtra("isLoginSuccess",false);
-        Log.i("userId", String.valueOf(userId));
+        Log.i("userId fanfan  homePage allType", String.valueOf(userId));
+        Log.i(" isLoginSuccess fanfan  homePage allType", String.valueOf(isLoginSuccess));
         Thread thread=new GetHomepageInfo(userId);
         thread.start();
         handler=new Handler(){

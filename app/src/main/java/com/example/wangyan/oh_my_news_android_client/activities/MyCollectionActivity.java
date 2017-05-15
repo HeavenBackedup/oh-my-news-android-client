@@ -117,7 +117,7 @@ public class MyCollectionActivity extends BaseActivity {
                                     intent=new Intent(MyCollectionActivity.this,DetailActivity.class);
                                     intent.putExtra("isLoginSuccess",isLoginSuccess);
                                     intent.putExtra("articleId",collectionInfo.getArticleId());
-                                    intent.putExtra("userIdOfLogin",userIdOfLogin);
+                                    intent.putExtra("userId",userIdOfLogin);
                                     startActivity(intent);
                                 }
 
