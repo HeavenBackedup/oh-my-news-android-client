@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,19 +44,22 @@ public class OthersHomepageActivity extends BaseActivity {
     private int userIdOfShow;
     private String nickname;
     private int userIdOfLogin;
-    private TextView textView_con;
-    private TextView textView_pri;
-    private CardView cardView;
     private boolean isConcerned;
     private int codeForSend;
     private boolean isLoginSuccess;
     private int position;
+    private TextView textView_con;
+    private TextView textView_pri;
+    private CardView cardView;
     private static final int RESULT_FANS=2;
     private int resultCode;
     public final static int RESULT_REL=1;
     public final static int RESULT_BACK=2;
     public final static int RESULT_CHANGE=4;
     private int pageStyle;
+    private boolean isLoginSuccessBack;
+    private int userIdOfLoginBack;
+    private SwipeRefreshLayout swipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,12 +70,9 @@ public class OthersHomepageActivity extends BaseActivity {
         cardView=(CardView)findViewById(R.id.others_btn_cardView);
         textView_con=(TextView) findViewById(R.id.concern_unconcern_btn);
         textView_pri=(TextView) findViewById(R.id.private_msg);
-
         intent=getIntent();
         userIdOfShow=intent.getIntExtra("userIdOfShow",-1);
-        nickname=intent.getStringExtra("nickname");
         pageStyle=intent.getIntExtra("pageStyle",-1);
-        setTitle(nickname+"的主页");
         if (pageStyle==1){
             position=intent.getIntExtra("position",-1);
             setBackClickListener(new View.OnClickListener() {
@@ -140,6 +141,8 @@ public class OthersHomepageActivity extends BaseActivity {
                         recyclerView.setLayoutManager(manager);
                         recyclerView.setAdapter(othersHomepageAdapter);
                         recyclerView.setAdapter(othersHomepageAdapter);
+                        nickname=homepageUserInfo.getNickname();
+                        setTitle(nickname+"的主页");
                         othersHomepageAdapter.setSpanSizeLookup(new BaseQuickAdapter.SpanSizeLookup(){
 
                             @Override
@@ -154,6 +157,7 @@ public class OthersHomepageActivity extends BaseActivity {
                                 if (position==4){
                                     intent=new Intent(OthersHomepageActivity.this,MyArticleActivity.class);
                                     intent.putExtra("userId",homepageUserInfo.getUserId());
+                                    Log.i("homepage article", String.valueOf(homepageUserInfo.getUserId()));
                                     intent.putExtra("avatarPic",homepageUserInfo.getAvatar());
                                     intent.putExtra("nickName",homepageUserInfo.getNickname());
                                     startActivity(intent);
@@ -174,6 +178,7 @@ public class OthersHomepageActivity extends BaseActivity {
                                     if (isConsernedNum==0){
                                         isConcerned=true;
                                         textView_con.setText("取消关注");
+                                        textView_con.setTextColor(getResources().getColor(R.color.black));
                                         textView_con.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
@@ -191,6 +196,8 @@ public class OthersHomepageActivity extends BaseActivity {
                                             public void onClick(View v) {
 //                                        codeForSend=3;
                                                 Thread threadAdd=new SendInfo(userIdOfLogin,userIdOfShow,3);
+                                                Log.i("userIdOfLogin other fandan", String.valueOf(userIdOfLogin));
+                                                Log.i("userIdOfShow other fanfan", String.valueOf(userIdOfShow));
                                                 threadAdd.start();
                                             }
                                         });
@@ -429,6 +436,33 @@ public class OthersHomepageActivity extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        isLoginSuccessBack = ExitApplication.getInstance().isLoginSuccess;
+        userIdOfLoginBack = ExitApplication.getInstance().userId;
+        if (isLoginSuccess==false){
+            if (isLoginSuccessBack=true){
+                if (userIdOfLoginBack==userIdOfLogin){
+                    cardView.setVisibility(View.GONE);
+                }else {
+                    cardView.setVisibility(View.VISIBLE);
+                    textView_pri.setText("私信");
+                    textView_pri.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(OthersHomepageActivity.this,DialogActivity.class);
+                            intent.putExtra("userId",userIdOfLogin);
+                            intent.putExtra("otherUserId",userIdOfShow);
+                            intent.putExtra("isLoginSuccess",isLoginSuccess);
+                            startActivity(intent);
+                        }
+                    });
+
+                    Thread threadBack=new GetConfirmInfo(userIdOfLoginBack,userIdOfShow,RESULT_REL);
+                    threadBack.start();
+                }
+                isLoginSuccess=isLoginSuccessBack;
+                userIdOfLogin=userIdOfLoginBack;
+            }
+        }
 
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,6 +47,8 @@ public class HomepageActivity extends AppCompatActivity {
     private int REQUEST_CODE_FANS=2;
     private int concernNum;
     private Intent intent;
+    private int code;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,79 +57,89 @@ public class HomepageActivity extends AppCompatActivity {
         ExitApplication.getInstance().addActivity(this);
         isLoginSuccess = ExitApplication.getInstance().isLoginSuccess;
         userId = ExitApplication.getInstance().userId;
-
+        swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.homepage_refresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Thread threadHomepage=new GetHomepageInfo(userId);
+                threadHomepage.start();
+            }
+        });
 //        intent=getIntent();
 //        userId=intent.getIntExtra("userId",-1);
 //        isLoginSuccess=intent.getBooleanExtra("isLoginSuccess",false);
-        Log.i("userId fanfan  homePage allType", String.valueOf(userId));
-        Log.i(" isLoginSuccess fanfan  homePage allType", String.valueOf(isLoginSuccess));
         Thread thread=new GetHomepageInfo(userId);
         thread.start();
         handler=new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                homepageUserInfo= (HomepageUserInfo) msg.getData().get("homepageUserInfo");
+
+                homepageUserInfo = (HomepageUserInfo) msg.getData().get("homepageUserInfo");
                 homepageUserInfo.setUserId(userId);
-                concernNum=homepageUserInfo.getConcerns();
-                recyclerView=(RecyclerView)findViewById(R.id.homepage_recyclerView_view);
-                final List<MultiItemOfHomepage> data= DataServerForHomepage.getMultiItemData();
-                final HomepageAdapter homepageAdapter=new HomepageAdapter(HomepageActivity.this,data,homepageUserInfo);
-                final GridLayoutManager manager=new GridLayoutManager(HomepageActivity.this,2);
-                recyclerView.setLayoutManager(manager);
-                recyclerView.setAdapter(homepageAdapter);
-                homepageAdapter.setSpanSizeLookup(new BaseQuickAdapter.SpanSizeLookup(){
+                code = msg.getData().getInt("code");
 
-                    @Override
-                    public int getSpanSize(GridLayoutManager gridLayoutManager, int position) {
-                        return data.get(position).getSpanSize();
-                    }
-                });
-                homepageAdapter.bindToRecyclerView(recyclerView);
-                homepageAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener(){
-                    @Override
-                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                        Toast.makeText(HomepageActivity.this,"item "+position,Toast.LENGTH_SHORT).show();
+                    concernNum = homepageUserInfo.getConcerns();
+                    recyclerView = (RecyclerView) findViewById(R.id.homepage_recyclerView_view);
+                    final List<MultiItemOfHomepage> data = DataServerForHomepage.getMultiItemData();
+                    final HomepageAdapter homepageAdapter = new HomepageAdapter(HomepageActivity.this, data, homepageUserInfo);
+                    final GridLayoutManager manager = new GridLayoutManager(HomepageActivity.this, 2);
+                    recyclerView.setLayoutManager(manager);
+                    recyclerView.setAdapter(homepageAdapter);
+                    homepageAdapter.setSpanSizeLookup(new BaseQuickAdapter.SpanSizeLookup() {
 
-                        switch (position){
-                            case 4:
-                                intent=new Intent(HomepageActivity.this,MyCollectionActivity.class);
-                                intent.putExtra("userId",userId);
-                                intent.putExtra("isLoginSuccess",isLoginSuccess);
-                                startActivity(intent);
-                                break;
-                            case 5:
-                                intent=new Intent(HomepageActivity.this,MyArticleActivity.class);
-                                intent.putExtra("userId",homepageUserInfo.getUserId());
-                                Log.i("homapage userId", String.valueOf(homepageUserInfo.getUserId()));
-                                intent.putExtra("avatarPic",homepageUserInfo.getAvatar());
-                                intent.putExtra("nickName",homepageUserInfo.getNickname());
-                                intent.putExtra("isLoginSuccess",isLoginSuccess);
-                                startActivity(intent);
-                                break;
-                            case 2:
-                                textViewConcerns=(TextView)adapter.getViewByPosition(position-1,R.id.btn_size);
-                                intent=new Intent(HomepageActivity.this,MyFansListActivity.class);
-                                intent.putExtra("userId",homepageUserInfo.getUserId());
-                                intent.putExtra("isLoginSuccess",isLoginSuccess);
-                                startActivityForResult(intent,REQUEST_CODE_FANS);
-                                break;
-                            case 1:
-                                textViewConcerns=(TextView)adapter.getViewByPosition(position,R.id.btn_size);
-                                intent=new Intent(HomepageActivity.this,ConcernsActivity.class);
-                                intent.putExtra("userId",homepageUserInfo.getUserId());
-                                intent.putExtra("isLoginSuccess",isLoginSuccess);
-                                startActivityForResult(intent,REQUEST_CODE_CONCERNS);
-                                break;
-                            case 6:
-                                intent=new Intent(HomepageActivity.this,AccountManageActivity.class);
-                                intent.putExtra("userId",homepageUserInfo.getUserId());
-                                startActivity(intent);
-                                break;
+                        @Override
+                        public int getSpanSize(GridLayoutManager gridLayoutManager, int position) {
+                            return data.get(position).getSpanSize();
                         }
-                    }
-                });
-                Log.i("homepageuserinfo",homepageUserInfo.toString());
+                    });
+                    homepageAdapter.bindToRecyclerView(recyclerView);
+                    homepageAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                            Toast.makeText(HomepageActivity.this, "item " + position, Toast.LENGTH_SHORT).show();
+                            switch (position) {
+                                case 4:
+                                    intent = new Intent(HomepageActivity.this, MyCollectionActivity.class);
+                                    intent.putExtra("userId", userId);
+                                    intent.putExtra("isLoginSuccess", isLoginSuccess);
+                                    startActivity(intent);
+                                    break;
+                                case 5:
+                                    intent = new Intent(HomepageActivity.this, MyArticleActivity.class);
+                                    intent.putExtra("userId", homepageUserInfo.getUserId());
+                                    Log.i("homapage userId", String.valueOf(homepageUserInfo.getUserId()));
+                                    intent.putExtra("avatarPic", homepageUserInfo.getAvatar());
+                                    intent.putExtra("nickName", homepageUserInfo.getNickname());
+                                    intent.putExtra("isLoginSuccess", isLoginSuccess);
+                                    startActivity(intent);
+                                    break;
+                                case 2:
+                                    textViewConcerns = (TextView) adapter.getViewByPosition(position - 1, R.id.btn_size);
+                                    intent = new Intent(HomepageActivity.this, MyFansListActivity.class);
+                                    intent.putExtra("userId", homepageUserInfo.getUserId());
+                                    intent.putExtra("isLoginSuccess", isLoginSuccess);
+                                    startActivityForResult(intent, REQUEST_CODE_FANS);
+                                    break;
+                                case 1:
+                                    textViewConcerns = (TextView) adapter.getViewByPosition(position, R.id.btn_size);
+                                    intent = new Intent(HomepageActivity.this, ConcernsActivity.class);
+                                    intent.putExtra("userId", homepageUserInfo.getUserId());
+                                    intent.putExtra("isLoginSuccess", isLoginSuccess);
+                                    startActivityForResult(intent, REQUEST_CODE_CONCERNS);
+                                    break;
+                                case 6:
+                                    intent = new Intent(HomepageActivity.this, AccountManageActivity.class);
+                                    intent.putExtra("userId", homepageUserInfo.getUserId());
+                                    intent.putExtra("concernNum",concernNum);
+                                    startActivity(intent);
+                                    break;
+                            }
+                        }
+                    });
+
+                homepageAdapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
             }
         };
 
@@ -148,6 +161,7 @@ public class HomepageActivity extends AppCompatActivity {
         public GetHomepageInfo(int userId) {
             this.userId = userId;
         }
+
 
         @Override
         public void run() {
@@ -192,7 +206,5 @@ public class HomepageActivity extends AppCompatActivity {
             },requestBody);
         }
     }
-
-
 
 }

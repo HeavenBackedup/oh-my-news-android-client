@@ -58,25 +58,26 @@ public class MyArticleActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_article);
         ExitApplication.getInstance().addActivity(this);
-        isLoginSuccess = ExitApplication.getInstance().isLoginSuccess;
-        userIdOfLogin = ExitApplication.getInstance().userId;
+//        isLoginSuccess = ExitApplication.getInstance().isLoginSuccess;
+//        userIdOfLogin = ExitApplication.getInstance().userId;
         setBackBtn();
         swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.article_refresh);
         intent=getIntent();
         user=new User();
         user.setAvatarPic(intent.getStringExtra("avatarPic"));
-        user.setUserId(userIdOfLogin);
-        Log.i("userIdOfLogin", String.valueOf(user.getUserId()));
+        user.setUserId(intent.getIntExtra("userId",-1));
+        userIdOfShow=user.getUserId();
+        Log.i("userIdOfLogin myArticle", String.valueOf(user.getUserId()));
         user.setUserName(intent.getStringExtra("nickName"));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Thread threadArticle=new GetMyArticleList(userIdOfLogin);
+                Thread threadArticle=new GetMyArticleList(userIdOfShow);
                 threadArticle.start();
             }
         });
         setTitle(user.getUserName()+"的文章");
-        Thread thread=new GetMyArticleList(user.getUserId());
+        Thread thread=new GetMyArticleList(userIdOfShow);
         thread.start();
         handler=new Handler(){
             @Override
@@ -120,11 +121,10 @@ public class MyArticleActivity extends BaseActivity {
                                 Intent intent=new Intent(MyArticleActivity.this,OthersHomepageActivity.class);
                                 intent.putExtra("userIdOfShow",userIdOfShow);
                                 intent.putExtra("pageStyle",OTHER_STYLE);
-                                intent.putExtra("nickname",user.getUserName());
                                 startActivity(intent);
                             }else {
                                 Intent intent=new Intent(MyArticleActivity.this,DetailActivity.class);
-                                intent.putExtra("userId",userIdOfLogin);
+//                                intent.putExtra("userId",userIdOfLogin);
                                 intent.putExtra("isLoginSuccess",isLoginSuccess);
                                 intent.putExtra("articleId",articleId);
                                 startActivity(intent);

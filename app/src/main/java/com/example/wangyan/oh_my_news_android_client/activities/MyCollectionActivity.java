@@ -109,7 +109,6 @@ public class MyCollectionActivity extends BaseActivity {
                                     intent=new Intent(MyCollectionActivity.this,OthersHomepageActivity.class);
                                     intent.putExtra("userIdOfShow",collectionInfo.getUserId());
                                     intent.putExtra("userIdOfLogin",userIdOfLogin);
-                                    intent.putExtra("nickname",collectionInfo.getNickname());
                                     intent.putExtra("isLoginSuccess",isLoginSuccess);
                                     startActivity(intent);
 

@@ -38,11 +38,10 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
     </android.support.design.widget.CoordinatorLayout>
-<!--<android.support.v4.widget.SwipeRefreshLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:id="@+id/homepage">-->
-<!--</android.support.v4.widget.SwipeRefreshLayout>-->
+<android.support.v4.widget.SwipeRefreshLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/homepage_refresh">
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,6 +51,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
     </android.support.v7.widget.RecyclerView>
+</android.support.v4.widget.SwipeRefreshLayout>
+
 </RelativeLayout>
 
 

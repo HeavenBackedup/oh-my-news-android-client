@@ -38,10 +38,16 @@
                 android:layout_margin="10dp"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.RecyclerView
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/others_userinfo_recycler_view">
-    </android.support.v7.widget.RecyclerView>
+        android:id="@+id/other_refresh">
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/others_userinfo_recycler_view">
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
 </LinearLayout>

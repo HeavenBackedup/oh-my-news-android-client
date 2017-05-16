@@ -2,19 +2,15 @@ package com.example.wangyan.oh_my_news_android_client.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.wangyan.oh_my_news_android_client.MainActivity;
 import com.example.wangyan.oh_my_news_android_client.R;
 import com.example.wangyan.oh_my_news_android_client.okhttp.CommonOkHttpClient;
 import com.example.wangyan.oh_my_news_android_client.okhttp.exception.OkHttpException;
@@ -36,6 +32,7 @@ public class AccountManageActivity extends AppCompatActivity {
     Context context;
     private ListView list;
     private Button button;
+    private int concernNum;
 //    private Button button0;
     private List<Map<String,Object>> tt;
 //    static  int position;
@@ -45,6 +42,8 @@ public class AccountManageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accountmanage);
         ExitApplication.getInstance().addActivity(this);
+Intent intent=getIntent();
+        concernNum=intent.getIntExtra("concernNum",-1);
 //        Intent intent0=getIntent();
 //        String content0=intent0.getStringExtra("content");
 //       TextView text=(TextView)findViewById(R.id.text);
@@ -58,8 +57,10 @@ public class AccountManageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent0=new Intent();
-                intent0.setClass(AccountManageActivity.this,HomepageActivity.class);
-                startActivity(intent0);
+                intent0.putExtra("concernNum",concernNum);
+                AccountManageActivity.this.setResult(0,intent0);
+//                intent0.setClass(AccountManageActivity.this,HomepageActivity.class);
+//                startActivity(intent0);
 
             }
         });
