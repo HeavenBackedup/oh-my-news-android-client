@@ -60,6 +60,7 @@ public class OthersHomepageActivity extends BaseActivity {
     private boolean isLoginSuccessBack;
     private int userIdOfLoginBack;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private String type="other";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +98,9 @@ public class OthersHomepageActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent=new Intent(OthersHomepageActivity.this,LoginActivity.class);
+                    intent.putExtra("type",type);
+                    intent.putExtra("userIdOfShow",userIdOfShow);
+                    intent.putExtra("pageStyle",pageStyle);
                     startActivity(intent);
                     Toast.makeText(OthersHomepageActivity.this,"请登陆后",Toast.LENGTH_SHORT).show();
                 }
