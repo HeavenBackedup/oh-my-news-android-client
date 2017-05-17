@@ -33,8 +33,11 @@ public class DialogActivity extends AppCompatActivity {
     private EditText inputText;
     private Button send;
     private msgAdapter adapter;
-    static String message0;
+    static String message0,message1;
     private static String name;
+    private  int userId;
+    private int otherUserId;
+    private boolean isLoginSuccess;
 
     private List<message> msgList = new ArrayList<message>();
 
@@ -43,11 +46,15 @@ public class DialogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialog);
         ExitApplication.getInstance().addActivity(this);
+
         Intent intent=getIntent();
          name=intent.getStringExtra("name");
+        otherUserId=intent.getIntExtra("otherUserId",-1);
         // ActionBar actionBar = getSupportActionBar();
         //actionBar.hide();
 //        initMsgs();
+        isLoginSuccess = ExitApplication.getInstance().isLoginSuccess;
+        userId = ExitApplication.getInstance().userId;
         postRequest();
         adapter = new msgAdapter(DialogActivity.this, R.layout.listlayout, msgList);
         inputText = (EditText)findViewById(R.id.inputText);
@@ -73,13 +80,14 @@ public class DialogActivity extends AppCompatActivity {
         Map<String,Object> params = new HashMap<String,Object>();
         String url = "/privatemsg/postPrivateMsg";
 
-        params.put("userId",123);
-        params.put("otherUserId",111);
+        params.put("userId",userId);
+        params.put("otherUserId",otherUserId);
         params.put("privateMsg",content);
 
         CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {
             @Override
             public void onSuccess(Object responseObj) {
+                System.out.println(responseObj);
                 System.out.println("......");
             }
 
@@ -100,8 +108,10 @@ public class DialogActivity extends AppCompatActivity {
     private void postRequest(){
         Map<String,Object> params = new HashMap<String,Object>();
         String url = "/privatemsg/getExMsg";
-        params.put("userId",2);
-        params.put("otherUserId",1);
+//        params.put("userId",2);
+//        params.put("otherUserId",1);
+        params.put("userId",userId);
+        params.put("otherUserId",otherUserId);
 
         CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {
             @Override
@@ -113,13 +123,21 @@ public class DialogActivity extends AppCompatActivity {
                    int len=jsonObject.length();
                     for (int i = 0; i < len; i++) {
                         JSONObject ob =jsonObject.getJSONObject(i);
-//                        System.out.println(ob.get("message"));
+//                        System.out.println(ob);
+                        System.out.println(ob.get("message"));
                         if(ob.getString("username").contains(name))
                         {
                            message0=ob.getString("message");
                             message msg1 = new message(name+":"+message0, message.TYPE_RECEIVED);
                             msgList.add(msg1);
 //                            System.out.println(message0);
+
+                        }
+                        else{
+                            message1=ob.getString("message");
+                            message msg2 = new message("我"+":"+message1, message.TYPE_SEND);
+                            msgList.add(msg2);
+
 
                         }
                     }

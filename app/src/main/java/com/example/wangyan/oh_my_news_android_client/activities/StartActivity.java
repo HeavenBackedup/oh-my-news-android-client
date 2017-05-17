@@ -39,7 +39,7 @@ public class StartActivity extends AppCompatActivity {
 
 //                intent.putExtra("userId",userId);
 //                intent.putExtra("isLoginSuccess",isLoginSuccess);
-//                intent.putExtra("type","");
+                intent.putExtra("type","");
                 intent.setClass(StartActivity.this, MypageActivity.class);
                 startActivity(intent);
                StartActivity.this.finish();
