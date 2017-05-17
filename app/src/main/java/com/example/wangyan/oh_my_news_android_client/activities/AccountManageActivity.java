@@ -35,6 +35,7 @@ public class AccountManageActivity extends AppCompatActivity {
     private int concernNum;
 //    private Button button0;
     private List<Map<String,Object>> tt;
+    private int userId;
 //    static  int position;
 
     @Override
@@ -44,6 +45,7 @@ public class AccountManageActivity extends AppCompatActivity {
         ExitApplication.getInstance().addActivity(this);
 Intent intent=getIntent();
         concernNum=intent.getIntExtra("concernNum",-1);
+        userId=intent.getIntExtra("userId",-1);
 //        Intent intent0=getIntent();
 //        String content0=intent0.getStringExtra("content");
 //       TextView text=(TextView)findViewById(R.id.text);
@@ -59,6 +61,7 @@ Intent intent=getIntent();
                 Intent intent0=new Intent();
                 intent0.putExtra("concernNum",concernNum);
                 AccountManageActivity.this.setResult(0,intent0);
+                finish();
 //                intent0.setClass(AccountManageActivity.this,HomepageActivity.class);
 //                startActivity(intent0);
 
@@ -71,12 +74,12 @@ Intent intent=getIntent();
 //            }
 //        });
         list = (ListView) findViewById(R.id.lsView);
-        postRequest();
+        postRequest(userId);
     }
-    private void postRequest(){
+    private void postRequest(int usreId){
         Map<String,Object> params = new HashMap<String,Object>();
         String url = "/accountManage/getUser";
-        params.put("userId","1");
+        params.put("userId",userId);
 
         CommonOkHttpClient.post(CommonRequest.createPostResquest(url,params),new ResponseDataHandle(new ResponseDataListener() {
             @Override
@@ -142,5 +145,13 @@ Intent intent=getIntent();
                 }
             }
         }));
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent=new Intent();
+        intent.putExtra("concernNum",concernNum);
+        AccountManageActivity.this.setResult(0,intent);
+        finish();
     }
 }

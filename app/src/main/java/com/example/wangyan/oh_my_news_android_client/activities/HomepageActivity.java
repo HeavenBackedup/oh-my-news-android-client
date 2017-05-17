@@ -78,7 +78,6 @@ public class HomepageActivity extends AppCompatActivity {
                 homepageUserInfo = (HomepageUserInfo) msg.getData().get("homepageUserInfo");
                 homepageUserInfo.setUserId(userId);
                 code = msg.getData().getInt("code");
-
                     concernNum = homepageUserInfo.getConcerns();
                     recyclerView = (RecyclerView) findViewById(R.id.homepage_recyclerView_view);
                     final List<MultiItemOfHomepage> data = DataServerForHomepage.getMultiItemData();
@@ -97,7 +96,6 @@ public class HomepageActivity extends AppCompatActivity {
                     homepageAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                            Toast.makeText(HomepageActivity.this, "item " + position, Toast.LENGTH_SHORT).show();
                             switch (position) {
                                 case 4:
                                     intent = new Intent(HomepageActivity.this, MyCollectionActivity.class);
