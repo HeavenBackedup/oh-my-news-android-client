@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
 //    private boolean isLoginSuccess;
     private String type;
     private int articleId;
+    private int userIdOfShow;
 
 
     @Override
@@ -68,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
         type = intent.getStringExtra("type");
         articleId = intent.getIntExtra("articleId",-1);
+        userIdOfShow=intent.getIntExtra("userIdOfShow",-1);
         Log.i("wangyan","..........."+type+"........"+articleId);
 
 
@@ -150,6 +152,11 @@ public class LoginActivity extends AppCompatActivity {
                         }else if ("homePage".equals(type)){
                           intent.putExtra("type",type);
                             intent.setClass(LoginActivity.this,MypageActivity.class);
+                        }else if ("other".equals(type)){
+                          intent.putExtra("type",type);
+                          intent.putExtra("userIdOfShow",userIdOfShow);
+                          intent.putExtra("pageStyle",1);
+                          intent.setClass(LoginActivity.this,OthersHomepageActivity.class);
                         }else {
                           intent.putExtra("type",type);
                           intent.setClass(LoginActivity.this, MypageActivity.class);

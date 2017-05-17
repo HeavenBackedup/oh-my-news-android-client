@@ -195,7 +195,8 @@ public class DetailActivity extends AppCompatActivity {
                         articleTime=articleInfo.getString("articleTime");
                         commentNum=Integer.parseInt(articleInfo.getString("commentNum"));
                         articleScore=Float.parseFloat(articleInfo.getString("articleScore"));
-                        Log.i("yanyue", author+".."+topic+".."+thumbupNum+".."+readed+".."+articleTime+".."+articleScore+".."+htmlContent+"....."+userIdOfShow+"....");
+                        Log.i("yanyue", articleInfo.toString());
+                        Log.i("yanyue", commentNum+"......."+author+".."+topic+".."+thumbupNum+".."+readed+".."+articleTime+".."+articleScore+".."+htmlContent+"....."+userIdOfShow+"....");
                         Log.i("yanyue", ".................................................................");
                         articleInit();
                     }
@@ -287,6 +288,7 @@ public class DetailActivity extends AppCompatActivity {
                             map.put("date",date);
                             map.put("img",img);
                             map.put("formerCommentId",formerCommentId);
+                            map.put("replierId",replierId);
                             data.add(map);
                             commentInit();
 //                            try {
