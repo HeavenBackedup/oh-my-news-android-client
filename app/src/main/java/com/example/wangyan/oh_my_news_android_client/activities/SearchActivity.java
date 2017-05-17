@@ -113,7 +113,7 @@ public class SearchActivity extends AppCompatActivity {
                             System.out.println(index);
                             Intent intent=new Intent();
                             intent.setClass(SearchActivity.this, DetailActivity.class);
-                            intent.putExtra("articleId",index);
+                            intent.putExtra("articleId",Integer.parseInt(index));
                             startActivity(intent);
                         }
                     });
