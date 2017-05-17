@@ -1,5 +1,7 @@
 package com.example.wangyan.oh_my_news_android_client.activities;
 import android.app.ActivityGroup;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -64,14 +66,13 @@ public class MypageActivity extends ActivityGroup  {
             initView();
             onClickEvent();
            pageChangeEvent();
+            initPage();
         }
         else {
 //            initView();
             initView1();
             onClickEvent1();
-
            pageChangeEvent1();
-
         }
     }
 
@@ -82,6 +83,7 @@ public class MypageActivity extends ActivityGroup  {
         isLoginSuccess = ExitApplication.getInstance().isLoginSuccess;
         userId = ExitApplication.getInstance().userId;
         if(isLoginSuccess){
+            getLocalActivityManager().destroyActivity("primsg",true);
             initView();
             onClickEvent();
             pageChangeEvent();
@@ -114,32 +116,7 @@ public class MypageActivity extends ActivityGroup  {
 //            initView();
             initView1();
             onClickEvent1();
-
             pageChangeEvent1();
-            switch (pageType){
-                case "home":
-                    restartBotton();
-                    txtHome.setTextColor(0xffFF0000);
-                    viewPager1.setCurrentItem(0);
-                    break;
-                case "search":
-                    restartBotton();
-                    txtSearch.setTextColor(0xffFF0000);
-                    viewPager1.setCurrentItem(1);
-                    break;
-                case "pmsg":
-                    Intent intent1 = new Intent();
-                    intent1.setClass(MypageActivity.this, LoginActivity.class);
-                    intent1.putExtra("type", "privateMsg");
-                    startActivity(intent1);
-                    break;
-                case "personal":
-                    Intent intent2 = new Intent();
-                    intent2.setClass(MypageActivity.this, LoginActivity.class);
-                    intent2.putExtra("type", "homePage");
-                    startActivity(intent2);
-                    break;
-            }
 
         }
     }
@@ -158,15 +135,7 @@ public class MypageActivity extends ActivityGroup  {
         views.add(view4);
         this.adapter = new contentAdapter(views);
         viewPager.setAdapter(adapter);
-        if(type.equals("privateMsg")){
-            viewPager.setCurrentItem(2);
-            txtPmsg.setTextColor(0xffFF0000);
-        }
-        else if(type.equals("homePage")){
-                viewPager.setCurrentItem(3);
-                txtPersonal.setTextColor(0xffFF0000);
-        }else
-            txtHome.setTextColor(0xffFF0000);
+
 
 
 //        if(type.equals("homePage")){
@@ -193,11 +162,15 @@ public class MypageActivity extends ActivityGroup  {
         this.adapter1 = new contentAdapter(views1);
         viewPager1.setAdapter(adapter1);
         txtHome.setTextColor(0xffFF0000);
+    }
+    private void initPage(){
         if(type.equals("privateMsg")){
+            pageType="pmsg";
             viewPager.setCurrentItem(2);
             txtPmsg.setTextColor(0xffFF0000);
         }
         else if(type.equals("homePage")){
+            pageType="personal";
             viewPager.setCurrentItem(3);
             txtPersonal.setTextColor(0xffFF0000);
         }else
@@ -229,18 +202,11 @@ public class MypageActivity extends ActivityGroup  {
         Pmsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isLoginSuccess) {
-                    pageType="pmsg";
-                    System.out.println("pmsgpmsg......");
-                    restartBotton();
-                    txtPmsg.setTextColor(0xffFF0000);
-                    viewPager.setCurrentItem(2);
-                } else {
-                    Intent intent1 = new Intent();
-                    intent1.setClass(MypageActivity.this, LoginActivity.class);
-                    intent1.putExtra("type", "privateMsg");
-                    startActivity(intent1);
-                }
+                pageType="pmsg";
+                System.out.println("pmsgpmsg......");
+                restartBotton();
+                txtPmsg.setTextColor(0xffFF0000);
+                viewPager.setCurrentItem(2);
 
 
             }
@@ -249,18 +215,11 @@ public class MypageActivity extends ActivityGroup  {
         Personal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isLoginSuccess) {
-                    pageType="personal";
-                    System.out.println("peraonalperaonal......");
-                    restartBotton();
-                    txtPersonal.setTextColor(0xffFF0000);
-                    viewPager.setCurrentItem(3);
-                } else {
-                    Intent intent1 = new Intent();
-                    intent1.setClass(MypageActivity.this, LoginActivity.class);
-                    intent1.putExtra("type", "homePage");
-                    startActivity(intent1);
-                }
+                pageType="personal";
+                System.out.println("peraonalperaonal......");
+                restartBotton();
+                txtPersonal.setTextColor(0xffFF0000);
+                viewPager.setCurrentItem(3);
 
             }
         });
@@ -291,38 +250,22 @@ public class MypageActivity extends ActivityGroup  {
         Pmsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isLoginSuccess) {
-                    pageType="pmsg";
-                    restartBotton();
-                    txtPmsg.setTextColor(0xffFF0000);
-                    viewPager1.setCurrentItem(2);
-                } else {
-                    pageType="pmsg";
-                    Intent intent1 = new Intent();
-                    intent1.setClass(MypageActivity.this, LoginActivity.class);
-                    intent1.putExtra("type", "privateMsg");
-                    startActivity(intent1);
-                }
-
-
+                pageType="pmsg";
+                Intent intent1 = new Intent();
+                intent1.setClass(MypageActivity.this, LoginActivity.class);
+                intent1.putExtra("type", "privateMsg");
+                startActivity(intent1);
             }
         });
 
         Personal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isLoginSuccess) {
-                    restartBotton();
-                    pageType="personal";
-                    txtPersonal.setTextColor(0xffFF0000);
-                    viewPager1.setCurrentItem(2);
-                } else {
-                    pageType="personal";
-                    Intent intent1 = new Intent();
-                    intent1.setClass(MypageActivity.this, LoginActivity.class);
-                    intent1.putExtra("type", "homePage");
-                    startActivity(intent1);
-                }
+                pageType="personal";
+                Intent intent1 = new Intent();
+                intent1.setClass(MypageActivity.this, LoginActivity.class);
+                intent1.putExtra("type", "homePage");
+                startActivity(intent1);
 
             }
         });
@@ -361,12 +304,12 @@ public class MypageActivity extends ActivityGroup  {
 //                            intent1.putExtra("type","privateMsg");
 //                            startActivity(intent1);
 //                        }
-//                        pageType="pmsg";
+                        pageType="pmsg";
                         txtPmsg.setTextColor(0xffFF0000);
 
                         break;
                     case 3:
-//                        pageType="personal";
+                        pageType="personal";
                         txtPersonal.setTextColor(0xffFF0000);
 //                        if(isLoginSuccss){
 //                            txtPersonal.setTextColor(0xffFF0000);
@@ -435,4 +378,25 @@ public class MypageActivity extends ActivityGroup  {
        txtPmsg.setTextColor(0xff000000);
        txtPersonal.setTextColor(0xff000000);
     }
+
+//    @Override
+//    public void onDestroy() {
+////        super.onBackPressed();
+//        AlertDialog.Builder builder = new AlertDialog.Builder(MypageActivity.this);
+//        builder.setMessage("确定要退出吗？");
+//        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                ExitApplication.getInstance().exitApp();
+//            }
+//        });
+//        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//            }
+//        });
+//        //创建并显示弹出的对话框
+//        builder.create().show();
+//    }
+
 }
