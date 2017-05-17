@@ -155,7 +155,7 @@ public class LoginActivity extends AppCompatActivity {
                         }else if ("other".equals(type)){
                           intent.putExtra("type",type);
                           intent.putExtra("userIdOfShow",userIdOfShow);
-                          intent.putExtra("pageStyle",1);
+                          intent.putExtra("pageStyle",0);
                           intent.setClass(LoginActivity.this,OthersHomepageActivity.class);
                         }else {
                           intent.putExtra("type",type);
