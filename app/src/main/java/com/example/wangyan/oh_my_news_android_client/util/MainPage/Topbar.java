@@ -19,7 +19,7 @@ import com.example.wangyan.oh_my_news_android_client.R;
 
 public class Topbar extends RelativeLayout{
 
-    private Button leftButton,rightButton;
+    public Button leftButton,rightButton;
     private TextView tvTitle;
 
     private Drawable leftBackground;
