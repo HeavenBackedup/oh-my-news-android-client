@@ -76,7 +76,6 @@ public class MainpageActivity extends AppCompatActivity{
 //        userId = intent.getIntExtra("userId",-1);
         isLoginSuccess = ExitApplication.getInstance().isLoginSuccess;
         userId = ExitApplication.getInstance().userId;
-        Log.i("yanyue", "onCreate: yyyyy"+userId+"...."+isLoginSuccess);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -115,6 +114,7 @@ public class MainpageActivity extends AppCompatActivity{
                 startActivity(intent);
             }
         });
+        initLoginText();
         mainPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -195,7 +195,6 @@ public class MainpageActivity extends AppCompatActivity{
               intent.putExtra("userId",ExitApplication.getInstance().userId);
               intent.putExtra("isLoginSuccess",ExitApplication.getInstance().isLoginSuccess);
               intent.putExtra("articleId",articleId);
-              Log.i("yanyue", "onCreate: "+userId+"...."+isLoginSuccess);
               intent.setClass(MainpageActivity.this,DetailActivity.class);
               startActivity(intent);
              }
@@ -220,15 +219,26 @@ public class MainpageActivity extends AppCompatActivity{
             }
         });
 
+
     }
+    //修改登录
+    private void initLoginText()
+    {
+        if (ExitApplication.getInstance().isLoginSuccess == true && ExitApplication.getInstance().userId != -1){
+            topbar_main.rightButton.setText("切换账号");
+        }
+    }
+    //点击分类的初始化
     private void sortOnclick(int index,Button button){
         list.clear();
+        addValue = 1;
         responseNewsData(addValue);
         restartButton();
         button.setTextColor(0xFFff0000);
         lv_refresh_news.setAdapter(null);
 
     }
+    //设置Button初始颜色
     private void restartButton(){
          mainPageButton.setTextColor(0xFF000000);
          cultureButton.setTextColor(0xFF000000);
@@ -323,6 +333,7 @@ public class MainpageActivity extends AppCompatActivity{
             }
         }));
     }
+    //刷新adapter
     private void getData(){
         adapter = new RefreshAdapter(MainpageActivity.this,list);
         lv_refresh_news.setAdapter(adapter);
