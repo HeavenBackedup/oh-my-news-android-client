@@ -287,6 +287,7 @@ public class PrivateMsgActivity extends AppCompatActivity {
             tv_title.setText(list.get(position).get(flag[1]).toString());
 
             final ImageView iv_img = (ImageView) convertView.findViewById(ItemIDs[0]);
+//            Glide.with(context).load(list.get(position).get(flag[0])).into(iv_img);
             Glide.with(context).load(list.get(position).get(flag[0])).asBitmap().into(new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {

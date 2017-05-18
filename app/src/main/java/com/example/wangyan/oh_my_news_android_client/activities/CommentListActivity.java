@@ -61,6 +61,10 @@ public class CommentListActivity extends AppCompatActivity {
         articleId=getIntent().getIntExtra("articleId",-1);
         userId=getIntent().getIntExtra("userId",-1);
         isLoginSuccess=getIntent().getBooleanExtra("isLoginSuccess",false);
+        if(!isLoginSuccess){
+            childComment.setVisibility(View.INVISIBLE);
+            childSubmit.setVisibility(View.INVISIBLE);
+        }
         Log.i("yanyue", "onCreate: "+articleId+"......."+userId+"......"+isLoginSuccess);
         formerCommentId=getIntent().getIntExtra("formerCommentId",-1);
         try {
