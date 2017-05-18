@@ -87,7 +87,7 @@ public class HomepageAdapter extends BaseMultiItemQuickAdapter<MultiItemOfHomepa
                     break;
                     case 6:
                         helper.setImageResource(R.id.list_pic,R.drawable.ic_android_settings);
-                        helper.setText(R.id.list_content,"账号设置");
+                        helper.setText(R.id.list_content,"我的账号");
 //                        helper.addOnClickListener(R.id.homepage_list);
                       break;
                 }
