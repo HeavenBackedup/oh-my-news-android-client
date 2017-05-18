@@ -439,7 +439,7 @@ public class OthersHomepageActivity extends BaseActivity {
 
     @Override
     protected void onRestart() {
-        super.onRestart();
+
         isLoginSuccessBack = ExitApplication.getInstance().isLoginSuccess;
         userIdOfLoginBack = ExitApplication.getInstance().userId;
         if (isLoginSuccess==false){
@@ -467,6 +467,7 @@ public class OthersHomepageActivity extends BaseActivity {
                 userIdOfLogin=userIdOfLoginBack;
             }
         }
+        super.onRestart();
 
     }
 }
