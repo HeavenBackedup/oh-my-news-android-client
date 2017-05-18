@@ -88,8 +88,8 @@ public class LoginActivity extends AppCompatActivity {
         topbar_login.setOnTopbarClickListener(new Topbar.topbarClickListener() {
             @Override
             public void leftClick() {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                exit(builder);
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    exit(builder);
 //                DialogUtil.showDialog(UserLoginActivity.this,"用户名或密码错误，请重新输入！",false);
             }
 

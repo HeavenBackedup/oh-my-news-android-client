@@ -220,7 +220,7 @@ public class DetailActivity extends AppCompatActivity {
                             report.setText("已举报");
                             report.setClickable(false);
                         }else{
-                            collect.setText("举报");
+                            report.setText("举报");
                         }
                     }
                 } catch (JSONException e) {
@@ -231,8 +231,8 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Object reasonObj) {
-                Toast.makeText(DetailActivity.this,"failure",Toast.LENGTH_LONG).show();
-
+//                Toast.makeText(DetailActivity.this,"failure",Toast.LENGTH_LONG).show();
+                DialogUtil.showDialog(DetailActivity.this,"网络连接失败",false);
             }
         }));
 
@@ -308,8 +308,8 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Object reasonObj) {
-                Toast.makeText(DetailActivity.this,"failure",Toast.LENGTH_LONG).show();
-
+//                Toast.makeText(DetailActivity.this,"failure",Toast.LENGTH_LONG).show();
+//                DialogUtil.showDialog(DetailActivity.this,"网络连接失败",false);
             }
         }));
     }
@@ -454,8 +454,8 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Object reasonObj) {
-                Toast.makeText(DetailActivity.this,"failure",Toast.LENGTH_LONG).show();
-                showMsg(false,submitType);
+//                Toast.makeText(DetailActivity.this,"failure",Toast.LENGTH_LONG).show();
+                DialogUtil.showDialog(DetailActivity.this,"网络连接失败",false);
             }
         }));
     }
@@ -491,8 +491,8 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Object reasonObj) {
-                Toast.makeText(DetailActivity.this,"failure",Toast.LENGTH_LONG).show();
-                showMsg(false,submitType,isno);
+//                Toast.makeText(DetailActivity.this,"failure",Toast.LENGTH_LONG).show();
+                DialogUtil.showDialog(DetailActivity.this,"网络连接失败",false);
 
             }
         }));
