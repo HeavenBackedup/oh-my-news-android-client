@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -49,11 +50,14 @@ public class HomepageActivity extends AppCompatActivity {
     private Intent intent;
     private int code;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+//        toolbar=(Toolbar)findViewById(R.id.toolbar_me);
+//        toolbar.setVisibility(View.VISIBLE);
         ExitApplication.getInstance().addActivity(this);
         isLoginSuccess = ExitApplication.getInstance().isLoginSuccess;
         userId = ExitApplication.getInstance().userId;
