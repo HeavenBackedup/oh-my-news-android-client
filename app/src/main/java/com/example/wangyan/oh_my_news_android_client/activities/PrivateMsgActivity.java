@@ -164,79 +164,79 @@ public class PrivateMsgActivity extends AppCompatActivity {
             }
         }));
     }
-    private void downloadFileOther(int i) throws FileNotFoundException {
-//        String url = "http://cms-bucket.nosdn.127.net/catchpic/e/e8/e8af197c3b3ab1786ef430976c9ae8f3.jpg?imageView&thumbnail=550x0";
-        String url=path.get(i);
-        final int j=i;
-
-        CommonOkHttpClient.downloadFileOther(CommonRequest.createGetResquest(url),new ResponseDataHandle(new ResponseDownloadListener() {
-            @Override
-            public void onProgress(int progress) {
-//           下载进度已封装，可根据需求实现
-            }
-            @Override
-            public void onSuccess(Object responseObj) {
-
-                bitmap = (Bitmap) responseObj;
-
-//                tt= new ArrayList<>();
-//                for(int j=0;j<len;j++) {
-                    if (bitmap != null) {
-                        Map<String, Object> map1 = new HashMap<>();
-                        map1.put("picture", bitmap);
-                       // System.out.println(bitmap);
-                        map1.put("name", name.get(j));
-//                        map1.put("otherUserId",otherUserId.get(j));
-                       // System.out.println(name.get(j));
-                        tt.add(map1);
-                    }
+//    private void downloadFileOther(int i) throws FileNotFoundException {
+////        String url = "http://cms-bucket.nosdn.127.net/catchpic/e/e8/e8af197c3b3ab1786ef430976c9ae8f3.jpg?imageView&thumbnail=550x0";
+//        String url=path.get(i);
+//        final int j=i;
+//
+//        CommonOkHttpClient.downloadFileOther(CommonRequest.createGetResquest(url),new ResponseDataHandle(new ResponseDownloadListener() {
+//            @Override
+//            public void onProgress(int progress) {
+////           下载进度已封装，可根据需求实现
+//            }
+//            @Override
+//            public void onSuccess(Object responseObj) {
+//
+//                bitmap = (Bitmap) responseObj;
+//
+////                tt= new ArrayList<>();
+////                for(int j=0;j<len;j++) {
+//                    if (bitmap != null) {
+//                        Map<String, Object> map1 = new HashMap<>();
+//                        map1.put("picture", bitmap);
+//                       // System.out.println(bitmap);
+//                        map1.put("name", name.get(j));
+////                        map1.put("otherUserId",otherUserId.get(j));
+//                       // System.out.println(name.get(j));
+//                        tt.add(map1);
+//                    }
+////                }
+//                System.out.println(tt);
+//                SimpleAdapter adapter = new SimpleAdapter(context, tt, R.layout.item1layout, new String[]{"picture", "name"}, new int[]{R.id.image1, R.id.text1});
+//                adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
+//                    @Override
+//                    public boolean setViewValue(View view, Object data,
+//                                                String textRepresentation) {
+//                        if (view instanceof ImageView && data instanceof Bitmap) {
+//                            ImageView iv = (ImageView) view;
+//                            iv.setImageBitmap((Bitmap) data);
+//                            return true;
+//                        }
+//                        return false;
+//                    }
+//                });
+//                listView.setAdapter(adapter);
+//                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
+//                        System.out.println(arg2);
+//                        Map<String, Object> mm = tt.get(arg2);
+//                        String name1= (String) mm.get("name");
+//                        int  otherUser=otherUserId.get(arg2);
+//                        System.out.println(name1);
+//                        Intent intent = new Intent();
+//                        intent.setClass(PrivateMsgActivity.this, DialogActivity.class);
+//                        intent.putExtra("name", name1);
+//                        intent.putExtra("otherUserId",otherUser);
+//                        startActivity(intent);
+//                    }
+//                });
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Object reasonObj) {
+////                自定义异常，当网络请求失败时可能需要在页面进行显示（-1：网络错误；-2：io错误）
+//                OkHttpException exception = new OkHttpException();
+//                if (exception.getEcode() == -1 && exception.getEmsg() == null){
+//                    Toast.makeText(PrivateMsgActivity.this,"网络不稳定",Toast.LENGTH_LONG).show();
 //                }
-                System.out.println(tt);
-                SimpleAdapter adapter = new SimpleAdapter(context, tt, R.layout.item1layout, new String[]{"picture", "name"}, new int[]{R.id.image1, R.id.text1});
-                adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
-                    @Override
-                    public boolean setViewValue(View view, Object data,
-                                                String textRepresentation) {
-                        if (view instanceof ImageView && data instanceof Bitmap) {
-                            ImageView iv = (ImageView) view;
-                            iv.setImageBitmap((Bitmap) data);
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-                listView.setAdapter(adapter);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
-                        System.out.println(arg2);
-                        Map<String, Object> mm = tt.get(arg2);
-                        String name1= (String) mm.get("name");
-                        int  otherUser=otherUserId.get(arg2);
-                        System.out.println(name1);
-                        Intent intent = new Intent();
-                        intent.setClass(PrivateMsgActivity.this, DialogActivity.class);
-                        intent.putExtra("name", name1);
-                        intent.putExtra("otherUserId",otherUser);
-                        startActivity(intent);
-                    }
-                });
-
-            }
-
-            @Override
-            public void onFailure(Object reasonObj) {
-//                自定义异常，当网络请求失败时可能需要在页面进行显示（-1：网络错误；-2：io错误）
-                OkHttpException exception = new OkHttpException();
-                if (exception.getEcode() == -1 && exception.getEmsg() == null){
-                    Toast.makeText(PrivateMsgActivity.this,"网络不稳定",Toast.LENGTH_LONG).show();
-                }
-                if (exception.getEcode() == -2 && exception.getEmsg() == null){
-                    Toast.makeText(PrivateMsgActivity.this,"文件不存在",Toast.LENGTH_LONG).show();
-                }
-            }
-        }));
-    }
+//                if (exception.getEcode() == -2 && exception.getEmsg() == null){
+//                    Toast.makeText(PrivateMsgActivity.this,"文件不存在",Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        }));
+//    }
 
 
 

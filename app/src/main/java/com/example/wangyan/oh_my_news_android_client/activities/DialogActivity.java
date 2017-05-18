@@ -106,8 +106,9 @@ public class DialogActivity extends AppCompatActivity {
         }));
     }
     private void postRequest(){
-        Map<String,Object> params = new HashMap<String,Object>();
-        String url = "/privatemsg/getExMsg";
+            Map<String,Object> params = new HashMap<String,Object>();
+//            String url = "/privatemsg/getExMsg";
+        String url = "/privatemsg/getAndroidExMsg";
 //        params.put("userId",2);
 //        params.put("otherUserId",1);
         params.put("userId",userId);
@@ -124,17 +125,17 @@ public class DialogActivity extends AppCompatActivity {
                     for (int i = 0; i < len; i++) {
                         JSONObject ob =jsonObject.getJSONObject(i);
 //                        System.out.println(ob);
-                        System.out.println(ob.get("message"));
-                        if(ob.getString("username").contains(name))
+                        System.out.println(ob.get("content"));
+                        if(ob.getString("sourceUsername").contains(name))
                         {
-                           message0=ob.getString("message");
+                           message0=ob.getString("content");
                             message msg1 = new message(name+":"+message0, message.TYPE_RECEIVED);
                             msgList.add(msg1);
 //                            System.out.println(message0);
 
                         }
                         else{
-                            message1=ob.getString("message");
+                            message1=ob.getString("content");
                             message msg2 = new message("我"+":"+message1, message.TYPE_SEND);
                             msgList.add(msg2);
 
@@ -150,6 +151,7 @@ public class DialogActivity extends AppCompatActivity {
             @Override
             public void onFailure(Object reasonObj) {
 //                自定义异常，当网络请求失败时可能需要在页面进行显示（-1：网络错误；-2：其他错误）
+                System.out.println("............");
 
                 OkHttpException exception = new OkHttpException();
                 if (exception.getEcode() == -1 && exception.getEmsg() == null){
