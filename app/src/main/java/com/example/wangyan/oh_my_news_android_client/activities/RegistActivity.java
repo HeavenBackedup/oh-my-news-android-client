@@ -99,11 +99,13 @@ public class RegistActivity extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 isSubmit = (Boolean)msg.obj;
+                Log.i("wangyan","123........"+username+"............"+pwd+"..........."+isSubmit);
                 if (isSubmit){
 //                    DialogUtil.showDialog(RegistActivity.this,"注册成功!",false);
                     intent.putExtra("username",username);
                     intent.putExtra("pwd",pwd);
                     intent.setClass(RegistActivity.this,LoginActivity.class);
+                    Log.i("wangyan","123........"+username+"............"+pwd);
                     startActivity(intent);
                 }else {
                     et_registUsername.setText("");

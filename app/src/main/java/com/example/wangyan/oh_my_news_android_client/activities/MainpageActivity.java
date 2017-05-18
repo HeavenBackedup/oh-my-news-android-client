@@ -222,8 +222,7 @@ public class MainpageActivity extends AppCompatActivity{
 
     }
     //修改登录
-    private void initLoginText()
-    {
+    private void initLoginText() {
         if (ExitApplication.getInstance().isLoginSuccess == true && ExitApplication.getInstance().userId != -1){
             topbar_main.rightButton.setText("切换账号");
         }
@@ -231,8 +230,8 @@ public class MainpageActivity extends AppCompatActivity{
     //点击分类的初始化
     private void sortOnclick(int index,Button button){
         list.clear();
-        addValue = 1;
-        responseNewsData(addValue);
+//        addValue = 1;
+        responseNewsData(1);
         restartButton();
         button.setTextColor(0xFFff0000);
         lv_refresh_news.setAdapter(null);
